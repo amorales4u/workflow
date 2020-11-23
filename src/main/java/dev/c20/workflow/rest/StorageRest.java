@@ -150,6 +150,178 @@ public class StorageRest {
         return ResponseEntity.ok(map);
     }
 
+    @PutMapping("/log/**")
+    ResponseEntity<?> createLog(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
+    @PutMapping("/value/**")
+    ResponseEntity<?> createValue(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/value/**")
+    ResponseEntity<?> updateValue(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
+    @DeleteMapping("/value/**")
+    ResponseEntity<?> deleteValue(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
+
+    @PutMapping("/attach/**")
+    ResponseEntity<?> createAttach(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/attach/**")
+    ResponseEntity<?> updateAttach(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
+    @DeleteMapping("/attach/**")
+    ResponseEntity<?> deleteAttach(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
+
+    @PutMapping("/data/**")
+    ResponseEntity<?> createData(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/data/**")
+    ResponseEntity<?> updateData(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
+    @DeleteMapping("/data/**")
+    ResponseEntity<?> deleteData(HttpServletRequest request) throws Exception {
+        logger.info(request.getContextPath());
+        String path = StringUtils.getPathFromURI( "/storage/note", request);
+
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("path", path);
+        map.put("parentFolder",PathUtils.getParentFolder(path));
+        map.put("folderName",PathUtils.getName(path));
+        map.put("level", PathUtils.getPathLevel(path));
+        map.put("isFolder", PathUtils.isFolder(path));
+
+        return ResponseEntity.ok(map);
+    }
+
 
 
 }
