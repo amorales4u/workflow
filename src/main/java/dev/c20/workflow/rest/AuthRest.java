@@ -63,19 +63,6 @@ public class AuthRest {
         }
     }
 
-    @PutMapping("/folder/add/**")
-    ResponseEntity<?> createFolder(HttpServletRequest request) {
-        logger.info(request.getContextPath());
-        String path = request.getRequestURI().substring((request.getContextPath() + "/storage/folder").length());
-        String rootPath = PathUtils.getParentFolder(path);
-        String folderName = PathUtils.getName(path);
-        //String storage = storageRepository.createFolder( new User(),1,rootPath,folderName);
-        //return storage != null ? ResponseEntity.ok(storage) :
-        //        ResponseEntity.notFound().build();
-        logger.info(path);
-
-        return ResponseEntity.ok(path);
-    }
     /*
     @GetMapping("/version/**")
     ResponseEntity<?> jwtProtected(@AuthenticationPrincipal Jwt jwt) {

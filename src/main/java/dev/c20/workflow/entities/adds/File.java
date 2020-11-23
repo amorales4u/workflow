@@ -23,7 +23,7 @@ class File {
     @Column(name=WorkflowApplication.DB_PREFIX + "MODIFIED")
     private Date modified;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "MODIFIER", length=2000)
+    @Column(name=WorkflowApplication.DB_PREFIX + "MODIFIER", length=20)
     private String modifier;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "COMMENT", length=2000)

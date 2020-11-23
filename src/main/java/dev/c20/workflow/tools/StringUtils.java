@@ -2,6 +2,8 @@ package dev.c20.workflow.tools;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.*;
 
 public class StringUtils {
@@ -535,6 +537,12 @@ public class StringUtils {
             throw new Exception(e);
         }
         return strData;
+    }
+
+    public static String getPathFromURI( String basePath, HttpServletRequest request) throws Exception {
+        String path = request.getRequestURI().substring((request.getContextPath() + basePath).length());
+        path = URLDecoder.decode(path,"UTF-8");
+        return path;
     }
 
 }
