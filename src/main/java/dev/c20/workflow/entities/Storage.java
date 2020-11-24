@@ -67,10 +67,10 @@ public class Storage {
     private Boolean locked = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "ROLE", columnDefinition = "TINYINT" )
-    private Boolean restrictedByRole = true;
+    private Boolean restrictedByRole = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "CHILDREN_ROLE", columnDefinition = "TINYINT" )
-    private Boolean childrenRestrictedByRole = true;
+    private Boolean childrenRestrictedByRole = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "STATUS")
     private Integer status;
