@@ -2,15 +2,16 @@ package dev.c20.workflow.rest;
 
 import dev.c20.workflow.entities.Storage;
 import dev.c20.workflow.repositories.StorageRepository;
+import dev.c20.workflow.services.StorageService;
 import dev.c20.workflow.tools.PathUtils;
 import dev.c20.workflow.tools.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,10 +19,11 @@ import java.util.Map;
 @RequestMapping("/storage")
 public class StorageRest {
 
-    Logger logger = Logger.getLogger(StorageRest.class.getName());
+    //Logger logger = Logger.getLogger(StorageRest.class.getName());
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
-    StorageRepository storageRepository;
+    StorageService storageService;
 
     @PutMapping("/folder/**")
     ResponseEntity<?> createFolder( HttpServletRequest request) throws Exception {
@@ -35,13 +37,8 @@ public class StorageRest {
             map.put("error", "No es un folder");
             return ResponseEntity.badRequest().body(map);
         }
-        Storage storage = storageRepository.getFolder(path);
 
-        if( storage != null ) {
-            map.put("error", "Ya existe el folder");
-            return ResponseEntity.badRequest().body(map);
-        }
-        return ResponseEntity.ok(storage);
+        return ResponseEntity.ok(new Storage());
     }
 
     @DeleteMapping("/folder/**")
@@ -136,6 +133,9 @@ public class StorageRest {
     ResponseEntity<?> createNote(HttpServletRequest request) throws Exception {
         logger.info(request.getContextPath());
         String path = StringUtils.getPathFromURI( "/storage/note", request);
+        logger.info("Path:" + path );
+
+        storageService.addFolder(null);
 
 
         Map<String,Object> map = new HashMap<>();

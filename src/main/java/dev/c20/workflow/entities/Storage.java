@@ -1,7 +1,7 @@
 package dev.c20.workflow.entities;
 
 
-import dev.c20.workflow.app.WorkflowApplication;
+import dev.c20.workflow.WorkflowApplication;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -32,6 +32,12 @@ public class Storage {
 
     @Column(name=WorkflowApplication.DB_PREFIX + "CREATOR")
     private String creator;
+
+    @Column(name=WorkflowApplication.DB_PREFIX + "DATE_ASSIGNED")
+    private Date dateAssigned;
+
+    @Column(name=WorkflowApplication.DB_PREFIX + "ASSIGNED")
+    private String assigned;
 
 
     @Column(name=WorkflowApplication.DB_PREFIX + "DELETED", columnDefinition = "TINYINT" )
@@ -225,6 +231,15 @@ public class Storage {
 
     public Storage setCreated(Date created) {
         this.created = created;
+        return this;
+    }
+
+    public Date getDateAssigned() {
+        return dateAssigned;
+    }
+
+    public Storage setAssigned(String assigned) {
+        this.assigned = assigned;
         return this;
     }
 

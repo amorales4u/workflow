@@ -1,8 +1,7 @@
-package dev.c20.workflow.app;
+package dev.c20.workflow;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +30,7 @@ import javax.persistence.EntityManagerFactory;
 @ComponentScan("dev.c20.workflow")
 //@EnableAutoConfiguration
 @EnableJpaRepositories("dev.c20.workflow")
-@EntityScan(basePackages= "dev.c20.entities")
+//@EntityScan(basePackages= "dev.c20.workflow")
 @EnableTransactionManagement
 public class WorkflowApplication {
 

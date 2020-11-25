@@ -1,6 +1,6 @@
 package dev.c20.workflow.entities.adds;
 
-import dev.c20.workflow.app.WorkflowApplication;
+import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.entities.Storage;
 
 import javax.persistence.*;
