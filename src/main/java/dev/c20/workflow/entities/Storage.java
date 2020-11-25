@@ -1,7 +1,7 @@
 package dev.c20.workflow.entities;
 
 
-import dev.c20.workflow.WorkflowApplication;
+import dev.c20.workflow.app.WorkflowApplication;
 
 import javax.persistence.*;
 import java.util.Date;

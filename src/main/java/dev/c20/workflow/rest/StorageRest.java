@@ -7,9 +7,6 @@ import dev.c20.workflow.tools.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,10 +24,8 @@ public class StorageRest {
     StorageRepository storageRepository;
 
     @PutMapping("/folder/**")
-    ResponseEntity<?> createFolder(Principal principal, HttpServletRequest request) throws Exception {
-        Authentication authentication = (Authentication) principal;
-        User user = (User) authentication.getPrincipal();
-        user.getUsername();
+    ResponseEntity<?> createFolder( HttpServletRequest request) throws Exception {
+        System.out.println( "Has ADMIN" );
         String path = StringUtils.getPathFromURI( "/storage/folder", request);
 
 
