@@ -65,6 +65,15 @@ public class StorageService {
         return this;
     }
 
+    static public final String USER_HEADER = "USER";
+    public String getUser() {
+
+        if( this.httpRequest.getHeader(USER_HEADER) != null )
+            this.user = this.httpRequest.getHeader(USER_HEADER);
+
+        return null;
+    }
+
     public StorageService setHttpServletRequest( HttpServletRequest httpRequest ) {
         this.httpRequest  = httpRequest;
         this.path = getPath();
@@ -87,13 +96,6 @@ public class StorageService {
 
         return this;
     }
-
-    public StorageService setUser(String user ) {
-        this.user = user;
-        return this;
-    }
-
-
 
     public String getPath() {
 

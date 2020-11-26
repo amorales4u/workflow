@@ -51,7 +51,6 @@ public class StorageRest {
 
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .getStorage(true)
                 .response();
 
@@ -62,7 +61,6 @@ public class StorageRest {
 
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .addFolder(storage)
                 .response();
 
@@ -72,7 +70,6 @@ public class StorageRest {
     ResponseEntity<?> deleteFolder(HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .delStorage()
                 .response();
     }
@@ -81,7 +78,6 @@ public class StorageRest {
     ResponseEntity<?> updateStorage(@RequestBody Storage storage, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .updateStorage(storage)
                 .response();
     }
@@ -91,7 +87,6 @@ public class StorageRest {
 
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .getStorage(false)
                 .response();
 
@@ -101,7 +96,6 @@ public class StorageRest {
     ResponseEntity<?> createFile(Storage storage, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .addFile(storage)
                 .response();
     }
@@ -110,7 +104,6 @@ public class StorageRest {
     ResponseEntity<?> updateFile(Storage storage,HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .updateStorage(storage)
                 .response();
     }
@@ -119,7 +112,6 @@ public class StorageRest {
     ResponseEntity<?> deleteFile(HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .delStorage()
                 .response();
     }
@@ -128,7 +120,6 @@ public class StorageRest {
     ResponseEntity<?> createNote(@RequestBody Note note, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .addNote(note)
                 .response();
 
@@ -138,7 +129,6 @@ public class StorageRest {
     ResponseEntity<?> readNote(HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .getNotes()
                 .response();
 
@@ -148,7 +138,6 @@ public class StorageRest {
     ResponseEntity<?> createLog(@RequestBody dev.c20.workflow.entities.adds.Log log, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .addLog(log)
                 .response();
 
@@ -158,7 +147,6 @@ public class StorageRest {
     ResponseEntity<?> readLog(HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .getLog()
                 .response();
 
@@ -168,7 +156,6 @@ public class StorageRest {
     ResponseEntity<?> readValues(HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .getValues()
                 .response();
 
@@ -178,7 +165,6 @@ public class StorageRest {
     ResponseEntity<?> createValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .addValue(value)
                 .response();
 
@@ -188,7 +174,6 @@ public class StorageRest {
     ResponseEntity<?> updateValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .updateValue(value)
                 .response();
 
@@ -198,7 +183,6 @@ public class StorageRest {
     ResponseEntity<?> deleteValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .deleteValue(value)
                 .response();
 
@@ -209,7 +193,6 @@ public class StorageRest {
     ResponseEntity<?> readAttachments(HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .getAttachments()
                 .response();
 
@@ -219,7 +202,6 @@ public class StorageRest {
     ResponseEntity<?> createAttach(@RequestBody Attach attach, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .addAttach(attach)
                 .response();
 
@@ -229,7 +211,6 @@ public class StorageRest {
     ResponseEntity<?> updateAttach(@RequestBody Attach attach, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .updateAttach(attach)
                 .response();
 
@@ -239,20 +220,15 @@ public class StorageRest {
     ResponseEntity<?> deleteAttach(@RequestBody Attach attach, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .deleteAttach(attach)
                 .response();
 
     }
 
-
-
-
     @PutMapping("/data/**")
     ResponseEntity<?> createData(@RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .addData(data)
                 .response();
     }
@@ -261,7 +237,6 @@ public class StorageRest {
     ResponseEntity<?> updateData(@RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .updateData(data)
                 .response();
     }
@@ -270,11 +245,8 @@ public class StorageRest {
     ResponseEntity<?> deleteData(@RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .setUser("tigger")
                 .deleteData()
                 .response();
     }
-
-
 
 }
