@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name= WorkflowApplication.DB_PREFIX + "STG_NOTE")
-class Note {
+public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name=WorkflowApplication.DB_PREFIX + "ID")

@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name= WorkflowApplication.DB_PREFIX + "STG_PERM")
-class Permition {
+public class Perm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,9 @@ class Permition {
     @Column(name=WorkflowApplication.DB_PREFIX + "CREATE", length = 10)
     private Boolean canCreate;
 
+    @Column(name=WorkflowApplication.DB_PREFIX + "READ", length = 10)
+    private Boolean canRead;
+
     @Column(name=WorkflowApplication.DB_PREFIX + "UPDATE", length = 10)
     private Boolean canUpdate;
 
@@ -39,8 +42,8 @@ class Permition {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Permition permition = (Permition) o;
-        return id.equals(permition.id);
+        Perm perm = (Perm) o;
+        return id.equals(perm.id);
     }
 
     @Override
@@ -52,7 +55,7 @@ class Permition {
         return id;
     }
 
-    public Permition setId(Long id) {
+    public Perm setId(Long id) {
         this.id = id;
         return this;
     }
@@ -61,7 +64,7 @@ class Permition {
         return parent;
     }
 
-    public Permition setParent(Storage parent) {
+    public Perm setParent(Storage parent) {
         this.parent = parent;
         return this;
     }
@@ -70,7 +73,7 @@ class Permition {
         return user;
     }
 
-    public Permition setUser(String user) {
+    public Perm setUser(String user) {
         this.user = user;
         return this;
     }
@@ -79,7 +82,7 @@ class Permition {
         return canCreate;
     }
 
-    public Permition setCanCreate(Boolean canCreate) {
+    public Perm setCanCreate(Boolean canCreate) {
         this.canCreate = canCreate;
         return this;
     }
@@ -88,7 +91,7 @@ class Permition {
         return canUpdate;
     }
 
-    public Permition setCanUpdate(Boolean canUpdate) {
+    public Perm setCanUpdate(Boolean canUpdate) {
         this.canUpdate = canUpdate;
         return this;
     }
@@ -97,7 +100,7 @@ class Permition {
         return canDelete;
     }
 
-    public Permition setCanDelete(Boolean canDelete) {
+    public Perm setCanDelete(Boolean canDelete) {
         this.canDelete = canDelete;
         return this;
     }
@@ -106,8 +109,18 @@ class Permition {
         return canAdmin;
     }
 
-    public Permition setCanAdmin(Boolean canAdmin) {
+    public Perm setCanAdmin(Boolean canAdmin) {
         this.canAdmin = canAdmin;
         return this;
     }
+    public Boolean getCanRead() {
+        return canRead;
+    }
+
+    public Perm setCanRead(Boolean canRead) {
+        this.canRead = canRead;
+        return this;
+    }
+
+
 }

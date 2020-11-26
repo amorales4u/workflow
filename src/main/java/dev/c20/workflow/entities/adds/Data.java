@@ -9,18 +9,15 @@ import java.util.Objects;
 
 @Entity
 @Table(name= WorkflowApplication.DB_PREFIX + "STG_DATA")
-class Data implements Serializable {
+public class Data implements Serializable {
 
     @Id
     @ManyToOne(targetEntity= Storage.class)
     @JoinColumn( name=WorkflowApplication.DB_PREFIX + "STORAGE")
     private Storage parent;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "NAME")
-    private String name;
-
     @Column(name=WorkflowApplication.DB_PREFIX + "VALUE")
-    private String value;
+    private String data;
 
     @Override
     public boolean equals(Object o) {
@@ -44,21 +41,12 @@ class Data implements Serializable {
         return this;
     }
 
-    public String getName() {
-        return name;
+    public String getData() {
+        return data;
     }
 
-    public Data setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public Data setValue(String value) {
-        this.value = value;
+    public Data setData(String value) {
+        this.data = value;
         return this;
     }
 }

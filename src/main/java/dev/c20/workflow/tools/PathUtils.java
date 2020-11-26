@@ -59,6 +59,11 @@ public class PathUtils {
         return level;
     }
 
+    static public String getPathFromLevel(String resource, int level) {
+        String result = getPathPart(resource,level-1);
+        return "/" + resource.substring(result.length());
+    }
+
     static public String getPathPart(String resource, int level) {
 
         resource = getFolderPath(resource);
@@ -99,4 +104,23 @@ public class PathUtils {
 
         return resource.split("/");
     }
+
+    static public void main(String[] args ) {
+        String path = "/workflow/storage/file/asasas";
+        System.out.println(path);
+        System.out.println(getPathFromLevel(path,4));
+        System.out.println(getName(getPathFromLevel(path,4)));
+        // path level: /0/1/
+        path = "/Workflows/";
+        System.out.println(path);
+        System.out.println(getParentFolder( path));
+        System.out.println(getPathLevel( path));
+
+        path = "/Workflows/EUC-27/";
+        System.out.println(path);
+        System.out.println(getPathLevel( path));
+        System.out.println(getParentFolder( path));
+
+    }
+
 }

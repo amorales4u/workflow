@@ -1,13 +1,16 @@
 package dev.c20.workflow.rest;
 
 import dev.c20.workflow.entities.Storage;
-import dev.c20.workflow.repositories.StorageRepository;
+import dev.c20.workflow.entities.adds.Attach;
+import dev.c20.workflow.entities.adds.Note;
+import dev.c20.workflow.entities.adds.Value;
 import dev.c20.workflow.services.StorageService;
 import dev.c20.workflow.tools.PathUtils;
 import dev.c20.workflow.tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/storage")
+
 public class StorageRest {
 
     //Logger logger = Logger.getLogger(StorageRest.class.getName());
@@ -25,300 +29,250 @@ public class StorageRest {
     @Autowired
     StorageService storageService;
 
-    @PutMapping("/folder/**")
-    ResponseEntity<?> createFolder( HttpServletRequest request) throws Exception {
-        System.out.println( "Has ADMIN" );
-        String path = StringUtils.getPathFromURI( "/storage/folder", request);
-
-
+    @GetMapping(value = "/version")
+    ResponseEntity<?> version() {
         Map<String,Object> map = new HashMap<>();
+        map.put("version", "2020/11/25");
+        map.put("entity", new Storage());
+        return ResponseEntity.ok(map);
+    }
 
-        if( !PathUtils.isFolder(path) ) {
-            map.put("error", "No es un folder");
-            return ResponseEntity.badRequest().body(map);
-        }
+    @PostMapping("/test")
+    ResponseEntity<?> test(@RequestBody Storage storage) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("version", "2020/11/25");
+        map.put("entity", storage);
+        return ResponseEntity.ok(map);
+    }
 
-        return ResponseEntity.ok(new Storage());
+
+    @GetMapping("/folder/**")
+    ResponseEntity<?> getFolderStorage( HttpServletRequest request) throws Exception {
+
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .getStorage(true)
+                .response();
+
+    }
+
+    @PutMapping("/folder/**")
+    ResponseEntity<?> createFolder( Storage storage, HttpServletRequest request) throws Exception {
+
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .addFolder(storage)
+                .response();
+
     }
 
     @DeleteMapping("/folder/**")
     ResponseEntity<?> deleteFolder(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/folder", request);
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .delStorage()
+                .response();
+    }
 
+    @PostMapping("/folder/**")
+    ResponseEntity<?> updateStorage(@RequestBody Storage storage, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .updateStorage(storage)
+                .response();
+    }
 
-        Map<String,Object> map = new HashMap<>();
+    @GetMapping("/file/**")
+    ResponseEntity<?> getFileStorage( HttpServletRequest request) throws Exception {
 
-        if( !PathUtils.isFolder(path) ) {
-            map.put("error", "No es un folder");
-            return ResponseEntity.badRequest().body(map);
-        }
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .getStorage(false)
+                .response();
 
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
     }
 
     @PutMapping("/file/**")
-    ResponseEntity<?> createFile(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/file", request);
-
-
-        Map<String,Object> map = new HashMap<>();
-
-        if( !PathUtils.isFile(path) ) {
-            map.put("error", "No es un file");
-            return ResponseEntity.badRequest().body(map);
-        }
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
+    ResponseEntity<?> createFile(Storage storage, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .addFile(storage)
+                .response();
     }
 
     @PostMapping("/file/**")
-    ResponseEntity<?> updateFile(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/file", request);
-
-
-        Map<String,Object> map = new HashMap<>();
-
-        if( !PathUtils.isFile(path) ) {
-            map.put("error", "No es un file");
-            return ResponseEntity.badRequest().body(map);
-        }
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
+    ResponseEntity<?> updateFile(Storage storage,HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .updateStorage(storage)
+                .response();
     }
 
     @DeleteMapping("/file/**")
     ResponseEntity<?> deleteFile(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/file", request);
-
-
-        Map<String,Object> map = new HashMap<>();
-
-        if( !PathUtils.isFile(path) ) {
-            map.put("error", "No es un file");
-            return ResponseEntity.badRequest().body(map);
-        }
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .delStorage()
+                .response();
     }
 
     @PutMapping("/note/**")
-    ResponseEntity<?> createNote(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
-        logger.info("Path:" + path );
+    ResponseEntity<?> createNote(@RequestBody Note note, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .addNote(note)
+                .response();
 
-        storageService.addFolder(null);
+    }
 
+    @GetMapping("/note/**")
+    ResponseEntity<?> readNote(HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .getNotes()
+                .response();
 
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
     }
 
     @PutMapping("/log/**")
-    ResponseEntity<?> createLog(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
+    ResponseEntity<?> createLog(@RequestBody dev.c20.workflow.entities.adds.Log log, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .addLog(log)
+                .response();
 
+    }
 
-        Map<String,Object> map = new HashMap<>();
+    @GetMapping("/log/**")
+    ResponseEntity<?> readLog(HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .getLog()
+                .response();
 
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
+    }
 
-        return ResponseEntity.ok(map);
+    @GetMapping("/value/**")
+    ResponseEntity<?> readValues(HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .getValues()
+                .response();
+
     }
 
     @PutMapping("/value/**")
-    ResponseEntity<?> createValue(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
+    ResponseEntity<?> createValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .addValue(value)
+                .response();
 
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
     }
 
     @PostMapping("/value/**")
-    ResponseEntity<?> updateValue(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
+    ResponseEntity<?> updateValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .updateValue(value)
+                .response();
 
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
     }
 
     @DeleteMapping("/value/**")
-    ResponseEntity<?> deleteValue(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
+    ResponseEntity<?> deleteValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .deleteValue(value)
+                .response();
 
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
     }
 
 
+    @GetMapping("/attach/**")
+    ResponseEntity<?> readAttachments(HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .getAttachments()
+                .response();
+
+    }
+
     @PutMapping("/attach/**")
-    ResponseEntity<?> createAttach(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
+    ResponseEntity<?> createAttach(@RequestBody Attach attach, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .addAttach(attach)
+                .response();
 
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
     }
 
     @PostMapping("/attach/**")
-    ResponseEntity<?> updateAttach(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
+    ResponseEntity<?> updateAttach(@RequestBody Attach attach, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .updateAttach(attach)
+                .response();
 
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
     }
 
     @DeleteMapping("/attach/**")
-    ResponseEntity<?> deleteAttach(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
+    ResponseEntity<?> deleteAttach(@RequestBody Attach attach, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .deleteAttach(attach)
+                .response();
 
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
     }
+
+
 
 
     @PutMapping("/data/**")
-    ResponseEntity<?> createData(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
-
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
+    ResponseEntity<?> createData(@RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .addData(data)
+                .response();
     }
 
     @PostMapping("/data/**")
-    ResponseEntity<?> updateData(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
-
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
+    ResponseEntity<?> updateData(@RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .updateData(data)
+                .response();
     }
 
     @DeleteMapping("/data/**")
-    ResponseEntity<?> deleteData(HttpServletRequest request) throws Exception {
-        logger.info(request.getContextPath());
-        String path = StringUtils.getPathFromURI( "/storage/note", request);
-
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("path", path);
-        map.put("parentFolder",PathUtils.getParentFolder(path));
-        map.put("folderName",PathUtils.getName(path));
-        map.put("level", PathUtils.getPathLevel(path));
-        map.put("isFolder", PathUtils.isFolder(path));
-
-        return ResponseEntity.ok(map);
+    ResponseEntity<?> deleteData(@RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .setUser("tigger")
+                .deleteData()
+                .response();
     }
 
 

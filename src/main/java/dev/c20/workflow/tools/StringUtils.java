@@ -1,5 +1,7 @@
 package dev.c20.workflow.tools;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
@@ -539,10 +541,30 @@ public class StringUtils {
         return strData;
     }
 
-    public static String getPathFromURI( String basePath, HttpServletRequest request) throws Exception {
-        String path = request.getRequestURI().substring((request.getContextPath() + basePath).length());
-        path = URLDecoder.decode(path,"UTF-8");
-        return path;
+    public static String getPathFromURI( String basePath, HttpServletRequest request) {
+        try {
+            String path = request.getRequestURI().substring((request.getContextPath() + basePath).length());
+            return URLDecoder.decode(path, "UTF-8");
+        } catch( Exception ex ) {
+            return null;
+        }
     }
+
+    public static String toJSON( Object map ) throws Exception {
+        return toJSON( map, false );
+    }
+
+    public static String toJSON( Object map, Boolean pretty ) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonResult = null;
+        if (pretty)
+            jsonResult = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(map);
+        else
+            jsonResult = mapper.writer().writeValueAsString(map);
+
+        return jsonResult;
+    }
+
 
 }

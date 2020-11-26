@@ -10,13 +10,13 @@ import java.util.List;
 @Repository
 public interface StorageRepository extends JpaRepository<Storage, Long> {
 
-    @Query( "select o from Storage o where o.path = ?1 and o.isFile = true")
+    @Query( "select o from Storage o where o.path = ?1 and o.isFolder = false")
     public Storage getFile(String path );
 
-    @Query( "select o from Storage o where o.path = ?1 and not o.isFile = true")
+    @Query( "select o from Storage o where o.path = ?1 and o.isFolder = true")
     public Storage getFolder(String path );
 
-    @Query( "select o from Storage o where o.path like ?1 and o.level = ?2 order by o.isFile, o.name")
+    @Query( "select o from Storage o where o.path like ?1 and o.level = ?2 order by o.isFolder, o.name")
     public List<Storage> dir(String path, Integer level );
 
 }

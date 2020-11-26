@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name=WorkflowApplication.DB_PREFIX + "STG_LOG")
-class Log {
+public class Log {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

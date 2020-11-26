@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name=WorkflowApplication.DB_PREFIX + "STG_FILE")
-class File {
+public class Attach {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ class File {
     private String modifier;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "COMMENT", length=2000)
-    private String comment;
+    private String name;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "FILE")
     private Long file;
@@ -37,7 +37,7 @@ class File {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        File log = (File) o;
+        Attach log = (Attach) o;
         return id.equals(log.id);
     }
 
@@ -50,7 +50,7 @@ class File {
         return id;
     }
 
-    public File setId(Long id) {
+    public Attach setId(Long id) {
         this.id = id;
         return this;
     }
@@ -59,7 +59,7 @@ class File {
         return parent;
     }
 
-    public File setParent(Storage parent) {
+    public Attach setParent(Storage parent) {
         this.parent = parent;
         return this;
     }
@@ -68,7 +68,7 @@ class File {
         return modified;
     }
 
-    public File setModified(Date modified) {
+    public Attach setModified(Date modified) {
         this.modified = modified;
         return this;
     }
@@ -77,17 +77,17 @@ class File {
         return modifier;
     }
 
-    public File setModifier(String modifier) {
+    public Attach setModifier(String modifier) {
         this.modifier = modifier;
         return this;
     }
 
-    public String getComment() {
-        return comment;
+    public String getName() {
+        return name;
     }
 
-    public File setComment(String comment) {
-        this.comment = comment;
+    public Attach setName(String comment) {
+        this.name = comment;
         return this;
     }
 
@@ -95,7 +95,7 @@ class File {
         return file;
     }
 
-    public File setFile(Long file) {
+    public Attach setFile(Long file) {
         this.file = file;
         return this;
     }

@@ -2,6 +2,7 @@ package dev.c20.workflow.entities;
 
 
 import dev.c20.workflow.WorkflowApplication;
+import dev.c20.workflow.tools.PathUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,8 +19,8 @@ public class Storage {
     @Column(name=WorkflowApplication.DB_PREFIX + "STG")
     private Long id;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "IS_FILE" , columnDefinition = "TINYINT")
-    private Boolean isFile = false;
+    @Column(name=WorkflowApplication.DB_PREFIX + "IS_FOLDER" , columnDefinition = "TINYINT")
+    private Boolean isFolder = null;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "NAME" )
     private String name;
@@ -41,7 +42,7 @@ public class Storage {
 
 
     @Column(name=WorkflowApplication.DB_PREFIX + "DELETED", columnDefinition = "TINYINT" )
-    private Boolean deleted = false;
+    private Boolean deleted = null;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "DELETE_DATE")
     @Temporal(value= TemporalType.TIMESTAMP)
@@ -51,7 +52,7 @@ public class Storage {
     private String userDeleter;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "MODIFIED", columnDefinition = "TINYINT" )
-    private Boolean modified = false;
+    private Boolean modified = null;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "MODIFY_DATE")
     @Temporal(value=TemporalType.TIMESTAMP)
@@ -60,23 +61,23 @@ public class Storage {
     @Column(name=WorkflowApplication.DB_PREFIX + "MODIFIER")
     private String modifier;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "FILE")
-    private Long file;
+    @Column(name=WorkflowApplication.DB_PREFIX + "FILE_ID")
+    private Long fileId;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "READONLY", columnDefinition = "TINYINT" )
-    private Boolean readOnly = false;
+    private Boolean readOnly = null;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "VISIBLE", columnDefinition = "TINYINT" )
-    private Boolean visible = true;
+    private Boolean visible = null;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "LOCKED", columnDefinition = "TINYINT" )
-    private Boolean locked = false;
+    private Boolean locked = null;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "ROLE", columnDefinition = "TINYINT" )
-    private Boolean restrictedByRole = false;
+    @Column(name=WorkflowApplication.DB_PREFIX + "RESTRICTED_BY_ROLE", columnDefinition = "TINYINT" )
+    private Boolean restrictedByPerm = null;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "CHILDREN_ROLE", columnDefinition = "TINYINT" )
-    private Boolean childrenRestrictedByRole = false;
+    @Column(name=WorkflowApplication.DB_PREFIX + "RESTRICTED_CHILDREN_BY_ROLE", columnDefinition = "TINYINT" )
+    private Boolean childrenRestrictedByPerm = null;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "STATUS")
     private Integer status;
@@ -112,12 +113,15 @@ public class Storage {
         return this;
     }
 
-    public Boolean getFile() {
-        return isFile;
+    public Boolean getIsFolder() {
+        return isFolder;
     }
 
-    public Storage setFile(Long file) {
-        this.file = file;
+    public Long getFileId() {
+        return this.fileId;
+    }
+    public Storage setFileId(Long fileId) {
+        this.fileId = fileId;
         return this;
     }
 
@@ -148,21 +152,21 @@ public class Storage {
         return this;
     }
 
-    public Boolean getRestrictedByRole() {
-        return restrictedByRole;
+    public Boolean getRestrictedByPerm() {
+        return restrictedByPerm;
     }
 
-    public Storage setRestrictedByRole(Boolean restrictedByRole) {
-        this.restrictedByRole = restrictedByRole;
+    public Storage setRestrictedByPerm(Boolean restrictedByRole) {
+        this.restrictedByPerm = restrictedByRole;
         return this;
     }
 
-    public Boolean getChildrenRestrictedByRole() {
-        return childrenRestrictedByRole;
+    public Boolean getChildrenRestrictedByPerm() {
+        return childrenRestrictedByPerm;
     }
 
-    public Storage setChildrenRestrictedByRole(Boolean childrenRestrictedByRole) {
-        this.childrenRestrictedByRole = childrenRestrictedByRole;
+    public Storage setChildrenRestrictedByPerm(Boolean childrenRestrictedByRole) {
+        this.childrenRestrictedByPerm = childrenRestrictedByRole;
         return this;
     }
 
@@ -199,11 +203,15 @@ public class Storage {
 
     public Storage setPath(String path) {
         this.path = path;
+        this.isFolder = PathUtils.isFolder(path);
+        this.name = PathUtils.getName(path);
+        this.level = PathUtils.getPathLevel(path);
+        this.created = new Date();
         return this;
     }
 
-    public Storage setFile(Boolean file) {
-        isFile = file;
+    public Storage setIsFolder(Boolean folder) {
+        isFolder = folder;
         return this;
     }
 
@@ -304,5 +312,16 @@ public class Storage {
     public Storage setModifier(String modifier) {
         this.modifier = modifier;
         return this;
+    }
+
+    public Storage setPropertiesFrom( Storage source ) {
+        return this.setAssigned(source.assigned)
+                .setChildrenRestrictedByPerm(source.childrenRestrictedByPerm)
+                .setClazzName(source.clazzName)
+                .setImage(source.image)
+                .setLocked(source.locked)
+                .setReadOnly(source.readOnly)
+                .setRestrictedByPerm(source.restrictedByPerm)
+                .setVisible(source.visible);
     }
 }

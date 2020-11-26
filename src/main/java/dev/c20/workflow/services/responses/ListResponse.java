@@ -1,51 +1,65 @@
-package dev.c20.workflow.services;
+package dev.c20.workflow.services.responses;
 
-import dev.c20.workflow.entities.Storage;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StorageResponse {
+public class ListResponse {
 
     private boolean error = false;
     private String errorDescription = "";
-    private List<Storage> storages = new ArrayList<>();
+    private List<Object> data = new ArrayList<>();
     private int listCount = 0;
     private int currentPage = 0;
     private int pageCount = 10;
 
-    public StorageResponse( Storage storage) {
-        if( storage == null ) {
+    public ListResponse( ) {
+
+    }
+
+    public ListResponse(String errorDescription) {
+        this.error = true;
+        this.errorDescription = errorDescription;
+        return;
+    }
+
+    public ListResponse(Object obj) {
+        if( obj == null ) {
             this.error = true;
             this.errorDescription = "No existe";
             return;
         }
 
-        this.storages.add(storage);
+        this.data.add(obj);
         this.listCount = 1;
         this.currentPage = 1;
         this.pageCount = 1;
     }
 
-    public StorageResponse( List<Storage> storages, int currentPage, int pageCount) {
-        if( storages == null ) {
+    public ListResponse(List<Object> objs, int currentPage, int pageCount) {
+        if( objs == null ) {
             this.error = true;
             this.errorDescription = "No hay información";
             return;
         }
 
-        this.storages = storages;
-        this.listCount = storages.size();
+        this.data = objs;
+        this.listCount = objs.size();
         this.currentPage = currentPage;
         this.pageCount = pageCount;
     }
 
-    public ResponseEntity<StorageResponse> ok() {
+    public ResponseEntity<ListResponse> response() {
+
+        return this.error ? error() : ok();
+    }
+
+    public ResponseEntity<ListResponse> ok() {
         return ResponseEntity.ok(this);
     }
 
-    public ResponseEntity<StorageResponse> error() {
+    public ResponseEntity<ListResponse> error() {
         return ResponseEntity.badRequest().body(this);
     }
 
@@ -53,7 +67,7 @@ public class StorageResponse {
         return error;
     }
 
-    public StorageResponse setError(boolean error) {
+    public ListResponse setError(boolean error) {
         this.error = error;
         return this;
     }
@@ -62,17 +76,17 @@ public class StorageResponse {
         return errorDescription;
     }
 
-    public StorageResponse setErrorDescription(String errorDescription) {
+    public ListResponse setErrorDescription(String errorDescription) {
         this.errorDescription = errorDescription;
         return this;
     }
 
-    public List<Storage> getStorages() {
-        return storages;
+    public List<Object> getData() {
+        return data;
     }
 
-    public StorageResponse setStorages(List<Storage> storages) {
-        this.storages = storages;
+    public ListResponse setData(List<Object> data) {
+        this.data = data;
         return this;
     }
 
@@ -80,7 +94,7 @@ public class StorageResponse {
         return listCount;
     }
 
-    public StorageResponse setListCount(int listCount) {
+    public ListResponse setListCount(int listCount) {
         this.listCount = listCount;
         return this;
     }
@@ -89,7 +103,7 @@ public class StorageResponse {
         return currentPage;
     }
 
-    public StorageResponse setCurrentPage(int currentPage) {
+    public ListResponse setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
         return this;
     }
@@ -98,7 +112,7 @@ public class StorageResponse {
         return pageCount;
     }
 
-    public StorageResponse setPageCount(int pageCount) {
+    public ListResponse setPageCount(int pageCount) {
         this.pageCount = pageCount;
         return this;
     }
