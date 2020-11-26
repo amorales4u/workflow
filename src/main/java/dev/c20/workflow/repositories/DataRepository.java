@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface DataRepository extends JpaRepository<Data, Long> {
 
-    @Query( "select o from Value o where o.parent = ?1 ")
-    public Data getByParent(Storage parent);
+    @Query( "select o from Data o where o.parent = ?1 ")
+    public Data getByParent(Long parent);
 
 
 }

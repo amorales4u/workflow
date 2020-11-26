@@ -107,20 +107,6 @@ public class StorageService {
         return null;
     }
 
-    public StorageResponse setSecurity(Storage storage) {
-        String path = PathUtils.getPathFromLevel(httpRequest.getContextPath(),4);
-        if( path == null ) {
-            path = getPath();
-            if( path == null ) {
-                return new StorageResponse()
-                        .setError(true)
-                        .setErrorDescription("Es necesario el path");
-            }
-        }
-
-        return null;
-    }
-
     public boolean canCreate() {
         return hasPermition(true, null, null, null, true);
     }
@@ -598,7 +584,7 @@ public class StorageService {
 
         try {
             Data obj = new Data()
-                    .setParent(requestedStorage)
+                    .setParent(requestedStorage.getId())
                     .setData(StringUtils.toJSON(data));
             dataRepository.save(obj);
 
@@ -616,7 +602,7 @@ public class StorageService {
             return new ObjectResponse().setErrorDescription(error);
 
         try {
-            Data obj = dataRepository.getByParent(requestedStorage);
+            Data obj = dataRepository.getByParent(requestedStorage.getId());
             obj.setData(StringUtils.toJSON(data) );
             dataRepository.save(obj);
 
@@ -633,7 +619,7 @@ public class StorageService {
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
-        Data obj = dataRepository.getByParent(requestedStorage);
+        Data obj = dataRepository.getByParent(requestedStorage.getId());
 
         dataRepository.delete(obj);
 

@@ -1,9 +1,11 @@
 package dev.c20.workflow.entities.adds;
 
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.entities.Storage;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -12,9 +14,8 @@ import java.util.Objects;
 public class Data implements Serializable {
 
     @Id
-    @ManyToOne(targetEntity= Storage.class)
-    @JoinColumn( name=WorkflowApplication.DB_PREFIX + "STORAGE")
-    private Storage parent;
+    @Column( name=WorkflowApplication.DB_PREFIX + "STORAGE")
+    private Long parent;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "VALUE")
     private String data;
@@ -32,11 +33,11 @@ public class Data implements Serializable {
         return Objects.hash(parent);
     }
 
-    public Storage getParent() {
+    public Long getParent() {
         return parent;
     }
 
-    public Data setParent(Storage parent) {
+    public Data setParent(Long parent) {
         this.parent = parent;
         return this;
     }
