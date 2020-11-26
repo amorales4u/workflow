@@ -3,6 +3,7 @@ package dev.c20.workflow.rest;
 import dev.c20.workflow.entities.Storage;
 import dev.c20.workflow.entities.adds.Attach;
 import dev.c20.workflow.entities.adds.Note;
+import dev.c20.workflow.entities.adds.Perm;
 import dev.c20.workflow.entities.adds.Value;
 import dev.c20.workflow.services.StorageService;
 import dev.c20.workflow.tools.PathUtils;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -22,6 +24,11 @@ import java.util.Map;
 @RequestMapping("/storage")
 
 public class StorageRest {
+
+    // POST Create
+    // PUT Update
+    // GET Read
+    // DELETE delete
 
     //Logger logger = Logger.getLogger(StorageRest.class.getName());
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -37,12 +44,16 @@ public class StorageRest {
         return ResponseEntity.ok(map);
     }
 
-    @PostMapping("/test")
-    ResponseEntity<?> test(@RequestBody Storage storage) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("version", "2020/11/25");
-        map.put("entity", storage);
-        return ResponseEntity.ok(map);
+    @PutMapping("/test")
+    ResponseEntity<?> test(@RequestBody Storage storage) throws Exception {
+        String key = "EjEm92-0.12rtyuo";
+        String source = "Hola Mundo!";
+        String target = StringUtils.encrypt(source,key);
+
+        System.out.println( source );
+        System.out.println( target );
+        System.out.println( StringUtils.decrypt(target,key) );
+        return ResponseEntity.ok(StringUtils.decrypt(target,key));
     }
 
 
@@ -56,7 +67,7 @@ public class StorageRest {
 
     }
 
-    @PutMapping("/folder/**")
+    @PostMapping("/folder/**")
     ResponseEntity<?> createFolder( Storage storage, HttpServletRequest request) throws Exception {
 
         return storageService
@@ -74,7 +85,7 @@ public class StorageRest {
                 .response();
     }
 
-    @PostMapping("/folder/**")
+    @PutMapping("/folder/**")
     ResponseEntity<?> updateStorage(@RequestBody Storage storage, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -92,7 +103,7 @@ public class StorageRest {
 
     }
 
-    @PutMapping("/file/**")
+    @PostMapping("/file/**")
     ResponseEntity<?> createFile(Storage storage, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -100,7 +111,7 @@ public class StorageRest {
                 .response();
     }
 
-    @PostMapping("/file/**")
+    @PutMapping("/file/**")
     ResponseEntity<?> updateFile(Storage storage,HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -116,7 +127,7 @@ public class StorageRest {
                 .response();
     }
 
-    @PutMapping("/note/**")
+    @PostMapping("/note/**")
     ResponseEntity<?> createNote(@RequestBody Note note, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -134,7 +145,7 @@ public class StorageRest {
 
     }
 
-    @PutMapping("/log/**")
+    @PostMapping("/log/**")
     ResponseEntity<?> createLog(@RequestBody dev.c20.workflow.entities.adds.Log log, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -161,7 +172,7 @@ public class StorageRest {
 
     }
 
-    @PutMapping("/value/**")
+    @PostMapping("/value/**")
     ResponseEntity<?> createValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -170,7 +181,7 @@ public class StorageRest {
 
     }
 
-    @PostMapping("/value/**")
+    @PutMapping("/value/**")
     ResponseEntity<?> updateValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -198,16 +209,16 @@ public class StorageRest {
 
     }
 
-    @PutMapping("/attach/**")
-    ResponseEntity<?> createAttach(@RequestBody Attach attach, HttpServletRequest request) throws Exception {
+    @PostMapping("/attach/**")
+    ResponseEntity<?> createAttach(@RequestParam("files") MultipartFile[] files, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .addAttach(attach)
+                .addAttach(files)
                 .response();
 
     }
 
-    @PostMapping("/attach/**")
+    @PutMapping("/attach/**")
     ResponseEntity<?> updateAttach(@RequestBody Attach attach, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -225,7 +236,15 @@ public class StorageRest {
 
     }
 
-    @PutMapping("/data/**")
+    @GetMapping("/data/**")
+    ResponseEntity<?> getData( HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .getData()
+                .response();
+    }
+
+    @PostMapping("/data/**")
     ResponseEntity<?> createData(@RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -233,7 +252,7 @@ public class StorageRest {
                 .response();
     }
 
-    @PostMapping("/data/**")
+    @PutMapping("/data/**")
     ResponseEntity<?> updateData(@RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
@@ -248,5 +267,38 @@ public class StorageRest {
                 .deleteData()
                 .response();
     }
+
+    @GetMapping("/perm/**")
+    ResponseEntity<?> getPerm( HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .getPerms()
+                .response();
+    }
+
+    @PostMapping("/perm/**")
+    ResponseEntity<?> createPerm(@RequestBody Perm perm, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .addPerm(perm)
+                .response();
+    }
+
+    @PutMapping("/perm/**")
+    ResponseEntity<?> updatePerm(@RequestBody Perm data, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .updatePerm(data)
+                .response();
+    }
+
+    @DeleteMapping("/perm/**")
+    ResponseEntity<?> deletePerm(@RequestBody Perm data, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .deletePerm(data)
+                .response();
+    }
+
 
 }

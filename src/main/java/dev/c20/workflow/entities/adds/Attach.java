@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name=WorkflowApplication.DB_PREFIX + "STG_FILE")
+@Table(name=WorkflowApplication.DB_PREFIX + "STG_ATTACH")
 public class Attach {
 
     @Id

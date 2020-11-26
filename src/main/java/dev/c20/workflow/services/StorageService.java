@@ -8,7 +8,9 @@ import dev.c20.workflow.tools.PathUtils;
 import dev.c20.workflow.tools.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
@@ -16,10 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class StorageService {
@@ -53,6 +52,9 @@ public class StorageService {
 
     @Autowired
     DataRepository dataRepository;
+
+    @Autowired
+    FileDBStorageService fileDBStorageService;
 
     private String user = null;
     private String path = null;
@@ -521,21 +523,35 @@ public class StorageService {
 
     }
 
-    public ObjectResponse addAttach(Attach attach) {
+    public ListResponse addAttach(MultipartFile[] attachments) {
         String error = getStorageForAdds();
         if( error != null )
-            return new ObjectResponse().setErrorDescription(error);
+            return new ListResponse().setErrorDescription(error);
 
-        Attach obj = new Attach()
-                .setParent(requestedStorage)
-                .setFile(attach.getFile())
-                .setModified(new Date())
-                .setModifier(this.user)
-                .setName(attach.getName());
+        List<Attach> attached = new ArrayList<>();
 
-        attachRepository.save(obj);
+        try {
 
-        return new ObjectResponse(obj);
+            Arrays.asList(attachments).stream().forEach(file -> {
+                Long fileId = fileDBStorageService.save(file,"12121213131");
+                Attach obj = new Attach()
+                        .setParent(requestedStorage)
+                        .setFile(fileId)
+                        .setModified(new Date())
+                        .setModifier(this.user)
+                        .setName(file.getOriginalFilename());
+                attached.add(obj);
+                attachRepository.save(obj);
+            });
+
+            return new ListResponse(attached);
+        } catch (Exception e) {
+            logger.error(e);
+            //e.printStackTrace(logger.)
+            return new ListResponse().setErrorDescription("Fail to upload files!");
+        }
+
+
 
     }
 
@@ -574,7 +590,13 @@ public class StorageService {
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
-        return new ObjectResponse(attachRepository.getAll(requestedStorage));
+        Data data = dataRepository.getByParent(requestedStorage.getId());
+        try {
+            Object obj = StringUtils.JSONFromString(data.getData());
+            return new ObjectResponse(obj);
+        } catch( Exception ex ) {
+            return new ObjectResponse().setErrorDescription("Error al convertir String a JSON");
+        }
 
     }
 

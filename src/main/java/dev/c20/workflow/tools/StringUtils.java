@@ -1,11 +1,22 @@
 package dev.c20.workflow.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.result.Output;
 
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.SecretKey;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.Key;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.HttpServletRequest;
-import java.net.URLDecoder;
+//import javax.servlet.http.HttpServletRequest;
+//import java.net.URLDecoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class StringUtils {
@@ -507,40 +518,23 @@ public class StringUtils {
         return buffer1.toString();
     }
 
-    public static String encrypt(String strClearText,String strKey) throws Exception{
-        String strData="";
-
-        try {
-            SecretKeySpec skeyspec=new SecretKeySpec(strKey.getBytes(),"Blowfish");
-            Cipher cipher=Cipher.getInstance("Blowfish");
-            cipher.init(Cipher.ENCRYPT_MODE, skeyspec);
-            byte[] encrypted=cipher.doFinal(strClearText.getBytes());
-            strData=new String(encrypted);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e);
+    public static String SHA256(String text, int length ) throws Exception {
+        String result;
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(text.getBytes("UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        byte[] digest = md.digest();
+        for( byte b : digest ) {
+            sb.append( String.format("%02x",b)); // Convert to HEX
         }
-        return strData;
-    }
-
-    public static String decrypt(String strEncrypted,String strKey) throws Exception{
-        String strData="";
-
-        try {
-            SecretKeySpec skeyspec=new SecretKeySpec(strKey.getBytes(),"Blowfish");
-            Cipher cipher=Cipher.getInstance("Blowfish");
-            cipher.init(Cipher.DECRYPT_MODE, skeyspec);
-            byte[] decrypted=cipher.doFinal(strEncrypted.getBytes());
-            strData=new String(decrypted);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e);
+        if( length > sb.toString().length() ) {
+            result = sb.toString();
+        } else {
+            result = sb.toString().substring(0,length);
         }
-        return strData;
+        return result;
     }
-
+/*
     public static String getPathFromURI( String basePath, HttpServletRequest request) {
         try {
             String path = request.getRequestURI().substring((request.getContextPath() + basePath).length());
@@ -548,6 +542,13 @@ public class StringUtils {
         } catch( Exception ex ) {
             return null;
         }
+    }
+*/
+    public static Object JSONFromString( String data ) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.readValue(data,Object.class);
+
     }
 
     public static String toJSON( Object map ) throws Exception {
@@ -566,5 +567,108 @@ public class StringUtils {
         return jsonResult;
     }
 
+    private static SecretKeySpec secretKey;
+    private static byte[] key;
+
+    public static void setKey(String myKey)
+    {
+        MessageDigest sha = null;
+        try {
+            key = myKey.getBytes("UTF-8");
+            sha = MessageDigest.getInstance("SHA-1");
+            key = sha.digest(key);
+            key = Arrays.copyOf(key, 16);
+            secretKey = new SecretKeySpec(key, "AES");
+        }
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String encrypt(String strToEncrypt, String secret)
+    {
+        try
+        {
+            setKey(secret);
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error while encrypting: " + e.toString());
+        }
+        return null;
+    }
+
+    public static String decrypt(String strToDecrypt, String secret)
+    {
+        try
+        {
+            setKey(secret);
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error while decrypting: " + e.toString());
+        }
+        return null;
+    }
+
+    public static InputStream encrypt(InputStream strToEncrypt, String secret)
+    {
+        try
+        {
+            setKey(secret);
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            InputStream output = new CipherInputStream(strToEncrypt, cipher);
+            return output;
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error while encrypting: " + e.toString());
+        }
+        return null;
+    }
+
+    public static OutputStream decrypt(OutputStream strToDecrypt, String secret)
+    {
+        try
+        {
+            setKey(secret);
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            OutputStream output = new CipherOutputStream(strToDecrypt, cipher);
+            return output;
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error while decrypting: " + e.toString());
+        }
+        return null;
+    }
+
+    static public void main(String[] args) throws Exception {
+
+        //final String secretKey = "ssshhhhhhhhhhh!!!!";
+        final String secretKey = "Ch1sasComoAsiSiJalaCon una LLave mas laraga";
+
+        String originalString = "howtodoinjava.com";
+        String encryptedString = encrypt(originalString, secretKey) ;
+        String decryptedString = decrypt(encryptedString, secretKey) ;
+
+        System.out.println(originalString);
+        System.out.println(encryptedString);
+        System.out.println(decryptedString);
+
+
+
+    }
 
 }
