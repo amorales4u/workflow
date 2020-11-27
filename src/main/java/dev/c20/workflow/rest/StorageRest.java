@@ -310,36 +310,32 @@ public class StorageRest {
                 .response();
     }
 
-    @PostMapping("/download/")
-    ResponseEntity<?> downloadFile(@RequestBody List<Long> files, HttpServletRequest request) throws Exception {
+    @GetMapping("/download/{file}/{fileName}")
+    ResponseEntity<?> downloadFile(@PathVariable("fileName") String fileName, @PathVariable("file") Long file, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .downloadFiles(files)
-                .response();
+                .downloadFile(fileName,file);
     }
 
     @PostMapping("/upload/")
-    ResponseEntity<?> uploadFile(@RequestParam("files") MultipartFile[] files, HttpServletRequest request) throws Exception {
+    ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .uploadFiles(files)
-                .response();
+                .uploadFile(file);
     }
 
-    @PutMapping("/upload/")
-    ResponseEntity<?> updateFile(@RequestParam("files") MultipartFile[] files, HttpServletRequest request) throws Exception {
+    @PutMapping("/upload/{file}")
+    ResponseEntity<?> updateFile(@PathVariable("file") Long fileId, MultipartFile file, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .updateFiles(files)
-                .response();
+                .updateFile(file,fileId);
     }
 
-    @DeleteMapping("/upload/")
-    ResponseEntity<?> updateFile(@RequestParam("files") MultipartFile[] files, HttpServletRequest request) throws Exception {
+    @DeleteMapping("/upload/{file}")
+    ResponseEntity<?> updateFile(@PathVariable("file") Long file, HttpServletRequest request) throws Exception {
         return storageService
                 .setHttpServletRequest(request)
-                .deleteFiles(files)
-                .response();
+                .deleteFile(file);
     }
 
 

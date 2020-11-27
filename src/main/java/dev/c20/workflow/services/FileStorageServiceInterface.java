@@ -10,9 +10,10 @@ public interface FileStorageServiceInterface {
     public void init();
 
     public Long save(MultipartFile file, String key);
+    public Long save(MultipartFile file, String key, Long fileId);
 
-    public OutputStream load(String filename, Long fileId, String key);
+    public byte[] load(String filename, Long fileId, String key);
 
-    public void delete(String fileName, Long fileId);
+    public Long delete(String fileName, Long fileId);
 
 }

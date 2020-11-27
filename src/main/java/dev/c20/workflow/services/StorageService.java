@@ -531,7 +531,7 @@ public class StorageService {
         if( error != null )
             return new ObjectResponse().setErrorDescription(error).error();
 
-        OutputStream file = fileDBStorageService.load(null, attach.getId(), "la llabe");
+        byte[] file = fileDBStorageService.load(null, attach.getId(), "la llabe");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attach.getName());
@@ -670,6 +670,49 @@ public class StorageService {
 
         return new ObjectResponse(obj);
 
+    }
+
+    public  ResponseEntity<?>  downloadFile( String fileName, Long fileId ) {
+
+        byte[] file = fileDBStorageService.load(null, fileId, "la llabe");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                //.contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(file);
+
+    }
+
+    public  ResponseEntity<?>  uploadFile( MultipartFile file) {
+
+        Long fileId = fileDBStorageService.save(file,"la llabe");
+        if( fileId == -1 )
+            ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok().body(fileId);
+    }
+
+    public  ResponseEntity<?>  updateFile( MultipartFile file, Long fileId ) {
+
+        Long fileSavedId = fileDBStorageService.save(file,"la llabe", fileId);
+        if( fileSavedId == -1 )
+            ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok().body(fileSavedId);
+    }
+
+    public  ResponseEntity<?>  deleteFile( Long file ) {
+
+        Long fileSavedId = fileDBStorageService.delete(null,file);
+
+        if( fileSavedId == -1 )
+            ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok().body(fileSavedId);
     }
 
 }

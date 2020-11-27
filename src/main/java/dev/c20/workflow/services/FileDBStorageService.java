@@ -1,8 +1,10 @@
 package dev.c20.workflow.services;
 
 import dev.c20.workflow.entities.adds.DBFile;
+import dev.c20.workflow.repositories.DBFileRepository;
 import dev.c20.workflow.tools.StringUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +26,11 @@ public class FileDBStorageService implements FileStorageServiceInterface {
     @Autowired
     EntityManager em;
 
+    @Autowired
+    DBFileRepository dbFileRepository;
+
+    protected final org.apache.commons.logging.Log logger = LogFactory.getLog(this.getClass());
+
     @Override
     public void init() {
 
@@ -32,45 +40,76 @@ public class FileDBStorageService implements FileStorageServiceInterface {
 
     @Override
     public Long save(MultipartFile file, String key) {
+        return save( file, key, -1l );
+    }
+
+    @Override
+    public Long save(MultipartFile file, String key,Long fileId)  {
         try {
 
             DBFile dbFile = new DBFile();
+            if( fileId != -1 ) {
+                dbFile = dbFileRepository.getOne(fileId);
+
+                if( dbFile == null )
+                    return -1l;
+            }
             //Blob blob = BlobProxy.generateProxy(file.getInputStream());
-            dbFile.setFile(IOUtils.toByteArray(StringUtils.encrypt( file.getInputStream(), secretKey)));
-            em.persist(dbFile);
+            ByteArrayOutputStream encrypted = StringUtils.encrypt( file.getInputStream(), secretKey);
+            dbFile.setFile(encrypted.toByteArray());
+            dbFileRepository.save(dbFile);
             return dbFile.getId();
         } catch( Exception ex ) {
+            logger.error(ex);
+
             return -1l;
         }
     }
 
     @Override
-    public OutputStream load(String filename, Long fileId, String key) {
+    public byte[] load(String filename, Long fileId, String key) {
         try {
             DBFile dbFile = null;
             try {
-                dbFile = (DBFile)em.createQuery("select o from DBFile o where o.id =?1")
-                        .setParameter(1,fileId)
-                        .getSingleResult();
+                dbFile = dbFileRepository.getOne(fileId);
                 if( dbFile !=  null ) {
-                    ByteArrayOutputStream output = new ByteArrayOutputStream( dbFile.getFile().length );
-                    output.write(dbFile.getFile(),0,dbFile.getFile().length);
-                    OutputStream result = StringUtils.decrypt(output,secretKey);
-                    return result;
+                    ByteArrayInputStream input = new ByteArrayInputStream(dbFile.getFile());
+
+                    ByteArrayOutputStream result = StringUtils.decrypt(input,secretKey);
+                    return result.toByteArray();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
+                logger.error(e);
             }
         } catch( Exception ex ) {
             ex.printStackTrace();
+            logger.error(ex);
         }
         return null;
     }
 
     @Override
-    public void delete(String fileName, Long fileId) {
+    public Long delete(String fileName, Long fileId) {
+        try {
+            DBFile dbFile = null;
+            try {
+                dbFile = dbFileRepository.getOne(fileId);
+                if( dbFile !=  null ) {
+                    dbFileRepository.delete(dbFile);
+                }
 
+                return fileId;
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error(e);
+            }
+        } catch( Exception ex ) {
+            ex.printStackTrace();
+            logger.error(ex);
+        }
+        return null;
     }
 
 }

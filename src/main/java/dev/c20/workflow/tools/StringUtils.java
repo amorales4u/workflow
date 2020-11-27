@@ -7,9 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.SecretKey;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.security.Key;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -620,14 +618,21 @@ public class StringUtils {
         return null;
     }
 
-    public static InputStream encrypt(InputStream strToEncrypt, String secret)
+    public static ByteArrayOutputStream encrypt(InputStream strToEncrypt, String secret)
     {
         try
         {
             setKey(secret);
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            InputStream output = new CipherInputStream(strToEncrypt, cipher);
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            CipherOutputStream cos = new CipherOutputStream(output, cipher);
+            byte[] block = new byte[32];
+            int i;
+            while ((i = strToEncrypt.read(block)) != -1) {
+                cos.write(block, 0, i);
+            }
+            cos.close();
             return output;
         }
         catch (Exception e)
@@ -637,14 +642,21 @@ public class StringUtils {
         return null;
     }
 
-    public static OutputStream decrypt(OutputStream strToDecrypt, String secret)
+    public static ByteArrayOutputStream decrypt(InputStream strToDecrypt, String secret)
     {
         try
         {
             setKey(secret);
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            OutputStream output = new CipherOutputStream(strToDecrypt, cipher);
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            CipherOutputStream cos = new CipherOutputStream(output, cipher);
+            byte[] block = new byte[32];
+            int i;
+            while ((i = strToDecrypt.read(block)) != -1) {
+                cos.write(block, 0, i);
+            }
+            cos.close();
             return output;
         }
         catch (Exception e)

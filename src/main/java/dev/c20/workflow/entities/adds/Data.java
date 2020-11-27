@@ -17,7 +17,7 @@ public class Data implements Serializable {
     @Column( name=WorkflowApplication.DB_PREFIX + "STORAGE")
     private Long parent;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "VALUE")
+    @Column(name=WorkflowApplication.DB_PREFIX + "VALUE", length = 32000)
     private String data;
 
     @Override
