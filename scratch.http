@@ -1,0 +1,131 @@
+GET http://localhost:8089/workflow/storage/version
+Content-Type: application/json
+
+<> 2020-11-25T051146.200.json
+<> 2020-11-25T045215.200.json
+<> 2020-11-25T045031.200.json
+<> 2020-11-25T044620.200.json
+<> 2020-11-25T043817.200.json
+<> 2020-11-25T043751.404.json
+###
+
+POST http://localhost:8089/workflow/storage/test
+Content-Type: application/json
+
+{
+  "image": "imagen1",
+  "clazzName": "la clase"
+}
+
+<> 2020-11-25T045226.200.json
+<> 2020-11-25T045122.200.json
+
+###
+
+PUT http://localhost:8089/workflow/authenticate
+Content-Type: application/json
+
+{ "username": "javainuse",
+"password": "password"
+}
+
+<> 2020-11-24T060611.404.json
+<> 2020-11-23T044433.200.json
+<> 2020-11-23T044415.415.json
+###
+
+GET http://localhost:8089/workflow/storage/read/Workflows/
+
+<> 2020-11-25T053235.200.json
+<> 2020-11-25T053057.400.json
+<> 2020-11-25T052744.500.json
+<> 2020-11-25T052531.500.json
+<> 2020-11-25T052351.404.json
+###
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+<> 2020-11-26T010824.200.json
+<> 2020-11-25T053042.200.json
+<> 2020-11-25T051826.200.json
+<> 2020-11-25T051417.200.json
+<> 2020-11-25T014138.400.json
+<> 2020-11-25T013547.200.json
+<> 2020-11-25T013056.500.json
+<> 2020-11-25T013007.200.json
+<> 2020-11-25T012639.200.json
+<> 2020-11-25T012622.200.json
+<> 2020-11-25T012006.200.json
+<> 2020-11-25T011808.200.json
+###
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/Demo 1/Solicitud Terminada/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+<> 2020-11-27T114634.200.json
+<> 2020-11-27T114611.200.json
+<> 2020-11-27T114559.200.json
+<> 2020-11-27T114533.200.json
+<> 2020-11-27T114524.200.json
+<> 2020-11-27T114513.200.json
+<> 2020-11-27T114457.200.json
+<> 2020-11-26T010835.200.json
+<> 2020-11-25T014203.400.json
+<> 2020-11-25T014157.200.json
+<> 2020-11-25T011651.400.json
+<> 2020-11-25T011607.400.json
+<> 2020-11-25T011328.400.json
+<> 2020-11-25T011018.200.json
+<> 2020-11-25T113802.400.json
+<> 2020-11-25T113645.400.json
+<> 2020-11-25T113616.400.json
+<> 2020-11-25T113442.400.json
+<> 2020-11-25T113304.400.json
+<> 2020-11-25T111317.400.json
+<> 2020-11-23T054602.200.json
+<> 2020-11-23T051852.403.json
+<> 2020-11-23T051815.403.json
+<> 2020-11-23T051743.200.json
+<> 2020-11-23T051724.200.json
+<> 2020-11-23T051625.200.json
+<> 2020-11-23T044911.200.json
+<> 2020-11-23T044838.200.json
+<> 2020-11-23T044814.200.json
+<> 2020-11-23T044810.200.json
+<> 2020-11-23T044735.200.json
+<> 2020-11-23T044610.403.json
+<> 2020-11-23T044551.401.json
+<> 2020-11-23T044542.401.json
+<> 2020-11-23T044525.401.json
+
+###
+
+POST http://localhost:8089/workflow/storage/upload/
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="persistence.xml"
+
+// The 'input.txt' file will be uploaded
+< C:/develop/persistence.xml
+--boundary
+
+<> 2020-11-27T040719.200.json
+<> 2020-11-27T040254.200.json
+<> 2020-11-27T033657.200.json
+<> 2020-11-27T033219.200.json
+<> 2020-11-27T032936.200.json
+<> 2020-11-27T032904.400.json
+
+###
+
+
+GET http://localhost:8089/workflow/storage/download/3/ejemplo%2exml
+
+<> 2020-11-27T040727.200.txt
+<> 2020-11-27T040312.500.json
+<> 2020-11-27T033955.500.json
+<> 2020-11-27T033912.404.json
+<> 2020-11-27T033747.404.json
+###
