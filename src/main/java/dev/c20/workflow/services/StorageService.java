@@ -8,6 +8,8 @@ import dev.c20.workflow.tools.PathUtils;
 import dev.c20.workflow.tools.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
@@ -520,6 +523,24 @@ public class StorageService {
             return new ListResponse().setErrorDescription(error);
 
         return new ListResponse(attachRepository.getAll(requestedStorage));
+
+    }
+
+    public ResponseEntity<?> downloadAttach( Attach attach) {
+        String error = getStorageForAdds();
+        if( error != null )
+            return new ObjectResponse().setErrorDescription(error).error();
+
+        OutputStream file = fileDBStorageService.load(null, attach.getId(), "la llabe");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + attach.getName());
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                //.contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(file);
 
     }
 
