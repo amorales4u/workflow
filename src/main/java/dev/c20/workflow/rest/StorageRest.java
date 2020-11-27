@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -308,6 +309,39 @@ public class StorageRest {
                 .deletePerm(data)
                 .response();
     }
+
+    @PostMapping("/download/")
+    ResponseEntity<?> downloadFile(@RequestBody List<Long> files, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .downloadFiles(files)
+                .response();
+    }
+
+    @PostMapping("/upload/")
+    ResponseEntity<?> uploadFile(@RequestParam("files") MultipartFile[] files, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .uploadFiles(files)
+                .response();
+    }
+
+    @PutMapping("/upload/")
+    ResponseEntity<?> updateFile(@RequestParam("files") MultipartFile[] files, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .updateFiles(files)
+                .response();
+    }
+
+    @DeleteMapping("/upload/")
+    ResponseEntity<?> updateFile(@RequestParam("files") MultipartFile[] files, HttpServletRequest request) throws Exception {
+        return storageService
+                .setHttpServletRequest(request)
+                .deleteFiles(files)
+                .response();
+    }
+
 
 
 }
