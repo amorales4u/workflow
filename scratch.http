@@ -60,44 +60,65 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiO
 <> 2020-11-25T011808.200.json
 ###
 
-POST http://localhost:8089/workflow/storage/folder/Workflows/Demo 1/Solicitud Terminada/
+POST http://localhost:8089/workflow/storage/folder/Workflows/Seguimiento de Algo/
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
 
-<> 2020-11-27T114634.200.json
-<> 2020-11-27T114611.200.json
-<> 2020-11-27T114559.200.json
-<> 2020-11-27T114533.200.json
-<> 2020-11-27T114524.200.json
-<> 2020-11-27T114513.200.json
-<> 2020-11-27T114457.200.json
-<> 2020-11-26T010835.200.json
-<> 2020-11-25T014203.400.json
-<> 2020-11-25T014157.200.json
-<> 2020-11-25T011651.400.json
-<> 2020-11-25T011607.400.json
-<> 2020-11-25T011328.400.json
-<> 2020-11-25T011018.200.json
-<> 2020-11-25T113802.400.json
-<> 2020-11-25T113645.400.json
-<> 2020-11-25T113616.400.json
-<> 2020-11-25T113442.400.json
-<> 2020-11-25T113304.400.json
-<> 2020-11-25T111317.400.json
-<> 2020-11-23T054602.200.json
-<> 2020-11-23T051852.403.json
-<> 2020-11-23T051815.403.json
-<> 2020-11-23T051743.200.json
-<> 2020-11-23T051724.200.json
-<> 2020-11-23T051625.200.json
-<> 2020-11-23T044911.200.json
-<> 2020-11-23T044838.200.json
-<> 2020-11-23T044814.200.json
-<> 2020-11-23T044810.200.json
-<> 2020-11-23T044735.200.json
-<> 2020-11-23T044610.403.json
-<> 2020-11-23T044551.401.json
-<> 2020-11-23T044542.401.json
-<> 2020-11-23T044525.401.json
+###
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/Seguimiento de Algo/Inicio/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+POST http://localhost:8089/workflow/storage/folder/Workflows/Seguimiento de Algo/Autorización/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+POST http://localhost:8089/workflow/storage/folder/Workflows/Seguimiento de Algo/Aceptadas/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/Seguimiento de Algo/Rechazadas/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/Seguimiento de Algo/Envio de Correo/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/Alta de Accesos/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/Alta de Accesos/Inicio/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+POST http://localhost:8089/workflow/storage/folder/Workflows/Alta de Accesos/Autorización/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+POST http://localhost:8089/workflow/storage/folder/Workflows/Alta de Accesos/Aceptadas/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/Alta de Accesos/Rechazadas/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/Alta de Accesos/Envio de Correo/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+
+
+POST http://localhost:8089/workflow/storage/folder/Workflows/Demo 1/Solicitud Terminada/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
 
 ###
 
@@ -111,21 +132,10 @@ Content-Disposition: form-data; name="file"; filename="persistence.xml"
 < C:/develop/persistence.xml
 --boundary
 
-<> 2020-11-27T040719.200.json
-<> 2020-11-27T040254.200.json
-<> 2020-11-27T033657.200.json
-<> 2020-11-27T033219.200.json
-<> 2020-11-27T032936.200.json
-<> 2020-11-27T032904.400.json
 
 ###
 
 
 GET http://localhost:8089/workflow/storage/download/3/ejemplo%2exml
 
-<> 2020-11-27T040727.200.txt
-<> 2020-11-27T040312.500.json
-<> 2020-11-27T033955.500.json
-<> 2020-11-27T033912.404.json
-<> 2020-11-27T033747.404.json
 ###
