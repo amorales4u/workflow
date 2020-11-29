@@ -6,12 +6,10 @@ import dev.c20.workflow.entities.adds.Note;
 import dev.c20.workflow.entities.adds.Perm;
 import dev.c20.workflow.entities.adds.Value;
 import dev.c20.workflow.services.StorageService;
-import dev.c20.workflow.tools.PathUtils;
 import dev.c20.workflow.tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -58,6 +55,14 @@ public class StorageRest {
         return ResponseEntity.ok(StringUtils.decrypt(target,key));
     }
 
+
+    @PutMapping("/command/{command}/**")
+    ResponseEntity<?> runCommand( @PathVariable String command, @RequestBody String params, HttpServletRequest request) throws Exception {
+
+        return storageService
+                .setHttpServletRequest(request)
+                .runCommand(command, StringUtils.splitAsList(params," ", true));
+    }
 
     @GetMapping("/folder/**")
     ResponseEntity<?> getFolderStorage( HttpServletRequest request) throws Exception {

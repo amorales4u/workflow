@@ -25,6 +25,9 @@ public class Storage {
     @Column(name=WorkflowApplication.DB_PREFIX + "NAME" )
     private String name;
 
+    @Column(name=WorkflowApplication.DB_PREFIX + "EXTENSION" )
+    private String extension;
+
     @Column(name=WorkflowApplication.DB_PREFIX + "IMAGE")
     private String image;
 
@@ -205,6 +208,7 @@ public class Storage {
         this.path = path;
         this.isFolder = PathUtils.isFolder(path);
         this.name = PathUtils.getName(path);
+        this.extension = PathUtils.getExtension(path);
         this.level = PathUtils.getPathLevel(path);
         this.created = new Date();
         return this;
@@ -314,8 +318,37 @@ public class Storage {
         return this;
     }
 
+    public Boolean getFolder() {
+        return isFolder;
+    }
+
+    public Storage setFolder(Boolean folder) {
+        isFolder = folder;
+        return this;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public Storage setExtension(String extension) {
+        this.extension = extension;
+        return this;
+    }
+
+    public Storage setDateAssigned(Date dateAssigned) {
+        this.dateAssigned = dateAssigned;
+        return this;
+    }
+
+    public String getAssigned() {
+        return assigned;
+    }
+
+
     public Storage setPropertiesFrom( Storage source ) {
         return this.setAssigned(source.assigned)
+                .setExtension(source.extension)
                 .setChildrenRestrictedByPerm(source.childrenRestrictedByPerm)
                 .setClazzName(source.clazzName)
                 .setImage(source.image)

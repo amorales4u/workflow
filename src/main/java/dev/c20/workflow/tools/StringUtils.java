@@ -302,16 +302,16 @@ public class StringUtils {
         return str.split(splitter);
     }
 
-    /**
-     * Splits a String into substrings along the provided char delimiter and returns
-     * the result as a List of Substrings.<p>
-     *
-     * @param source the String to split
-     * @param delimiter the delimiter to split at
-     * @param trim flag to indicate if leading and trailing white spaces should be omitted
-     *
-     * @return the List of splitted Substrings
-     */
+        /**
+         * Splits a String into substrings along the provided char delimiter and returns
+         * the result as a List of Substrings.<p>
+         *
+         * @param source the String to split
+         * @param delimiter the delimiter to split at
+         * @param trim flag to indicate if leading and trailing white spaces should be omitted
+         *
+         * @return the List of splitted Substrings
+         */
     static public List<String> splitAsList(String source, char delimiter, boolean trim) {
 
         List<String> result = new ArrayList<>();

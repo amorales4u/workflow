@@ -6,6 +6,7 @@ import dev.c20.workflow.repositories.*;
 import dev.c20.workflow.services.responses.*;
 import dev.c20.workflow.tools.PathUtils;
 import dev.c20.workflow.tools.StringUtils;
+import org.apache.commons.cli.*;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +19,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
@@ -104,7 +106,8 @@ public class StorageService {
 
     public String getPath() {
 
-        String path = PathUtils.getPathFromLevel(httpRequest.getRequestURI(),4);
+        int level = httpRequest.getRequestURI().indexOf("/command/") != -1 ? 5 : 4;
+        String path = PathUtils.getPathFromLevel(httpRequest.getRequestURI(),level);
         try {
             path =  URLDecoder.decode(path, "UTF-8");
             return path;
@@ -115,34 +118,44 @@ public class StorageService {
     }
 
     public boolean canCreate() {
-        return hasPermition(true, null, null, null, true);
+        return hasPermition(true, null, null, null, true, false);
     }
 
     public boolean canRead() {
-        return hasPermition(false, true, null, null, true);
+        return hasPermition(false, true, null, null, true, false);
     }
 
     public boolean canUpdate() {
-        return hasPermition(false, false, true, null, true);
+        return hasPermition(false, false, true, null, true, false);
     }
 
     public boolean canDelete() {
-        return hasPermition(false, false, false, true, true);
+        return hasPermition(false, false, false, true, true, false);
     }
 
-    public boolean hasPermition(Boolean canCreate, Boolean canRead, Boolean canUpdate, Boolean canDelete, Boolean canAdmin) {
+    public boolean canAdmin() {
+        return hasPermition(false, null, null, null, true, false);
+    }
+
+    public boolean canSend() {
+        return hasPermition(false, null, null, null, true, true);
+    }
+
+
+    public boolean hasPermition(Boolean canCreate, Boolean canRead, Boolean canUpdate, Boolean canDelete, Boolean canAdmin, Boolean canSend) {
 
         if( this.user == null )
             return false;
 
         CriteriaBuilder qb = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq = qb.createQuery(Long.class);
-        Root<Perm> permition = cq.from(Perm.class);
-        Path<Boolean> createPath = permition.get("create");
-        Path<Boolean> readPath   = permition.get("read");
-        Path<Boolean> updatePath = permition.get("update");
-        Path<Boolean> deletePath = permition.get("delete");
-        Path<Boolean> adminPath  = permition.get("admin");
+        Root<Perm> perm = cq.from(Perm.class);
+        Path<Boolean> createPath = perm.get("create");
+        Path<Boolean> readPath   = perm.get("read");
+        Path<Boolean> updatePath = perm.get("update");
+        Path<Boolean> deletePath = perm.get("delete");
+        Path<Boolean> adminPath  = perm.get("admin");
+        Path<Boolean> sendPath  = perm.get("send");
 
 
         cq.select(qb.count(cq.from(Perm.class)));
@@ -164,6 +177,9 @@ public class StorageService {
         if( canAdmin != null )
             predicates.add( qb.and( qb.equal(adminPath,canAdmin)) );
 
+        if( canSend != null )
+            predicates.add( qb.and( qb.equal(sendPath,canSend)) );
+
         cq.where(
                 qb.and(
                         predicates.toArray(new Predicate[predicates.size()])
@@ -175,19 +191,19 @@ public class StorageService {
         return count > 0;
     }
 
-    public StorageResponse addFolder(Storage storage) {
+    public ObjectResponse addFolder(Storage storage) {
         if( !this.isFolder )
-            return new StorageResponse("En el path no se manda un folder");
+            return new ObjectResponse("En el path no se manda un folder");
         logger.info("addFolder:" + path);
 
         if( requestedStorage != null )
-            return new StorageResponse("Ya existe el folder");
+            return new ObjectResponse("Ya existe el folder");
 
         if( PathUtils.getPathLevel(this.path) > 0 && parentFolder == null )
-            return new StorageResponse("No existe el parent folder " + PathUtils.getParentFolder(this.path));
+            return new ObjectResponse("No existe el parent folder " + PathUtils.getParentFolder(this.path));
 
         if( parentFolder != null && parentFolder.getRestrictedByPerm() && !canCreate() )
-            return new StorageResponse("El usuario no tiene permisos para crear en " + PathUtils.getParentFolder(this.path));
+            return new ObjectResponse("El usuario no tiene permisos para crear en " + PathUtils.getParentFolder(this.path));
 
         requestedStorage = new Storage()
                 .setPath(this.path)
@@ -202,23 +218,23 @@ public class StorageService {
 
         storageRepository.save(requestedStorage);
 
-        return new StorageResponse(requestedStorage);
+        return new ObjectResponse(requestedStorage);
 
     }
 
-    public StorageResponse delStorage() {
+    public ObjectResponse delStorage() {
 
         if( requestedStorage == null )
-            return new StorageResponse("No existe el file/folder");
+            return new ObjectResponse("No existe el file/folder");
 
-        if( parentFolder.getRestrictedByPerm() && !canDelete() )
-            return new StorageResponse("El usuario no tiene permisos en el folder para eliminar en " + this.path);
+        if( parentFolder.getRestrictedByPerm() && ( !canDelete() || !canAdmin() ))
+            return new ObjectResponse("El usuario no tiene permisos en el folder para eliminar en " + this.path);
 
-        if( requestedStorage.getRestrictedByPerm()  && !canDelete() )
-            return new StorageResponse("El usuario no tiene permisos en el file para eliminar en " + this.path);
+        if( requestedStorage.getRestrictedByPerm()  && ( !canDelete() || !canAdmin() ))
+            return new ObjectResponse("El usuario no tiene permisos en el file para eliminar en " + this.path);
 
         if( requestedStorage.getDeleted() )
-            return new StorageResponse(requestedStorage);
+            return new ObjectResponse(requestedStorage);
 
         requestedStorage.setLocked(true)
                 .setVisible(false)
@@ -228,20 +244,20 @@ public class StorageService {
 
         storageRepository.save(requestedStorage);
 
-        return new StorageResponse(requestedStorage);
+        return new ObjectResponse(requestedStorage);
 
     }
 
-    public StorageResponse updateStorage(Storage request) {
+    public ObjectResponse updateStorage(Storage request) {
 
         if( requestedStorage == null )
-            return new StorageResponse("No existe el file/folder");
+            return new ObjectResponse("No existe el file/folder");
 
-        if( parentFolder.getRestrictedByPerm() && !canUpdate() )
-            return new StorageResponse("El usuario no tiene permisos en el folder para modificar en " + this.path);
+        if( parentFolder.getRestrictedByPerm() && ( !canUpdate() || !canAdmin() ))
+            return new ObjectResponse("El usuario no tiene permisos en el folder para modificar en " + this.path);
 
-        if( requestedStorage.getRestrictedByPerm()  && !canUpdate() )
-            return new StorageResponse("El usuario no tiene permisos en el file/folder para modificar en " + this.path);
+        if( requestedStorage.getRestrictedByPerm()  && ( !canUpdate() || !canAdmin() ))
+            return new ObjectResponse("El usuario no tiene permisos en el file/folder para modificar en " + this.path);
 
         if( request.getLocked() != null )
             requestedStorage.setLocked(request.getLocked());
@@ -266,43 +282,44 @@ public class StorageService {
 
         storageRepository.save(requestedStorage);
 
-        return new StorageResponse(requestedStorage);
+        return new ObjectResponse(requestedStorage);
 
     }
 
-    public StorageResponse getStorage(Boolean folder) {
+    public ObjectResponse getStorage(Boolean folder) {
         if( requestedStorage == null )
-            return new StorageResponse("No existe el file/folder");
+            return new ObjectResponse("No existe el file/folder");
 
-        if( requestedStorage.getLevel() > 0 && parentFolder.getRestrictedByPerm() && !canRead() )
-            return new StorageResponse("El usuario no tiene permisos en el folder para leer en " + this.path);
+        if( requestedStorage.getLevel() > 0 && parentFolder.getRestrictedByPerm() && ( !canRead() || !canAdmin() ) )
+            return new ObjectResponse("El usuario no tiene permisos en el folder para leer en " + this.path);
 
-        if( requestedStorage.getRestrictedByPerm()  && !canRead() )
-            return new StorageResponse("El usuario no tiene permisos en el file/folder para leer en " + this.path);
+
+        if( requestedStorage.getRestrictedByPerm()  && ( !canRead() || !canAdmin() ))
+            return new ObjectResponse("El usuario no tiene permisos en el file/folder para leer en " + this.path);
 
         if( requestedStorage.getIsFolder() != folder )
-            return new StorageResponse("file/folder no es del tipo solicitado " + this.path);
+            return new ObjectResponse("file/folder no es del tipo solicitado " + this.path);
 
         if( requestedStorage.getDeleted())
-            return new StorageResponse("file/folder eliminado " + this.path);
+            return new ObjectResponse("file/folder eliminado " + this.path);
 
-        return new StorageResponse(requestedStorage);
+        return new ObjectResponse(requestedStorage);
 
     }
 
-    public StorageResponse addFile(Storage storage) {
+    public ObjectResponse addFile(Storage storage) {
         if( this.isFolder )
-            return new StorageResponse("En el path no se manda un file");
+            return new ObjectResponse("En el path no se manda un file");
         logger.info("addFolder:" + path);
 
         if( requestedStorage != null )
-            return new StorageResponse("Ya existe el file");
+            return new ObjectResponse("Ya existe el file");
 
         if( parentFolder == null )
-            return new StorageResponse("No existe el parent folder " + PathUtils.getParentFolder(this.path));
+            return new ObjectResponse("No existe el parent folder " + PathUtils.getParentFolder(this.path));
 
-        if( parentFolder.getRestrictedByPerm() && !canCreate() )
-            return new StorageResponse("El usuario no tiene permisos para crear en " + PathUtils.getParentFolder(this.path));
+        if( parentFolder.getRestrictedByPerm() && ( !canCreate() || !canAdmin() ))
+            return new ObjectResponse("El usuario no tiene permisos para crear en " + PathUtils.getParentFolder(this.path));
 
         requestedStorage = new Storage()
                 .setPath(this.path)
@@ -317,11 +334,24 @@ public class StorageService {
 
         storageRepository.save(requestedStorage);
 
-        return new StorageResponse(requestedStorage);
+        return new ObjectResponse(requestedStorage);
 
     }
 
-    private String getStorageForAdds() {
+    private String getStorageForCreates() {
+        if( requestedStorage == null )
+            return "No existe el storage";
+
+        if( parentFolder != null && parentFolder.getRestrictedByPerm() && !canCreate() )
+            return "El usuario no tiene permisos para modificar en " + PathUtils.getParentFolder(this.path);
+
+        if( requestedStorage.getRestrictedByPerm() && !canCreate() )
+            return "El usuario no tiene permisos para modificar en " + PathUtils.getParentFolder(this.path);
+
+        return null;
+    }
+
+    private String getStorageForUpdates() {
         if( requestedStorage == null )
             return "No existe el storage";
 
@@ -347,6 +377,46 @@ public class StorageService {
         return null;
     }
 
+    private String getStorageForDeletes() {
+        if( requestedStorage == null )
+            return "No existe el storage";
+
+        if( parentFolder != null && parentFolder.getRestrictedByPerm() && !canDelete() )
+            return "El usuario no tiene permisos para modificar en " + PathUtils.getParentFolder(this.path);
+
+        if( requestedStorage.getRestrictedByPerm() && !canDelete() )
+            return "El usuario no tiene permisos para modificar en " + PathUtils.getParentFolder(this.path);
+
+        return null;
+    }
+
+    private String getStorageForAdmins() {
+        if( requestedStorage == null )
+            return "No existe el storage";
+
+        if( parentFolder != null && parentFolder.getRestrictedByPerm() && !canAdmin() )
+            return "El usuario no tiene permisos para administrar en " + PathUtils.getParentFolder(this.path);
+
+        if( requestedStorage.getRestrictedByPerm() && !canAdmin() )
+            return "El usuario no tiene permisos para administrar en " + PathUtils.getParentFolder(this.path);
+
+        return null;
+    }
+
+    private String getStorageForSenders() {
+        if( requestedStorage == null )
+            return "No existe el storage";
+
+        if( parentFolder != null && parentFolder.getRestrictedByPerm() && !canSend() )
+            return "El usuario no tiene permisos para administrar en " + PathUtils.getParentFolder(this.path);
+
+        if( requestedStorage.getRestrictedByPerm() && !canSend() )
+            return "El usuario no tiene permisos para administrar en " + PathUtils.getParentFolder(this.path);
+
+        return null;
+    }
+
+
     public ListResponse getNotes() {
         String error = getStorageForReads();
         if( error != null )
@@ -357,7 +427,7 @@ public class StorageService {
     }
 
     public ObjectResponse addNote(Note note) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -408,7 +478,7 @@ public class StorageService {
     }
 
     public ObjectResponse addValue(Value value) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -424,7 +494,7 @@ public class StorageService {
     }
 
     public ObjectResponse updateValue(Value value) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -439,7 +509,7 @@ public class StorageService {
     }
 
     public ObjectResponse deleteValue(Value value) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -464,7 +534,7 @@ public class StorageService {
 
 
     public ObjectResponse addPerm(Perm perm) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -484,7 +554,7 @@ public class StorageService {
     }
 
     public ObjectResponse updatePerm(Perm perm) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -504,7 +574,7 @@ public class StorageService {
     }
 
     public ObjectResponse deletePerm(Perm perm) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -527,7 +597,7 @@ public class StorageService {
     }
 
     public ResponseEntity<?> downloadAttach( Attach attach) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error).error();
 
@@ -545,7 +615,7 @@ public class StorageService {
     }
 
     public ListResponse addAttach(MultipartFile[] attachments) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ListResponse().setErrorDescription(error);
 
@@ -577,7 +647,7 @@ public class StorageService {
     }
 
     public ObjectResponse updateAttach(Attach attach) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -594,7 +664,7 @@ public class StorageService {
     }
 
     public ObjectResponse deleteAttach(Attach attach) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -622,7 +692,7 @@ public class StorageService {
     }
 
     public ObjectResponse addData(Map<String,Object> data) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -642,7 +712,7 @@ public class StorageService {
     }
 
     public ObjectResponse updateData(Map<String,Object> data) {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -660,7 +730,7 @@ public class StorageService {
     }
 
     public ObjectResponse deleteData() {
-        String error = getStorageForAdds();
+        String error = getStorageForUpdates();
         if( error != null )
             return new ObjectResponse().setErrorDescription(error);
 
@@ -713,6 +783,60 @@ public class StorageService {
             ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok().body(fileSavedId);
+    }
+
+    private String commandHelp( String commandName, Options options ) {
+        HelpFormatter formatter = new HelpFormatter();
+        StringWriter out = new StringWriter();
+        PrintWriter pw = new PrintWriter(out);
+
+        formatter.printHelp( pw,80, commandName, commandName + " options", options,
+                formatter.getLeftPadding(), formatter.getDescPadding(),
+                "list", true);
+        pw.flush();
+        logger.error( "Parsing failed.  Reason: No send command " + out.toString() );
+        return out.toString();
+
+    }
+    public ResponseEntity<?> runCommand(String command, List<String> arguments ) {
+
+        String error = getStorageForReads();
+        if( error != null )
+            return ResponseEntity.badRequest().body(error);
+
+        Options options = new Options();
+
+        logger.info("Command:"+command + " for storage: " + requestedStorage.getPath());
+
+        try {
+
+            options.addOption(new Option("ls", "list", false, "List directory."))
+                .addOption(new Option("r", "recursive", false, "Recursive list."))
+                .addOption(new Option("d", "directories", false, "List only directories."))
+                .addOption(new Option("f", "files", false, "List only files."))
+                .addOption(new Option("d", "sort-date", false, "List sort by date."))
+                .addOption(new Option("t", "sort-type", false, "List sort by type."));
+
+            String[] args = arguments.toArray(new String[0]);
+            CommandLineParser parser = new DefaultParser();
+            CommandLine cmd = parser.parse(options, args);
+            if( cmd.hasOption("list") ) {
+
+            } else {
+                String apiSyntax = commandHelp( command, options);
+                logger.error( "Command failed.  Reason: No send command " + apiSyntax );
+                return ResponseEntity.badRequest().body("Command failed.  No send command " + apiSyntax);
+            }
+            return ResponseEntity.ok().body("ok");
+        }catch( ParseException exp ) {
+            // oops, something went wrong
+            String apiSyntax = commandHelp( "List", options);
+            logger.error( "Parsing failed.  Reason: " + apiSyntax );
+            return ResponseEntity.badRequest().body("Parsing failed.  Reason: " + apiSyntax);
+        } catch( Exception ex ) {
+            logger.error(ex);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

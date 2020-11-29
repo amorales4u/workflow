@@ -29,6 +29,20 @@ public class PathUtils {
         return resource.substring(parent.lastIndexOf('/') + 1);
     }
 
+    static public String getExtension(String resource) {
+
+        if( isFolder(resource) ) {
+            return null;
+        }
+        String name = getName(resource);
+
+        if( name.indexOf(".") == -1 ) {
+            return null;
+        }
+
+        return name.substring(name.indexOf(".")+1);
+    }
+
     static public String getFolderPath(String resource) {
 
         return resource.substring(0, resource.lastIndexOf('/') + 1);

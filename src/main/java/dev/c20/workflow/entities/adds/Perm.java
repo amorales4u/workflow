@@ -23,20 +23,23 @@ public class Perm {
     @Column(name=WorkflowApplication.DB_PREFIX + "USER", length = 10)
     private String user;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "CREATE", length = 10)
+    @Column(name=WorkflowApplication.DB_PREFIX + "CREATE")
     private Boolean canCreate;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "READ", length = 10)
+    @Column(name=WorkflowApplication.DB_PREFIX + "READ")
     private Boolean canRead;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "UPDATE", length = 10)
+    @Column(name=WorkflowApplication.DB_PREFIX + "UPDATE")
     private Boolean canUpdate;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "DELETE", length = 10)
+    @Column(name=WorkflowApplication.DB_PREFIX + "DELETE")
     private Boolean canDelete;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "ADMIN", length = 10)
+    @Column(name=WorkflowApplication.DB_PREFIX + "ADMIN")
     private Boolean canAdmin;
+
+    @Column(name=WorkflowApplication.DB_PREFIX + "SEND")
+    private Boolean canSend;
 
     @Override
     public boolean equals(Object o) {
@@ -119,6 +122,15 @@ public class Perm {
 
     public Perm setCanRead(Boolean canRead) {
         this.canRead = canRead;
+        return this;
+    }
+
+    public Boolean getCanSend() {
+        return canSend;
+    }
+
+    public Perm setCanSend(Boolean canSend) {
+        this.canSend = canSend;
         return this;
     }
 
