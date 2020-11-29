@@ -1,12 +1,6 @@
 GET http://localhost:8089/workflow/storage/version
 Content-Type: application/json
 
-<> 2020-11-25T051146.200.json
-<> 2020-11-25T045215.200.json
-<> 2020-11-25T045031.200.json
-<> 2020-11-25T044620.200.json
-<> 2020-11-25T043817.200.json
-<> 2020-11-25T043751.404.json
 ###
 
 POST http://localhost:8089/workflow/storage/test
@@ -17,9 +11,6 @@ Content-Type: application/json
   "clazzName": "la clase"
 }
 
-<> 2020-11-25T045226.200.json
-<> 2020-11-25T045122.200.json
-
 ###
 
 PUT http://localhost:8089/workflow/authenticate
@@ -29,35 +20,15 @@ Content-Type: application/json
 "password": "password"
 }
 
-<> 2020-11-24T060611.404.json
-<> 2020-11-23T044433.200.json
-<> 2020-11-23T044415.415.json
 ###
 
 GET http://localhost:8089/workflow/storage/read/Workflows/
 
-<> 2020-11-25T053235.200.json
-<> 2020-11-25T053057.400.json
-<> 2020-11-25T052744.500.json
-<> 2020-11-25T052531.500.json
-<> 2020-11-25T052351.404.json
 ###
 
 POST http://localhost:8089/workflow/storage/folder/Workflows/
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
 
-<> 2020-11-26T010824.200.json
-<> 2020-11-25T053042.200.json
-<> 2020-11-25T051826.200.json
-<> 2020-11-25T051417.200.json
-<> 2020-11-25T014138.400.json
-<> 2020-11-25T013547.200.json
-<> 2020-11-25T013056.500.json
-<> 2020-11-25T013007.200.json
-<> 2020-11-25T012639.200.json
-<> 2020-11-25T012622.200.json
-<> 2020-11-25T012006.200.json
-<> 2020-11-25T011808.200.json
 ###
 
 POST http://localhost:8089/workflow/storage/folder/Workflows/Seguimiento de Algo/
@@ -137,5 +108,14 @@ Content-Disposition: form-data; name="file"; filename="persistence.xml"
 
 
 GET http://localhost:8089/workflow/storage/download/3/ejemplo%2exml
+
+###
+
+###
+
+PUT http://localhost:8089/workflow/storage/command/list/Workflows/
+Content-Type: application/json
+
+"ld"
 
 ###
