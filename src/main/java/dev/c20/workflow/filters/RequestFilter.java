@@ -26,6 +26,8 @@ public class RequestFilter  extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("IN  ContentCachingFilter ");
         CachedBodyHttpServletRequest cachedBodyHttpServletRequest = new CachedBodyHttpServletRequest(httpServletRequest);
+        String body = IOUtils.toString(cachedBodyHttpServletRequest.getReader());
+        body.replaceAll("(?i)<(/?script[^>]*)>", "&lt;$1&gt;");
         System.err.println("Cache Request:" + IOUtils.toString(cachedBodyHttpServletRequest.getReader()));
         filterChain.doFilter(cachedBodyHttpServletRequest, httpServletResponse);
 

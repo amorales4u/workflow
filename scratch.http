@@ -1,9 +1,18 @@
+PUT http://localhost:8089/workflow/auth/
+Content-Type: application/json
+
+{
+  "user": "amorales"
+}
+
+###
+
 GET http://localhost:8089/workflow/storage/version
 Content-Type: application/json
 
 ###
 
-POST http://localhost:8089/workflow/storage/test
+PUT http://localhost:8089/workflow/storage/test
 Content-Type: application/json
 
 {
@@ -22,7 +31,17 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8089/workflow/storage/read/Workflows/
+POST http://localhost:8089/workflow/storage/folder/Catálogos/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+
+POST http://localhost:8089/workflow/storage/folder/Catálogos/Usuarios/
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiOiJBQixDRCxFRixHIiwiR1JVUE9TIjoi77-9JmLvv71cdTAwMUbvv718We-_ve-_ve-_ve-_vVx1MDAwMu-_ve-_vWEiLCJleHAiOjE2MDYxODk0NzMsImlhdCI6MTYwNjE3MTQ3M30.8nTScyt56mX0Pjtlsg_rcvrQ-MnlhkrpwyPy7Ja_DymfFQZrdruDMQ-_Zp_MfZXlWLuzyUvJqdN6Bf8alAs6Jg
+
+###
+
+GET http://localhost:8089/workflow/storage/folder/Workflows/
 
 ###
 
@@ -113,8 +132,9 @@ GET http://localhost:8089/workflow/storage/download/3/ejemplo%2exml
 
 ###
 
-PUT http://localhost:8089/workflow/storage/command/list/Workflows/
+PUT http://localhost:8089/workflow/commands/list/Workflows/
 Content-Type: application/json
+Authorization: token ZKZJ/alVw9gQ/mdfGbK5TXDlmajYcEth2hhtHBUXsIw+zLa5ZDm6x4fovB57qKu1Qe27b14nkjXlFUNksHAX4tKOJZkk05kHO/ncQTU0f/8jSPFnIVI1+C9Dqq9XIv06IRoVBxuGy7B4mHbRX/vJ23LNULCSPWRH2YMKm8U989A=
 
 "ld"
 

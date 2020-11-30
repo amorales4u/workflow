@@ -666,6 +666,37 @@ public class StringUtils {
         return null;
     }
 
+    private final String tokenKey = "856war98mq7qE9NADH";
+
+    public String getToken(Map<String,Object> user) {
+        try {
+            // 5 minuts
+            user.put("validTo", System.currentTimeMillis() + ( 1000 * 60 * 5) );
+            String userJSON = StringUtils.toJSON(user);
+            userJSON = StringUtils.encrypt(userJSON,tokenKey);
+            return userJSON;
+        } catch( Exception ex ) {
+            return null;
+        }
+    }
+
+    public Map<String,Object> readToken(String token) {
+
+        try {
+            token = StringUtils.decrypt(token, tokenKey);
+            Map<String, Object> userData = (Map<String, Object>) StringUtils.JSONFromString(token);
+            long validTo = (Long) userData.get("validTo");
+
+            if (System.currentTimeMillis() > validTo)
+                throw new RuntimeException("Token caduco");
+
+            return userData;
+        } catch (Exception ex) {
+            throw new RuntimeException("Token invalido");
+        }
+    }
+
+
     static public void main(String[] args) throws Exception {
 
         //final String secretKey = "ssshhhhhhhhhhh!!!!";
