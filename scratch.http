@@ -1,9 +1,6 @@
-PUT http://localhost:8089/workflow/auth/
+PUT http://localhost:8089/workflow/authentication/
 Content-Type: application/json
-
-{
-  "user": "amorales"
-}
+Authentication: amorales
 
 ###
 
@@ -134,8 +131,8 @@ GET http://localhost:8089/workflow/storage/download/3/ejemplo%2exml
 
 PUT http://localhost:8089/workflow/commands/list/Workflows/
 Content-Type: application/json
-Authorization: token ZKZJ/alVw9gQ/mdfGbK5TXDlmajYcEth2hhtHBUXsIw+zLa5ZDm6x4fovB57qKu1Qe27b14nkjXlFUNksHAX4tKOJZkk05kHO/ncQTU0f/8jSPFnIVI1+C9Dqq9XIv06IRoVBxuGy7B4mHbRX/vJ23LNULCSPWRH2YMKm8U989A=
+Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==
 
-"ld"
+-r -d
 
 ###
