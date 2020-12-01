@@ -95,6 +95,9 @@ public class Storage implements Serializable {
     @Column(name=WorkflowApplication.DB_PREFIX + "LEVEL")
     private Integer level = 0;
 
+    @Column(name=WorkflowApplication.DB_PREFIX + "DESCRIPTION", length = 200)
+    private String description;
+
     @Column(name=WorkflowApplication.DB_PREFIX + "PATH",length = 1000 )
     private String path;
 
@@ -359,6 +362,17 @@ public class Storage implements Serializable {
         return this;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public Storage setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+
+
     public String getAssigned() {
         return assigned;
     }
@@ -367,6 +381,7 @@ public class Storage implements Serializable {
     public Storage setPropertiesFrom( Storage source ) {
         return this.setAssigned(source.assigned)
                 .setExtension(source.extension)
+                .setDescription(source.description)
                 .setChildrenRestrictedByPerm(source.childrenRestrictedByPerm)
                 .setClazzName(source.clazzName)
                 .setImage(source.image)

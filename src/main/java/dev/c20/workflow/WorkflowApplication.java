@@ -41,6 +41,7 @@ public class WorkflowApplication {
     static public final String TOKEN_KEY = "856war98mq7qE9NADH";
     static public final String FILE_KEY = "Ch1sasComoAsiSiJalaCon una LLave mas laraga";
     static public final String[] SERVICES_WITHOUT_AUTH = { "authentication" };
+    static public final String WORKFLOWS_PATH = "/Workflows";
     // un mes
     static public final long TOKEN_MINUTES_VALID = 43200;
 
