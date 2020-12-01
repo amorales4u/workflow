@@ -1,11 +1,9 @@
 package dev.c20.workflow.storage.entities.adds;
 
 import dev.c20.workflow.WorkflowApplication;
+import dev.c20.workflow.storage.entities.Storage;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 

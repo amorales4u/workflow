@@ -33,7 +33,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             // validate token
             logger.info("==>/" + restService + "/<== Is not open service, we need Validate token");
             String tokenData = revalidateToken(httpServletRequest,httpServletResponse);
-            httpServletResponse.setHeader("Authorization", "token " + tokenData);
+            httpServletResponse.setHeader(WorkflowApplication.HEADER_AUTHORIZATION, WorkflowApplication.HEADER_AUTHORIZATION_TOKEN + tokenData);
         }
         String body = IOUtils.toString(cachedBodyHttpServletRequest.getReader());
         body.replaceAll("(?i)<(/?script[^>]*)>", "&lt;$1&gt;");
@@ -43,13 +43,13 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     }
 
     public String revalidateToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        String token = httpServletRequest.getHeader("Authorization");
+        String token = httpServletRequest.getHeader(WorkflowApplication.HEADER_AUTHORIZATION);
 
         if( token == null || token.equals(""))
             throw new RuntimeException("No se recibio el Token");
 
         logger.info("Token:" + token);
-        token = token.substring(6);
+        token = token.substring(WorkflowApplication.HEADER_AUTHORIZATION_TOKEN.length());
         logger.info(token);
 
         Map<String,Object> tokenData = StringUtils.readToken(token);

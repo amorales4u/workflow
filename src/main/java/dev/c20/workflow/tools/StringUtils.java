@@ -681,6 +681,9 @@ public class StringUtils {
 
     static public Map<String,Object> readToken(String token) {
 
+        if( token.contains(WorkflowApplication.HEADER_AUTHORIZATION_TOKEN)) {
+            token = token.substring(WorkflowApplication.HEADER_AUTHORIZATION_TOKEN.length() );
+        }
         Map<String, Object> userData = null;
         try {
             token = StringUtils.decrypt(token, WorkflowApplication.TOKEN_KEY);

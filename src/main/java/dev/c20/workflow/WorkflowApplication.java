@@ -36,6 +36,8 @@ public class WorkflowApplication {
 
     static public final String DB_PREFIX ="C20_";
     static public final String HEADER_USER_NAME = "Authentication";
+    static public final String HEADER_AUTHORIZATION = "Authorization";
+    static public final String HEADER_AUTHORIZATION_TOKEN = "token ";
     static public final String TOKEN_KEY = "856war98mq7qE9NADH";
     static public final String FILE_KEY = "Ch1sasComoAsiSiJalaCon una LLave mas laraga";
     static public final String[] SERVICES_WITHOUT_AUTH = { "authentication" };

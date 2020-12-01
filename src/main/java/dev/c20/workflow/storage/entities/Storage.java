@@ -6,6 +6,7 @@ import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.tools.PathUtils;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Objects;
 @Inheritance(strategy= InheritanceType.JOINED)
 @Table(name= WorkflowApplication.DB_PREFIX + "STG")
 
-public class Storage {
+public class Storage implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,19 +72,19 @@ public class Storage {
     private Long fileId;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "READONLY", columnDefinition = "TINYINT" )
-    private Boolean readOnly = null;
+    private Boolean readOnly = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "VISIBLE", columnDefinition = "TINYINT" )
-    private Boolean visible = null;
+    private Boolean visible = true;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "LOCKED", columnDefinition = "TINYINT" )
-    private Boolean locked = null;
+    private Boolean locked = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "RESTRICTED_BY_ROLE", columnDefinition = "TINYINT" )
-    private Boolean restrictedByPerm = null;
+    private Boolean restrictedByPerm = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "RESTRICTED_CHILDREN_BY_ROLE", columnDefinition = "TINYINT" )
-    private Boolean childrenRestrictedByPerm = null;
+    private Boolean childrenRestrictedByPerm = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "STATUS")
     private Integer status;
