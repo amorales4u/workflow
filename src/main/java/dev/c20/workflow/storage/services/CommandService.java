@@ -165,6 +165,7 @@ public class CommandService {
         CriteriaQuery<Storage> cq = qb.createQuery(Storage.class);
         Root<Storage> storage = cq.from(Storage.class);
         Path<String> pathPath = storage.get("path");
+        Path<Integer> levelPath = storage.get("level");
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -172,6 +173,8 @@ public class CommandService {
 
         result.put("args", args);
         result.put("recursive", cmd.hasOption("recursive"));
+
+        predicates.add(qb.and(qb.greaterThan(levelPath, requestedStorage.getLevel())));
 
         if( cmd.hasOption("recursive") ) {
             predicates.add(qb.and(qb.like(pathPath, requestedStorage.getPath() + "%")));
@@ -203,9 +206,30 @@ public class CommandService {
 
         List<Storage> list = em.createQuery(cq).getResultList();
 
-        result.put("list",list);
+        Integer level = requestedStorage.getLevel() + 1;
+        for( Storage stg : list ) {
+            if( stg.getLevel() == level ) {
+                requestedStorage.getChildren().add(stg);
+            } else {
+                tree(list, stg);
+            }
+        }
+
+        result.put("root",requestedStorage);
 
         return ResponseEntity.ok().body(result);
+    }
+
+    public void tree( List<Storage> list, Storage storage ) {
+        String parentPath = PathUtils.getParentFolder( storage.getPath() );
+
+        for( Storage parent : list ) {
+            if( parent.getPath().equals(parentPath)) {
+                parent.getChildren().add(storage);
+                return;
+            }
+        }
+
     }
 
     public ResponseEntity<?> copyCommand( String[] args, Options options) throws ParseException {
