@@ -1,15 +1,12 @@
 package dev.c20.workflow.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.result.Output;
+import dev.c20.workflow.WorkflowApplication;
 
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.crypto.SecretKey;
 import java.io.*;
-import java.security.Key;
-import javax.crypto.spec.IvParameterSpec;
+import java.nio.charset.Charset;
 import javax.crypto.spec.SecretKeySpec;
 //import javax.servlet.http.HttpServletRequest;
 //import java.net.URLDecoder;
@@ -666,36 +663,52 @@ public class StringUtils {
         return null;
     }
 
-    private final String tokenKey = "856war98mq7qE9NADH";
-
-    public String getToken(Map<String,Object> user) {
+    static public String getToken(Map<String,Object> user) {
         try {
             // 5 minuts
-            user.put("validTo", System.currentTimeMillis() + ( 1000 * 60 * 5) );
+            long validTo = System.currentTimeMillis() + ( ( 1000 * 60 ) * WorkflowApplication.TOKEN_MINUTES_VALID);
+            System.out.println("Current tme:" + System.currentTimeMillis());
+            System.out.println("plus time:" + ( ( 1000 * 60 ) * WorkflowApplication.TOKEN_MINUTES_VALID));
+            System.out.println("New Token valid to:" + validTo + " " + WorkflowApplication.TOKEN_MINUTES_VALID);
+            user.put("validTo",  validTo );
             String userJSON = StringUtils.toJSON(user);
-            userJSON = StringUtils.encrypt(userJSON,tokenKey);
+            userJSON = StringUtils.encrypt(userJSON, WorkflowApplication.TOKEN_KEY);
             return userJSON;
         } catch( Exception ex ) {
             return null;
         }
     }
 
-    public Map<String,Object> readToken(String token) {
+    static public Map<String,Object> readToken(String token) {
 
+        Map<String, Object> userData = null;
         try {
-            token = StringUtils.decrypt(token, tokenKey);
-            Map<String, Object> userData = (Map<String, Object>) StringUtils.JSONFromString(token);
-            long validTo = (Long) userData.get("validTo");
-
-            if (System.currentTimeMillis() > validTo)
-                throw new RuntimeException("Token caduco");
-
-            return userData;
+            token = StringUtils.decrypt(token, WorkflowApplication.TOKEN_KEY);
+            userData = (Map<String, Object>) StringUtils.JSONFromString(token);
         } catch (Exception ex) {
+            System.out.println(token);
+            ex.printStackTrace();
             throw new RuntimeException("Token invalido");
         }
+
+        long validTo = (Long) userData.get("validTo");
+
+        if (System.currentTimeMillis() > validTo) {
+            System.err.println("Token caduco:" + validTo);
+            throw new RuntimeException("Token caduco");
+        }
+
+        userData.remove("dummy");
+        return userData;
     }
 
+    static public String randomString(int len) {
+        byte[] array = new byte[len]; // length is bounded by 7
+        new Random().nextBytes(array);
+        String generatedString = new String(array, Charset.forName("UTF-8"));
+
+        return generatedString;
+    }
 
     static public void main(String[] args) throws Exception {
 

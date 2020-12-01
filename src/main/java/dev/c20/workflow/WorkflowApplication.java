@@ -35,6 +35,12 @@ import javax.persistence.EntityManagerFactory;
 public class WorkflowApplication {
 
     static public final String DB_PREFIX ="C20_";
+    static public final String HEADER_USER_NAME = "Authentication";
+    static public final String TOKEN_KEY = "856war98mq7qE9NADH";
+    static public final String FILE_KEY = "Ch1sasComoAsiSiJalaCon una LLave mas laraga";
+    static public final String[] SERVICES_WITHOUT_AUTH = { "authentication" };
+    // un mes
+    static public final long TOKEN_MINUTES_VALID = 43200;
 
     protected final org.apache.commons.logging.Log logger = LogFactory.getLog(this.getClass());
 
