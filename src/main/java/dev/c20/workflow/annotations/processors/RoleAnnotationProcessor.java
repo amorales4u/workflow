@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 @Component
-public class GroupAnnotationProcessor implements BeanPostProcessor {
+public class RoleAnnotationProcessor implements BeanPostProcessor {
 
     private ConfigurableListableBeanFactory configurableBeanFactory;
 
     @Autowired
-    public GroupAnnotationProcessor(ConfigurableListableBeanFactory beanFactory) {
+    public RoleAnnotationProcessor(ConfigurableListableBeanFactory beanFactory) {
         this.configurableBeanFactory = beanFactory;
     }
 
@@ -40,5 +40,4 @@ public class GroupAnnotationProcessor implements BeanPostProcessor {
                 new RoleAccessMethodCallback(configurableBeanFactory, bean);
         ReflectionUtils.doWithMethods(managedBeanClass, methodCallback);
     }
-}
 }

@@ -1,13 +1,16 @@
 package dev.c20.workflow.annotations.processors;
 
-import dev.c20.workflow.annotations.Group;
+import dev.c20.workflow.annotations.Role;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 
 public class RoleAccessMethodCallback implements ReflectionUtils.MethodCallback {
+
+    protected final org.apache.commons.logging.Log logger = LogFactory.getLog(this.getClass());
 
     private ConfigurableListableBeanFactory configurableBeanFactory;
     private Object bean;
@@ -21,6 +24,12 @@ public class RoleAccessMethodCallback implements ReflectionUtils.MethodCallback 
 
         ReflectionUtils.makeAccessible(method);
 
-        Group classValue = method.getDeclaredAnnotation(Group.class);
+        Role classValue = method.getDeclaredAnnotation(Role.class);
+        if( classValue == null ) {
+            String[] groups = classValue.groups();
+
+            logger.info("Method:" + method.getName() + " Groups:" + groups);
+        }
+
     }
 }
