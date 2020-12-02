@@ -1,4 +1,4 @@
-package dev.c20.workflow.tools;
+package dev.c20.workflow.auth.filters;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;

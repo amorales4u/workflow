@@ -1,10 +1,16 @@
 package dev.c20.workflow.auth.entities;
 
 import dev.c20.workflow.tools.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
+@Scope("session")
 public class UserEntity {
 
     private String user;
@@ -13,6 +19,9 @@ public class UserEntity {
     private String email;
     private Map<String,Object> extras = new HashMap<>();
 
+    public void init() {
+
+    }
     public String getUser() {
         return user;
     }

@@ -1,7 +1,6 @@
 package dev.c20.workflow.auth.filters;
 
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.tools.CachedBodyHttpServletRequest;
 import dev.c20.workflow.tools.PathUtils;
 import dev.c20.workflow.tools.StringUtils;
 import org.apache.commons.io.IOUtils;
