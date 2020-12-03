@@ -1,6 +1,6 @@
 package dev.c20.workflow.storage;
 
-import dev.c20.workflow.annotations.Role;
+import dev.c20.workflow.annotations.Roles;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Attach;
 import dev.c20.workflow.storage.entities.adds.Note;
@@ -41,9 +41,9 @@ public class StorageRestController {
     @Autowired
     StorageService storageService;
 
-    @Role(groups = { "uno", "dos"})
+    @Roles({"ADMIN","TEST"})
     @GetMapping("/version")
-    ResponseEntity<?> version() {
+    ResponseEntity<?> version(HttpServletRequest request ) {
         Map<String,Object> map = new HashMap<>();
         map.put("version", "2020/11/25");
         map.put("entity", new Storage());

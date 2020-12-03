@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -32,6 +33,7 @@ import javax.persistence.EntityManagerFactory;
 @EnableJpaRepositories("dev.c20.workflow")
 //@EntityScan(basePackages= "dev.c20.workflow")
 @EnableTransactionManagement
+@EnableAspectJAutoProxy
 public class WorkflowApplication {
 
     static public final String DB_PREFIX ="C20_";
