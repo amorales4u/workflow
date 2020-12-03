@@ -41,7 +41,7 @@ public class StorageRestController {
     @Autowired
     StorageService storageService;
 
-    @Roles({"ADMIN","TEST"})
+    @Roles({"VISITOR"})
     @GetMapping("/version")
     ResponseEntity<?> version(HttpServletRequest request ) {
         Map<String,Object> map = new HashMap<>();

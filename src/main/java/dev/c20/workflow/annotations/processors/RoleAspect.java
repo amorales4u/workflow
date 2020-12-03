@@ -1,6 +1,8 @@
 package dev.c20.workflow.annotations.processors;
 
+import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.annotations.Roles;
+import dev.c20.workflow.auth.entities.UserEntity;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,8 +24,6 @@ public class RoleAspect {
     @Autowired
     RoleAnnotationProcessor roleAnnotationProcessor;
 */
-    @Autowired
-    HttpServletRequest req;
 
     @Before("@annotation(dev.c20.workflow.annotations.Roles) && args(request,..)")
     public void before( JoinPoint jp, HttpServletRequest request){
@@ -33,34 +33,36 @@ public class RoleAspect {
                     new RuntimeException("request should be HttpServletRequesttype");
         }
 */
-        logger.info("In Aspect before for Role" + jp);
-        logger.info("In Aspect before for Role" + request);
-        logger.info("In Aspect before for Role Autowired " + req.getRequestURI());
-        logger.info("Has Roles: " + jp.getSignature().getName() );
-
         MethodSignature signature = (MethodSignature) jp.getSignature();
         Method method = signature.getMethod();
         Roles[] roles = method.getAnnotationsByType(Roles.class);
 
+        UserEntity userEntity = UserEntity.fromToken(request.getHeader(WorkflowApplication.HEADER_AUTHORIZATION));
+
+        if( userEntity == null ) {
+            throw  new RuntimeException("No esta firmado el usuario");
+        }
+
+        boolean hasRole = false;
+        String rolesStr = "";
         for( Roles role : roles ) {
 
-            for( String roleStr : role.value() )
+            for( String roleStr : role.value() ) {
                 logger.info("Role " + roleStr);
+                rolesStr += roleStr + ",";
+                hasRole = userEntity.getRoles().contains(roleStr);
+                if( hasRole ) {
+                    break;
+                }
+            }
         }
 
-
-        //logger.info(joinPoint.getArgs());
-/*
-        if(roleAnnotationProcessor.authorize(request)){
-            logger.info(joinPoint.getArgs());
-            request.setAttribute(
-                    "userSession",
-                    "session information which cann be acces in controller"
-            );
-        }else {
-            throw new RuntimeException("auth error..!!!");
+        if( hasRole ) {
+            return;
+        } else {
+            throw  new RuntimeException("El usuario No tiene permiso para el algún Rol " + rolesStr);
         }
-*/
+
 
     }
 
