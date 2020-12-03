@@ -25,9 +25,13 @@ public class RoleAccessMethodCallback implements ReflectionUtils.MethodCallback 
         ReflectionUtils.makeAccessible(method);
 
         Role classValue = method.getDeclaredAnnotation(Role.class);
-        if( classValue == null ) {
-            String[] groups = classValue.groups();
 
+        if( classValue != null ) {
+            String[] groups = classValue.groups();
+            /*
+            String beanName = classValue.getSimpleName() + generic.getSimpleName();
+            Object beanInstance = getBeanInstance(beanName, generic, classValue);
+            */
             logger.info("Method:" + method.getName() + " Groups:" + groups);
         }
 
