@@ -1,18 +1,16 @@
-package dev.c20.workflow.annotations.processors;
+package dev.c20.workflow.commons.annotations.processors;
 
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.annotations.Roles;
-import dev.c20.workflow.auth.entities.UserEntity;
+import dev.c20.workflow.commons.annotations.Roles;
+import dev.c20.workflow.commons.auth.UserEntity;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 @Aspect
@@ -25,7 +23,7 @@ public class RoleAspect {
     RoleAnnotationProcessor roleAnnotationProcessor;
 */
 
-    @Before("@annotation(dev.c20.workflow.annotations.Roles) && args(request,..)")
+    @Before("@annotation(dev.c20.workflow.commons.annotations.Roles) && args(request,..)")
     public void before( JoinPoint jp, HttpServletRequest request){
         /*
         if (!(request instanceof HttpServletRequest)) {

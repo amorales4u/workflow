@@ -1,13 +1,13 @@
 package dev.c20.workflow.storage.services;
 
-import dev.c20.workflow.auth.entities.UserEntity;
+import dev.c20.workflow.commons.auth.UserEntity;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.*;
 import dev.c20.workflow.files.services.FileDBStorageService;
 import dev.c20.workflow.storage.services.responses.*;
 import dev.c20.workflow.storage.repositories.*;
-import dev.c20.workflow.tools.PathUtils;
-import dev.c20.workflow.tools.StringUtils;
+import dev.c20.workflow.commons.tools.PathUtils;
+import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.commons.cli.*;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

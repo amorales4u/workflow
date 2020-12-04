@@ -3,7 +3,7 @@ package dev.c20.workflow.files.services;
 import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.files.entities.DBFile;
 import dev.c20.workflow.files.repositories.DBFileRepository;
-import dev.c20.workflow.tools.StringUtils;
+import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

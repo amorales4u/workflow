@@ -2,7 +2,7 @@ package dev.c20.workflow.storage.services;
 
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Perm;
-import dev.c20.workflow.tools.StringUtils;
+import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package dev.c20.workflow.tools;
+package dev.c20.workflow.commons.tools;
 
 public class PathUtils {
 

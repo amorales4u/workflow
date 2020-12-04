@@ -1,6 +1,6 @@
 package dev.c20.workflow.auth.services;
 
-import dev.c20.workflow.auth.entities.UserEntity;
+import dev.c20.workflow.commons.auth.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,8 +1,8 @@
-package dev.c20.workflow.auth.filters;
+package dev.c20.workflow.commons.filters;
 
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.tools.PathUtils;
-import dev.c20.workflow.tools.StringUtils;
+import dev.c20.workflow.commons.tools.PathUtils;
+import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

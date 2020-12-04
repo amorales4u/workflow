@@ -1,4 +1,4 @@
-package dev.c20.workflow.annotations;
+package dev.c20.workflow.commons.annotations;
 
 import java.lang.annotation.*;
 

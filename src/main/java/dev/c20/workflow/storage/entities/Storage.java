@@ -1,9 +1,8 @@
 package dev.c20.workflow.storage.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.tools.PathUtils;
+import dev.c20.workflow.commons.tools.PathUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;

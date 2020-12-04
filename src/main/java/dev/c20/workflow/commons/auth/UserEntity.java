@@ -1,7 +1,7 @@
-package dev.c20.workflow.auth.entities;
+package dev.c20.workflow.commons.auth;
 
 import dev.c20.workflow.auth.AuthenticationRestController;
-import dev.c20.workflow.tools.StringUtils;
+import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;

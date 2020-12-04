@@ -1,18 +1,21 @@
-package dev.c20.workflow.tools;
+package dev.c20.workflow.commons.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.c20.workflow.WorkflowApplication;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
-import java.io.*;
-import java.nio.charset.Charset;
 import javax.crypto.spec.SecretKeySpec;
-//import javax.servlet.http.HttpServletRequest;
-//import java.net.URLDecoder;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+
+//import javax.servlet.http.HttpServletRequest;
+//import java.net.URLDecoder;
 
 public class StringUtils {
     /**

@@ -1,7 +1,7 @@
 package dev.c20.workflow.auth.services;
 
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.auth.entities.UserEntity;
+import dev.c20.workflow.commons.auth.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

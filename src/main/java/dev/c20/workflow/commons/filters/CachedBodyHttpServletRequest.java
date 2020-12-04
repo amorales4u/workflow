@@ -1,4 +1,4 @@
-package dev.c20.workflow.auth.filters;
+package dev.c20.workflow.commons.filters;
 
 import org.springframework.util.StreamUtils;
 

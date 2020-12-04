@@ -1,8 +1,8 @@
 package dev.c20.workflow.auth;
 
-import dev.c20.workflow.auth.entities.UserEntity;
+import dev.c20.workflow.commons.auth.UserEntity;
 import dev.c20.workflow.auth.services.AuthenticationService;
-import dev.c20.workflow.tools.StringUtils;
+import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.log4j.Logger;
 
 

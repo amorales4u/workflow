@@ -1,13 +1,13 @@
 package dev.c20.workflow.flow.services;
 
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.auth.entities.UserEntity;
+import dev.c20.workflow.commons.auth.UserEntity;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Data;
 import dev.c20.workflow.storage.repositories.DataRepository;
 import dev.c20.workflow.storage.repositories.StorageRepository;
-import dev.c20.workflow.tools.PathUtils;
-import dev.c20.workflow.tools.StringUtils;
+import dev.c20.workflow.commons.tools.PathUtils;
+import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,7 +15,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
