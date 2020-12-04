@@ -1,25 +1,12 @@
 package dev.c20.workflow.auth.entities;
 
-import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.auth.AuthenticationRestController;
 import dev.c20.workflow.tools.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.util.WebUtils;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class UserEntity {
 
     private String user;
@@ -29,31 +16,6 @@ public class UserEntity {
     private Map<String,Object> extras = new HashMap<>();
 
     Logger logger = Logger.getLogger(AuthenticationRestController.class.getName());
-
-    public static HttpServletRequest getCurrentHttpRequest(){
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes instanceof ServletRequestAttributes) {
-            HttpServletRequest request = ((ServletRequestAttributes)requestAttributes).getRequest();
-            return request;
-        }
-        return null;
-    }
-    @PostConstruct
-    public void init() {
-        HttpServletRequest request = getCurrentHttpRequest();
-
-        logger.info("Construct UserEntity " + request);
-
-        if( request != null ) {
-
-            UserEntity fromToken = UserEntity.fromToken(request.getHeader(WorkflowApplication.HEADER_AUTHORIZATION));
-            if (fromToken != null)
-                this.copyFrom(fromToken);
-
-        }
-
-    }
-
 
     public String getUser() {
         return user;

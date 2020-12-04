@@ -1,5 +1,6 @@
 package dev.c20.workflow.storage.services;
 
+import dev.c20.workflow.auth.entities.UserEntity;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.*;
 import dev.c20.workflow.files.services.FileDBStorageService;
@@ -64,7 +65,7 @@ public class StorageService  {
     }
 
 
-    private String user = null;
+    private UserEntity user = null;
     private String path = null;
     private boolean isFolder = false;
     private Storage requestedStorage  = null;
@@ -119,10 +120,10 @@ public class StorageService  {
     }
 
     static public final String USER_HEADER = "USER";
-    public String getUser() {
+    public UserEntity getUser() {
 
         if( this.httpRequest.getHeader(USER_HEADER) != null )
-            this.user = this.httpRequest.getHeader(USER_HEADER);
+            this.user = UserEntity.fromToken(this.httpRequest.getHeader(USER_HEADER));
 
         return null;
     }
@@ -254,7 +255,7 @@ public class StorageService  {
         this.setRequestedStorage(new Storage()
                 .setPath(this.getPath())
                 .setPropertiesFrom(storage)
-                .setCreator(this.getUser())
+                .setCreator(this.getUser().getUser())
                 .setLocked(false)
                 .setVisible(true)
                 .setDeleted(false)
@@ -285,7 +286,7 @@ public class StorageService  {
         this.getRequestedStorage().setLocked(true)
                 .setVisible(false)
                 .setDeleted(true)
-                .setUserDeleter(this.getUser())
+                .setUserDeleter(this.getUser().getUser())
                 .setDeletedDate(new Date());
 
         storageRepository.save(this.getRequestedStorage());
@@ -371,7 +372,7 @@ public class StorageService  {
         this.setRequestedStorage(  new Storage()
                 .setPath(this.getPath())
                 .setPropertiesFrom(storage)
-                .setCreator(this.getUser())
+                .setCreator(this.getUser().getUser())
                 .setLocked(false)
                 .setVisible(true)
                 .setDeleted(false)
@@ -479,7 +480,7 @@ public class StorageService  {
             return new ObjectResponse().setErrorDescription(error);
 
         Note obj = new Note();
-        obj.setCreator(this.getUser());
+        obj.setCreator(this.getUser().getUser());
         obj.setCreated(new Date());
         obj.setComment(note.getComment());
         obj.setImage(note.getImage());
@@ -494,7 +495,7 @@ public class StorageService  {
     public ObjectResponse addLog(Log log) {
 
         Log obj = new Log();
-        obj.setModifier(this.getUser());
+        obj.setModifier(this.getUser().getUser());
         obj.setModified(new Date());
         obj.setComment(log.getComment());
         obj.setType(log.getType());
@@ -676,7 +677,7 @@ public class StorageService  {
                         .setParent(this.getRequestedStorage())
                         .setFile(fileId)
                         .setModified(new Date())
-                        .setModifier(this.getUser())
+                        .setModifier(this.getUser().getUser())
                         .setName(file.getOriginalFilename());
                 attached.add(obj);
                 attachRepository.save(obj);
@@ -701,7 +702,7 @@ public class StorageService  {
         Attach obj = attachRepository.getByName(this.getRequestedStorage(),attach.getName());
         obj.setFile(attach.getFile())
                 .setModified(new Date())
-                .setModifier(this.getUser())
+                .setModifier(this.getUser().getUser())
                 .setName(attach.getName());
 
         attachRepository.save(obj);
