@@ -33,6 +33,7 @@ import javax.persistence.EntityManagerFactory;
 //@EntityScan(basePackages= "dev.c20.workflow")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
+
 public class WorkflowApplication {
 
     static public final String DB_PREFIX ="C20_";
