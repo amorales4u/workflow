@@ -175,44 +175,45 @@ Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zg
 
 {
   "startFolder": "Inicio/",
-  "service": "/workflow/demo-workflow",
+  "rootService": "/workflow/demo-workflow",
+  "dataInInstancel": true,
   "perms":[
-      { "user": "amorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
-    , { "user": "emorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
+      { "user": "amorales", "perms": "crudas" }
+    , { "user": "emorales", "perms": "crudas" }
   ],
   "activities": [
      { "name":  "Inicio",
        "description": "Inicio de seguimiento",
        "perms":[
-         { "user": "amorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
-       , { "user": "emorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
+         { "user": "amorales", "perms": "crudas" }
+       , { "user": "emorales", "perms": "crudas" }
        ]
      },
      { "name":  "Envio de correo para autorización",
       "description": "Manda correo al supervisor",
       "perms":[
-         { "user": "amorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
-       , { "user": "emorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
+         { "user": "amorales", "perms": "crudas" }
+       , { "user": "emorales", "perms": "crudas" }
        ]
      },
      { "name":  "Aceptadas",
        "description": "Solicitudes aceptadas",
        "perms":[
-         { "user": "amorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
-       , { "user": "emorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
+         { "user": "amorales", "perms": "crudas" }
+       , { "user": "emorales", "perms": "crudas" }
        ]
      },
      { "name":  "Rechazadas",
        "description": "Solicitudes rechazadas",
        "perms":[
-         { "user": "amorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
-       , { "user": "emorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
+         { "user": "amorales", "perms": "crudas" }
+       , { "user": "emorales", "perms": "crudas" }
        ]     },
      { "name":  "Finalizadas",
        "description": "Solicitudes finalizadas",
        "perms":[
-         { "user": "amorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
-       , { "user": "emorales", "create": true,"read": true,"update": false,"delete": false,"admin": false,"send": false}
+         { "user": "amorales", "perms": "crudas" }
+       , { "user": "emorales", "perms": "crudas" }
        ]     }
   ],
   "flow": {
@@ -252,3 +253,11 @@ Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zg
   "aceptada": false,
   "aceptadaPor": "Juan Perez"
 }
+
+###
+
+GET http://localhost:8089/workflow/demo-workflow
+Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==
+Content-Type: application/json
+
+###
