@@ -4,6 +4,7 @@ import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.storage.entities.Storage;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -22,8 +23,18 @@ public class Value {
     @Column(name=WorkflowApplication.DB_PREFIX + "NAME")
     private String name;
 
-    @Column(name=WorkflowApplication.DB_PREFIX + "VALUE")
+    @Column(name=WorkflowApplication.DB_PREFIX + "STR_VALUE")
     private String value;
+
+    @Column(name=WorkflowApplication.DB_PREFIX + "NUM_VALUE", precision = 6)
+    private Double doubleValue;
+
+    @Column(name=WorkflowApplication.DB_PREFIX + "DATE_VALUE")
+    private Date dateValue;
+
+    @Column(name=WorkflowApplication.DB_PREFIX + "LONG_VALUE")
+    private Long longValue;
+
 
     @Override
     public boolean equals(Object o) {
@@ -73,4 +84,33 @@ public class Value {
         this.value = value;
         return this;
     }
+
+    public Double getDoubleValue() {
+        return doubleValue;
+    }
+
+    public Value setDoubleValue(Double doubleValue) {
+        this.doubleValue = doubleValue;
+        return this;
+    }
+
+    public Date getDateValue() {
+        return dateValue;
+    }
+
+    public Value setDateValue(Date dateValue) {
+        this.dateValue = dateValue;
+        return this;
+    }
+
+    public Long getLongValue() {
+        return longValue;
+    }
+
+    public Value setLongValue(Long longValue) {
+        this.longValue = longValue;
+        return this;
+    }
+
+
 }
