@@ -30,6 +30,7 @@ import java.util.Map;
 @Service
 public class TaskService {
 
+    static public final String TASK_CLAZZ = "task_instance";
     static public final Integer TASK_ACTIVE = 100;
     static public final Integer TASK_COMPLETED = 110;
     static public final Integer TASK_ERROR   = 120;
@@ -160,6 +161,7 @@ public class TaskService {
         Storage task = new Storage()
                 .setCreated(new Date())
                 .setCreator(userEntity.getUser())
+                .setClazzName(TASK_CLAZZ)
                 .setPath(newPath)
                 .setStatus(TASK_ACTIVE);
 
@@ -167,6 +169,7 @@ public class TaskService {
         Data dataStorage = new Data()
                 .setParent(task.getId())
                 .setData(StringUtils.toJSON(data,true));
+        dataRepository.save(dataStorage);
 
         sendWorkflowEvent(task,data);
 

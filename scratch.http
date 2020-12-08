@@ -176,7 +176,7 @@ Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zg
 {
   "startFolder": "Inicio/",
   "rootService": "/workflow/demo-workflow",
-  "dataInInstancel": true,
+  "historic": false,
   "perms":[
       { "user": "amorales", "perms": "crudas" }
     , { "user": "emorales", "perms": "crudas" }

@@ -718,16 +718,8 @@ public class StringUtils {
 
     static public void main(String[] args) throws Exception {
 
-        //final String secretKey = "ssshhhhhhhhhhh!!!!";
-        final String secretKey = "Ch1sasComoAsiSiJalaCon una LLave mas laraga";
-
-        String originalString = "howtodoinjava.com";
-        String encryptedString = encrypt(originalString, secretKey) ;
-        String decryptedString = decrypt(encryptedString, secretKey) ;
-
-        System.out.println(originalString);
-        System.out.println(encryptedString);
-        System.out.println(decryptedString);
+        String formatted = String.format("SOL-%tY/%tm/%td-%05d",new Date(), new Date(), new Date(), 44);
+        System.out.println(formatted);
 
 
 
