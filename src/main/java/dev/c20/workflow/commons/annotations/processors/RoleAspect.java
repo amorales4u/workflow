@@ -1,6 +1,7 @@
 package dev.c20.workflow.commons.annotations.processors;
 
 import dev.c20.workflow.WorkflowApplication;
+import dev.c20.workflow.commons.annotations.RoleException;
 import dev.c20.workflow.commons.annotations.Roles;
 import dev.c20.workflow.commons.auth.UserEntity;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +25,7 @@ public class RoleAspect {
 */
 
     @Before("@annotation(dev.c20.workflow.commons.annotations.Roles) && args(request,..)")
-    public void before( JoinPoint jp, HttpServletRequest request){
+    public void before( JoinPoint jp, HttpServletRequest request) throws RoleException {
         /*
         if (!(request instanceof HttpServletRequest)) {
             throw
@@ -38,7 +39,7 @@ public class RoleAspect {
         UserEntity userEntity = UserEntity.fromToken(request.getHeader(WorkflowApplication.HEADER_AUTHORIZATION));
 
         if( userEntity == null ) {
-            throw  new RuntimeException("No esta firmado el usuario");
+            throw  new RoleException("No esta firmado el usuario");
         }
 
         boolean hasRole = false;
@@ -58,7 +59,7 @@ public class RoleAspect {
         if( hasRole ) {
             return;
         } else {
-            throw  new RuntimeException("El usuario No tiene permiso para el algún Rol " + rolesStr);
+            throw  new RoleException("El usuario No tiene permiso para el Rol " + rolesStr);
         }
 
 

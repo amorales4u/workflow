@@ -2,7 +2,8 @@ package dev.c20.workflow.commons.auth;
 
 import dev.c20.workflow.auth.AuthenticationRestController;
 import dev.c20.workflow.commons.tools.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class UserEntity {
     private String email;
     private Map<String,Object> extras = new HashMap<>();
 
-    Logger logger = Logger.getLogger(AuthenticationRestController.class.getName());
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     public String getUser() {
         return user;

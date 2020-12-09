@@ -1,6 +1,7 @@
 package dev.c20.workflow;
 
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -47,7 +48,7 @@ public class WorkflowApplication {
     // un mes
     static public final long TOKEN_MINUTES_VALID = 43200;
 
-    protected final org.apache.commons.logging.Log logger = LogFactory.getLog(this.getClass());
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
     Environment env;

@@ -3,9 +3,10 @@ package dev.c20.workflow.auth;
 import dev.c20.workflow.commons.auth.UserEntity;
 import dev.c20.workflow.auth.services.AuthenticationService;
 import dev.c20.workflow.commons.tools.StringUtils;
-import org.apache.log4j.Logger;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,8 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 )
 public class AuthenticationRestController {
 
-    Logger logger = Logger.getLogger(AuthenticationRestController.class.getName());
-
+    protected final Log logger = LogFactory.getLog(this.getClass());
     @Autowired
     private StorageRepository storageRepository;
 

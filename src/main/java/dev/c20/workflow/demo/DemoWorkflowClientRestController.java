@@ -1,5 +1,7 @@
 package dev.c20.workflow.demo;
 
+import dev.c20.workflow.commons.annotations.RoleException;
+import dev.c20.workflow.commons.annotations.Roles;
 import dev.c20.workflow.demo.entities.Palabra;
 import dev.c20.workflow.demo.entities.PalabraRepository;
 import dev.c20.workflow.storage.entities.Storage;
@@ -41,6 +43,7 @@ public class DemoWorkflowClientRestController {
     StorageRepository storageRepository;
 
     @PostMapping
+    @Roles(value = {"ADMINISTRA"})
     ResponseEntity<?> createTest(HttpServletRequest request) throws Exception {
 
         logger.info("Create words for entities");
@@ -88,10 +91,10 @@ public class DemoWorkflowClientRestController {
     }
 
     @GetMapping
-    ResponseEntity<?> taskMessage(@RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {
+    @Roles(value = {"ADMINISTRA"})
+    ResponseEntity<?> taskMessage(HttpServletRequest request) {
 
         logger.info( "En demo-workflow " );
-        logger.info( data);
 
         return ResponseEntity.ok("Ok");
     }
