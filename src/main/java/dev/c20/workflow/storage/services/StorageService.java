@@ -1,5 +1,6 @@
 package dev.c20.workflow.storage.services;
 
+import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.commons.auth.UserEntity;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.*;
@@ -119,11 +120,9 @@ public class StorageService  {
         return this;
     }
 
-    static public final String USER_HEADER = "USER";
     public UserEntity getUser() {
 
-        if( this.httpRequest.getHeader(USER_HEADER) != null )
-            this.user = UserEntity.fromToken(this.httpRequest.getHeader(USER_HEADER));
+        this.user = UserEntity.fromToken(this.httpRequest.getHeader(WorkflowApplication.HEADER_AUTHORIZATION));
 
         return null;
     }

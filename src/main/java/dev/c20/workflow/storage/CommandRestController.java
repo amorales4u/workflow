@@ -29,7 +29,7 @@ public class CommandRestController {
     SecurityService securityService;
 
     @PutMapping(value = "/{command}/**", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> runCommand(@PathVariable String command, @RequestBody String params, HttpServletRequest request) throws Exception {
+    ResponseEntity<?> runCommand( @PathVariable("command") String command, @RequestBody String params, HttpServletRequest request) throws Exception {
         logger.info(params);
         return commandsService
                 .setHttpServletRequest(request)

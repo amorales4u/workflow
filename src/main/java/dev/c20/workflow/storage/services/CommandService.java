@@ -178,7 +178,8 @@ public class CommandService {
         if( cmd.hasOption("recursive") ) {
             predicates.add(qb.and(qb.like(pathPath, requestedStorage.getPath() + "%")));
         } else {
-            predicates.add(qb.and(qb.equal(pathPath, requestedStorage.getPath())));
+            predicates.add(qb.and(qb.like(pathPath, requestedStorage.getPath() + "%")));
+            predicates.add(qb.and(qb.equal(levelPath, requestedStorage.getLevel() + 1)));
         }
 
         if( cmd.hasOption("directories") ) {
