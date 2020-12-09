@@ -9,14 +9,24 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 @ControllerAdvice
 public class RestRoleControllerAdvise extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ RoleException.class })
     public ResponseEntity<Object> handleAccessDeniedException(
             RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "You not have Role for this operation";
+        String bodyOfResponse = "You dont have Role for this operation";
+        Map<String,Object> response = new HashMap<>();
+        response.put("timestamp", new Date());
+        response.put("status", 401);
+        response.put("error", bodyOfResponse);
+        response.put("message",HttpStatus.UNAUTHORIZED);
+        response.put("path", request.getContextPath());
         return new ResponseEntity<>(
-                bodyOfResponse, new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+                response, new HttpHeaders(), HttpStatus.UNAUTHORIZED);
     }
 }
