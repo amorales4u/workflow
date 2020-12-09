@@ -19,7 +19,7 @@ public class RestRoleControllerAdvise extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ RoleException.class })
     public ResponseEntity<Object> handleAccessDeniedException(
             RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "You dont have Role for this operation";
+        String bodyOfResponse = "Su Rol no le permite hacer esta operación";
         Map<String,Object> response = new HashMap<>();
         response.put("timestamp", new Date());
         response.put("status", 401);
