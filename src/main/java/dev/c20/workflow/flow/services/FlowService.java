@@ -4,7 +4,9 @@ import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.commons.auth.UserEntity;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Data;
+import dev.c20.workflow.storage.entities.adds.Perm;
 import dev.c20.workflow.storage.repositories.DataRepository;
+import dev.c20.workflow.storage.repositories.PermRepository;
 import dev.c20.workflow.storage.repositories.StorageRepository;
 import dev.c20.workflow.commons.tools.PathUtils;
 import dev.c20.workflow.commons.tools.StringUtils;
@@ -17,8 +19,7 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class FlowService {
@@ -37,6 +38,9 @@ public class FlowService {
     }
     @Autowired
     StorageRepository storageRepository;
+
+    @Autowired
+    PermRepository permRepository;
 
     private Boolean isFolder = false;
     private Boolean isFile = false;
@@ -114,18 +118,82 @@ public class FlowService {
         Map<String,Object> result = new HashMap<>();
         result.put("flow",folderProcess);
         result.put("data",data);
-        return ResponseEntity.badRequest().body(result);
+        return updateProcess(data);
 
     }
 
     public ResponseEntity<?> updateProcess( Map<String,Object> data) throws Exception {
 
         // Actualiza un proceso
-        if( !isFolder ) {
-            return ResponseEntity.badRequest().body("Update: Se espera un Folder para configurar el proceso");
+        if( !isFolder || folderProcess == null) {
+            return ResponseEntity.badRequest().body("Create:Se espera un Folder para configurar el proceso");
+        }
+        // crea un proceso
+
+        Data dataObj = dataRepository.getByParent(folderProcess.getId());
+        if( dataObj == null )
+            dataObj = new Data()
+                    .setParent(folderProcess.getId());
+        dataObj.setData(StringUtils.toJSON(data,true));
+        logger.info(folderProcess.getId());
+        logger.info(dataObj.getData());
+
+        dataRepository.save(dataObj);
+
+        updatePerms(folderProcess,(List<Map<String,Object>>)data.get("perms"));
+
+        for( Map<String,Object> activity : (List<Map<String,Object>>)data.get("activities")) {
+            configureActivity( activity );
         }
 
-        return ResponseEntity.badRequest().body("Funcionalidad no implementada");
+
+        return ResponseEntity.ok("Proceso configurado");
+    }
+
+    private void configureActivity(Map<String,Object> activitie) {
+
+        String activityFolderPath = folderProcess.getPath() + activitie.get("name") + "/";
+        Storage activityFolder = storageRepository.getFolder( activityFolderPath);
+
+        if( activityFolder == null ) {
+            activityFolder = new Storage()
+                    .setPath(activityFolderPath)
+                    .setDescription((String)activitie.get("description"))
+                    .setCreator(userEntity.getUser())
+                    .setCreated(new Date());
+        } else {
+            activityFolder
+                    .setDescription((String)activitie.get("description"))
+                    .setModifier(userEntity.getUser())
+                    .setModifyDate(new Date());
+        }
+
+        storageRepository.save(activityFolder);
+
+        updatePerms(activityFolder,(List<Map<String,Object>>)activitie.get("perms"));
+
+    }
+
+    public void updatePerms( Storage activityFolder, List<Map<String,Object>> permsDef ) {
+        permRepository.deleteFromParent(activityFolder);
+        List<Perm> permsToAdd = new ArrayList<>();
+        for( Map<String,Object> permDef : permsDef) {
+            String perms = (String)permDef.get("perms");
+            Perm perm = new Perm()
+                    .setParent(activityFolder)
+                    .setUser((String) permDef.get("user"))
+                    .setCanCreate(perms.contains("c"))
+                    .setCanRead(perms.contains("r"))
+                    .setCanUpdate(perms.contains("u"))
+                    .setCanDelete(perms.contains("d"))
+                    .setCanAdmin(perms.contains("a"))
+                    .setCanSend(perms.contains("s"));
+            permsToAdd.add(perm);
+
+        }
+
+        permRepository.saveAll(permsToAdd);
+
     }
 
     public ResponseEntity<?> undeleteProcess( Map<String,Object> data) throws Exception {
@@ -135,7 +203,11 @@ public class FlowService {
             return ResponseEntity.badRequest().body("Undelete: Se espera un Folder para configurar el proceso");
         }
 
-        return ResponseEntity.badRequest().body("Funcionalidad no implementada");
+        folderProcess.setDeleted(false);
+
+        storageRepository.save(folderProcess);
+
+        return ResponseEntity.ok("Proceso recuperado");
     }
 
     public ResponseEntity<?> deleteProcess( Map<String,Object> data) throws Exception {
@@ -144,8 +216,13 @@ public class FlowService {
         if( !isFolder ) {
             return ResponseEntity.badRequest().body("Delete: Se espera un Folder para configurar el proceso");
         }
+        folderProcess.setDeleted(true)
+                .setDeletedDate(new Date())
+                .setUserDeleter(userEntity.getUser());
 
-        return ResponseEntity.badRequest().body("Funcionalidad no implementada");
+        storageRepository.save(folderProcess);
+
+        return ResponseEntity.ok("Proceso eliminado");
     }
 
 }

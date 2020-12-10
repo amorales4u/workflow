@@ -182,15 +182,17 @@ public class CommandService {
             predicates.add(qb.and(qb.equal(levelPath, requestedStorage.getLevel() + 1)));
         }
 
-        if( cmd.hasOption("directories") ) {
-            Path<Boolean> thisPath = storage.get("isFolder");
-            predicates.add(qb.and(qb.equal(thisPath, true)));
+        if( !( cmd.hasOption("directories") && cmd.hasOption("files") ) )  {
+            if(cmd.hasOption("directories")) {
+                Path<Boolean> thisPath = storage.get("isFolder");
+                predicates.add(qb.and(qb.equal(thisPath, true)));
+            }
+            if( cmd.hasOption("files") ) {
+                Path<Boolean> thisPath = storage.get("isFolder");
+                predicates.add(qb.and(qb.equal(thisPath, false)));
+            }
         }
 
-        if( cmd.hasOption("files") ) {
-            Path<Boolean> thisPath = storage.get("isFolder");
-            predicates.add(qb.and(qb.equal(thisPath, false)));
-        }
 
 
         cq.where(
