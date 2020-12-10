@@ -220,7 +220,12 @@ Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zg
     "Inicio": {
       "default": "Envio de correo para autorización",
       "when": [
-        { "when":  "nombre == 'ejemplo'", "goto":  "Envio de correo para autorización"},
+        { "when":
+                [
+                  "nombre == 'ejemplo'",
+                  " and apellido = 'morales'"
+                  ],
+          "goto":  "Envio de correo para autorización"},
         { "when":  "nombre != 'ejemplo'", "goto":  "Rechazadas"}
       ]
     },
