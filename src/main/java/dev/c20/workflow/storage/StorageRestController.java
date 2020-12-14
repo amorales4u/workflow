@@ -10,6 +10,7 @@ import dev.c20.workflow.storage.services.StorageService;
 import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.lucene.index.IndexReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -320,6 +324,32 @@ public class StorageRestController {
                 .setHttpServletRequest(request)
                 .deletePerm(data)
                 .response();
+    }
+
+    @Autowired
+    DataSource dataSource;
+    /*
+    @GetMapping( "/index")
+    String index() throws JdbcStoreException, IOException {
+        JdbcDirectory jdbcDir = new JdbcDirectory(dataSource, new OracleDialect(),"WFK_STG_INDEX"); // ... create the jdbc directory
+        Connection conn = DataSourceUtils.getConnection(dataSource);
+        try {
+            IndexReader indexReader = IndexReader.open(jdbcDir); // you can also use an already open IndexReader
+
+            // ...
+            DataSourceUtils.commitConnectionIfPossible(conn); // will commit the connection if controlling it
+        } catch (IOException e) {
+            DataSourceUtils.safeRollbackConnectionIfPossible(conn);
+            throw e;
+        } finally {
+            DataSourceUtils.releaseConnection(conn);
+        }
+
+        return "Ok";
+    }
+    */
+    private void test() {
+
     }
 
 

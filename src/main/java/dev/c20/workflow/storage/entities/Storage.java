@@ -3,6 +3,9 @@ package dev.c20.workflow.storage.entities;
 
 import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.commons.tools.PathUtils;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,9 +17,10 @@ import java.util.Objects;
 @Entity
 @Inheritance(strategy= InheritanceType.JOINED)
 @Table(name= WorkflowApplication.DB_PREFIX + "STG")
-
+@Indexed
 public class Storage implements Serializable {
 
+    @DocumentId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name=WorkflowApplication.DB_PREFIX + "STG")
@@ -94,6 +98,7 @@ public class Storage implements Serializable {
     @Column(name=WorkflowApplication.DB_PREFIX + "LEVEL")
     private Integer level = 0;
 
+    @Field
     @Column(name=WorkflowApplication.DB_PREFIX + "DESCRIPTION", length = 200)
     private String description;
 

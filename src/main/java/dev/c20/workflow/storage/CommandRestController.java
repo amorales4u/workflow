@@ -37,6 +37,9 @@ public class CommandRestController {
 
     }
 
+    public static void main(String[] args ) {
+
+    }
 
 
 }

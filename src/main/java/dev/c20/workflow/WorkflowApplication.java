@@ -1,5 +1,6 @@
 package dev.c20.workflow;
 
+import com.github.lucene.store.jdbc.JdbcDirectory;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,13 @@ public class WorkflowApplication {
         properties.setProperty("hibernate.current_session_context_class", env.getProperty("spring.jpa.properties.hibernate.current_session_context_class"));
         properties.setProperty("hibernate.show_sql", env.getProperty("spring.jpa.show-sql"));
         properties.setProperty("hibernate.format_sql", env.getProperty("spring.jpa.properties.hibernate.format_sql"));
+
+
+        logger.info(JdbcDirectory.class.getName());
+        properties.setProperty("hibernate.search.default.directory_provider", JdbcDirectory.class.getName());
+        properties.setProperty("hibernate.search.generate_statistics",env.getProperty("spring.jpa.properties.hibernate.search.generate_statistics"));
+        properties.setProperty("hibernate.search.lucene_version",env.getProperty("spring.jpa.properties.hibernate.search.lucene_version"));
+        properties.setProperty("hibernate.search.default.indexBase",env.getProperty("spring.jpa.properties.hibernate.search.default.indexBase"));
 
         return properties;
     }
