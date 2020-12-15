@@ -73,13 +73,13 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
-
+        <!--
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search-orm</artifactId>
             <version>5.11.7.Final</version>
         </dependency>
-
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -113,13 +113,18 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.compass-project/compass -->
-        <!--
+
         <dependency>
             <groupId>org.compass-project</groupId>
             <artifactId>compass</artifactId>
             <version>2.2.0</version>
         </dependency>
-        -->
+        <dependency>
+            <artifactId>lucene-core</artifactId>
+            <groupId>org.apache.lucene</groupId>
+            <type>jar</type>
+            <version>3.6.1</version>
+        </dependency>
 
     </dependencies>
 
