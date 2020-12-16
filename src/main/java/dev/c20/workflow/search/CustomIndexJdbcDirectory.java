@@ -1,14 +1,13 @@
 package dev.c20.workflow.search;
 
-import org.apache.lucene.store.jdbc.dialect.Dialect;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import com.github.lucene.store.jdbc.JdbcDirectory;
+import com.github.lucene.store.jdbc.JdbcDirectorySettings;
+import com.github.lucene.store.jdbc.JdbcStoreException;
+import com.github.lucene.store.jdbc.dialect.Dialect;
+import com.github.lucene.store.jdbc.support.JdbcTable;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import org.apache.lucene.store.jdbc.JdbcDirectory;
-import org.apache.lucene.store.jdbc.JdbcDirectorySettings;
-import org.apache.lucene.store.jdbc.JdbcStoreException;
-import org.apache.lucene.store.jdbc.support.JdbcTable;
 
 public class CustomIndexJdbcDirectory extends JdbcDirectory {
 
@@ -79,8 +78,8 @@ public class CustomIndexJdbcDirectory extends JdbcDirectory {
      * @throws IOException Signals that an I/O exception has occurred.
      * @see org.apache.lucene.store.Directory#listAll()
      */
-    //@Override
+    @Override
     public String[] listAll() throws IOException {
-        return super.list();
+        return super.listAll();
     }
 }

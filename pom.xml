@@ -51,6 +51,7 @@
         -->
 
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -114,17 +115,27 @@
 
         <!-- https://mvnrepository.com/artifact/org.compass-project/compass -->
 
+        <!--
         <dependency>
             <groupId>org.compass-project</groupId>
             <artifactId>compass</artifactId>
             <version>2.2.0</version>
         </dependency>
+        -->
         <dependency>
             <artifactId>lucene-core</artifactId>
             <groupId>org.apache.lucene</groupId>
             <type>jar</type>
-            <version>3.6.1</version>
+            <version>5.3.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+            <version>5.3.1</version>
+        </dependency>
+
 
     </dependencies>
 
