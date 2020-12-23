@@ -1,4 +1,4 @@
-wildfly JMS:
+wildfly Config JMS:
         <extension module="org.wildfly.extension.messaging-activemq"/>
 
 
