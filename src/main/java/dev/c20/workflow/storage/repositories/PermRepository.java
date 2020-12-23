@@ -29,5 +29,23 @@ public interface PermRepository extends JpaRepository<Perm, Long> {
     @Query("delete from Perm o where o.parent = ?1")
     public int deleteFromParent( Storage storage);
 
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin and o.canCreate")
+    public int userHasCreatePermissionsInStorage( Long id, List<String> identities);
+
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin and o.canRead")
+    public int userHasReadPermissionsInStorage( Long id, List<String> identities);
+
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin and o.canUpdate")
+    public int userHasUpdatePermissionsInStorage( Long id, List<String> identities);
+
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin and o.canDelete")
+    public int userHasDeletePermissionsInStorage( Long id, List<String> identities);
+
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin ")
+    public int userHasAdminPermissionsInStorage( Long id, List<String> identities);
+
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canSend ")
+    public int userHasSendPermissionsInStorage( Long id, List<String> identities);
+
 
 }

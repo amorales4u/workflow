@@ -5,6 +5,7 @@ import dev.c20.workflow.commons.auth.UserEntity;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Data;
 import dev.c20.workflow.storage.repositories.DataRepository;
+import dev.c20.workflow.storage.repositories.PermRepository;
 import dev.c20.workflow.storage.repositories.StorageRepository;
 import dev.c20.workflow.commons.tools.PathUtils;
 import dev.c20.workflow.commons.tools.StringUtils;
@@ -23,9 +24,7 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TaskService {
@@ -49,6 +48,9 @@ public class TaskService {
 
     @Autowired
     DataRepository dataRepository;
+
+    @Autowired
+    PermRepository permRepository;
 
     private Boolean isFolder = false;
     private Boolean isFile = false;
@@ -158,6 +160,14 @@ public class TaskService {
 
         String newPath = this.folderProcess.getPath() + startFolder + "/" + StringUtils.randomString(20);
 
+        List<String> permissions = StringUtils.splitAsList(userEntity.getRoles(),"," );
+        permissions.add(userEntity.getName());
+
+        int cnt = permRepository.userHasCreatePermissionsInStorage( this.folderProcess.getId(), permissions );
+
+        if( cnt == 0 ) {
+            return ResponseEntity.badRequest().body("Create:El usuario no tiene permisos para crear una tarea");
+        }
         Storage task = new Storage()
                 .setCreated(new Date())
                 .setCreator(userEntity.getUser())

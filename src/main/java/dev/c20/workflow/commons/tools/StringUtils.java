@@ -718,7 +718,9 @@ public class StringUtils {
 
     static public void main(String[] args) throws Exception {
 
-        String formatted = String.format("SOL-%tY/%tm/%td-%05d",new Date(), new Date(), new Date(), 44);
+        Formatter formatter = new Formatter();
+        //System.out.println( formatter.format("SOL-%0tY/%0tm/%0td-%105d", new Date(), 23) );
+        String formatted = String.format("SOL-%0tY/%0tm/%0td-%15d",new Date(), 44);
         System.out.println(formatted);
 
 
