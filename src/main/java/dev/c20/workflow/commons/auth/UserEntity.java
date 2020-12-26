@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserEntity {
@@ -63,6 +64,14 @@ public class UserEntity {
         return this;
     }
 
+    public List<String> getPermissionsList() {
+        List<String> permissions = StringUtils.splitAsList(this.getRoles(),"," );
+        permissions.add(this.getName());
+
+        return permissions;
+
+    }
+
     public String randomString() {
         return StringUtils.randomString(20);
     }
@@ -80,6 +89,8 @@ public class UserEntity {
 
 
     }
+
+
     public UserEntity copyFrom(UserEntity userEntity) {
         this.setUser(userEntity.user);
         this.setName(userEntity.getName());

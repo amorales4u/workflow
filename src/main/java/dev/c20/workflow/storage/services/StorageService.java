@@ -124,7 +124,7 @@ public class StorageService  {
 
         this.user = UserEntity.fromToken(this.httpRequest.getHeader(WorkflowApplication.HEADER_AUTHORIZATION));
 
-        return null;
+        return this.user;
     }
 
     public StorageService setHttpServletRequest( HttpServletRequest httpRequest ) {
@@ -358,8 +358,12 @@ public class StorageService  {
             return new ObjectResponse("En el path no se manda un file");
         logger.info("addFolder:" + this.getPath() );
 
-        if( this.getRequestedStorage() != null )
-            return new ObjectResponse("Ya existe el file");
+        if( this.getRequestedStorage() != null ) {
+            return new ObjectResponse<>()
+                    .setError(false)
+                    .setErrorDescription("El file ya existia")
+                    .setData( this.getRequestedStorage());
+        }
 
         if( this.getParentFolder() == null )
             return new ObjectResponse("No existe el parent folder " + PathUtils.getParentFolder(this.getPath()));
@@ -381,7 +385,9 @@ public class StorageService  {
 
         storageRepository.save(this.getRequestedStorage());
 
-        return new ObjectResponse(this.getRequestedStorage());
+        return new ObjectResponse<>()
+                .setError(false)
+                .setData( this.getRequestedStorage());
 
     }
 
@@ -487,7 +493,7 @@ public class StorageService  {
 
         noteRepository.save(obj);
 
-        return new ObjectResponse(obj);
+        return new ObjectResponse<>(obj);
 
     }
 

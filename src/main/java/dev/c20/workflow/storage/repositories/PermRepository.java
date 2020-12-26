@@ -29,23 +29,27 @@ public interface PermRepository extends JpaRepository<Perm, Long> {
     @Query("delete from Perm o where o.parent = ?1")
     public int deleteFromParent( Storage storage);
 
-    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin and o.canCreate")
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and ( o.canAdmin = true or o.canCreate = true  )")
     public int userHasCreatePermissionsInStorage( Long id, List<String> identities);
 
-    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin and o.canRead")
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and ( o.canAdmin = true  or o.canRead = true  )")
     public int userHasReadPermissionsInStorage( Long id, List<String> identities);
 
-    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin and o.canUpdate")
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and ( o.canAdmin = true  or o.canUpdate = true  ) ")
     public int userHasUpdatePermissionsInStorage( Long id, List<String> identities);
 
-    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin and o.canDelete")
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and ( o.canAdmin = true  or o.canDelete = true  ) ")
     public int userHasDeletePermissionsInStorage( Long id, List<String> identities);
 
-    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin ")
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canAdmin = true ")
     public int userHasAdminPermissionsInStorage( Long id, List<String> identities);
 
-    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and o.canSend ")
+    @Query( "select count(o) from Perm o where o.parent.id = ?1 and o.user in ( ?2 ) and ( o.canAdmin = true  or o.canSend = true  )")
     public int userHasSendPermissionsInStorage( Long id, List<String> identities);
+
+    @Query( "select s from Perm o, Storage s where o.parent = s and s.path = ?1 and s.level = ?2 and o.user in ( ?3 ) and ( o.canAdmin = true  or o.canRead = true or o.canSend = true  ) order by s.path")
+    public List<Storage> getStorages( String path, int level, List<String> identities);
+
 
 
 }

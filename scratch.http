@@ -176,7 +176,7 @@ Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zg
 {
   "startFolder": "Inicio/",
   "folderRoot": "/workflow/demo-workflow",
-  "historic": false,
+  "saveHistory": false,
   "perms":[
       { "user": "amorales", "perms": "crudas" }
     , { "user": "emorales", "perms": "crudas" }
@@ -226,14 +226,14 @@ Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zg
                   " and apellido = 'morales'"
                   ],
           "goto":  "Envio de correo para autorización"},
-        { "when":  "nombre != 'ejemplo'", "goto":  "Rechazadas"}
+        { "when":  [ "nombre != 'ejemplo'" ], "goto":  "Rechazadas"}
       ]
     },
     "Envio de correo para autorización": {
       "default": "Aceptadas",
       "when": [
-        { "when":  "correoEnviado", "goto":  "Aceptadas"},
-        { "when":  "!correoEnviado", "goto":  "Rechazadas"}
+        { "when": [  "correoEnviado" ], "goto":  "Aceptadas"},
+        { "when": [  "!correoEnviado" ], "goto":  "Rechazadas"}
       ]
     },
     "Aceptadas": {

@@ -2,11 +2,11 @@ package dev.c20.workflow.flow.services;
 
 import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.commons.auth.UserEntity;
+import dev.c20.workflow.flow.responses.EvalResult;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Data;
-import dev.c20.workflow.storage.repositories.DataRepository;
-import dev.c20.workflow.storage.repositories.PermRepository;
-import dev.c20.workflow.storage.repositories.StorageRepository;
+import dev.c20.workflow.storage.entities.adds.Log;
+import dev.c20.workflow.storage.repositories.*;
 import dev.c20.workflow.commons.tools.PathUtils;
 import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.commons.logging.LogFactory;
@@ -33,6 +33,7 @@ public class TaskService {
     static public final Integer TASK_ACTIVE = 100;
     static public final Integer TASK_COMPLETED = 110;
     static public final Integer TASK_ERROR   = 120;
+    static public final Integer TASK_DELETED   = 130;
 
     protected final org.apache.commons.logging.Log logger = LogFactory.getLog(this.getClass());
 
@@ -51,6 +52,21 @@ public class TaskService {
 
     @Autowired
     PermRepository permRepository;
+
+    @Autowired
+    AttachRepository attachRepository;
+
+    @Autowired
+    LogRepository logRepository;
+
+    @Autowired
+    NoteRepository noteRepository;
+
+    @Autowired
+    ValueRepository valueRepository;
+
+    @Autowired
+    EvalProcessService evalProcessService;
 
     private Boolean isFolder = false;
     private Boolean isFile = false;
@@ -103,6 +119,26 @@ public class TaskService {
         return this;
     }
 
+    public Log newLog(Storage parent, String user, String comment ) {
+        return newLog( parent, user, comment,null, null );
+    }
+    public Log newLog( Storage parent, String user, String comment, Long commentId ) {
+        return newLog( parent, user, comment,commentId, null );
+    }
+
+    public Log newLog( Storage parent, String user, String comment, Long commentId, Long type ) {
+        Log log = new Log()
+                .setParent(parent)
+                .setModifier(user)
+                .setModified(new Date())
+                .setComment(comment)
+                .setCommentId(commentId)
+                .setType(type);
+        logRepository.save(log);
+        return log;
+    }
+
+
     private void sendWorkflowEvent(Storage task, Map<String,Object> data ) {
         try {
 
@@ -141,11 +177,33 @@ public class TaskService {
         return result;
     }
 
+    public String canReadStorage(Storage storage) {
+        if( storage.getDeleted() )
+            return storage.getName() + " esta eliminado";
+
+        if( storage.getLocked() )
+            return storage.getName() + " esta bloqueado por sistema";
+
+        if( storage.getVisible() )
+            return storage.getName() + " no es visible para los usuarios";
+
+        return null;
+    }
+
     public ResponseEntity<?> getTask() throws Exception {
-        if( isFolder ) {
+        if( this.taskFile == null ) {
             return ResponseEntity.badRequest().body("Get:Se espera un File para la tarea");
         }
-        return ResponseEntity.badRequest().body("Funcionalidad no implementada");
+
+        String canReadStorage = canReadStorage(this.taskFile);
+        if( canReadStorage != null ) {
+            return ResponseEntity.badRequest().body("Get:" + canReadStorage);
+        }
+
+        Data dataStorage = dataRepository.getOne(taskFile.getId());
+        Map<String,Object> data = ( Map<String,Object>)StringUtils.fromJSON(dataStorage.getData());
+
+        return ResponseEntity.ok(createResult(taskFile,data));
 
     }
 
@@ -154,16 +212,20 @@ public class TaskService {
         if( this.folderProcess == null ) {
             return ResponseEntity.badRequest().body("Create:No se encuentra la configuración del proceso");
         }
+
+        String canReadStorage = canReadStorage(this.folderProcess);
+        if( canReadStorage != null ) {
+            return ResponseEntity.badRequest().body("Create:" + canReadStorage);
+        }
+
+
         // crea un proceso
 
         String startFolder = (String)this.processConfig.get("startFolder");
 
         String newPath = this.folderProcess.getPath() + startFolder + "/" + StringUtils.randomString(20);
 
-        List<String> permissions = StringUtils.splitAsList(userEntity.getRoles(),"," );
-        permissions.add(userEntity.getName());
-
-        int cnt = permRepository.userHasCreatePermissionsInStorage( this.folderProcess.getId(), permissions );
+        int cnt = permRepository.userHasCreatePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
 
         if( cnt == 0 ) {
             return ResponseEntity.badRequest().body("Create:El usuario no tiene permisos para crear una tarea");
@@ -190,31 +252,216 @@ public class TaskService {
     public ResponseEntity<?> update( Map<String,Object> data) throws Exception {
 
         // Actualiza un proceso
-        if( isFolder ) {
-            return ResponseEntity.badRequest().body("Update: Se espera un File para la tarea");
+        if( this.folderProcess == null ) {
+            return ResponseEntity.badRequest().body("Update:No se encuentra la configuración del proceso");
         }
 
-        return ResponseEntity.badRequest().body("Funcionalidad no implementada");
-    }
-
-    public ResponseEntity<?> complete( Map<String,Object> data) throws Exception {
-
-        // desborra un proceso
-        if( !isFolder ) {
-            return ResponseEntity.badRequest().body("complete: Se espera un Folder para configurar el proceso");
+        String canReadStorage = canReadStorage(this.folderProcess);
+        if( canReadStorage != null ) {
+            return ResponseEntity.badRequest().body("Update:" + canReadStorage);
         }
 
-        return ResponseEntity.badRequest().body("Funcionalidad no implementada");
+        if( this.taskFile == null )
+            return ResponseEntity.badRequest().body("Update:No existe la tarea solicitada");
+
+        canReadStorage = canReadStorage(this.taskFile);
+        if( canReadStorage != null ) {
+            return ResponseEntity.badRequest().body("Update:" + canReadStorage);
+        }
+
+        // crea un proceso
+
+        int cnt = permRepository.userHasUpdatePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
+
+        if( cnt == 0 ) {
+            return ResponseEntity.badRequest().body("Update:El usuario no tiene permisos para modificar una tarea");
+        }
+
+        taskFile.setModifyDate(new Date())
+                .setModifier(userEntity.getUser())
+                .setClazzName(TASK_CLAZZ)
+                .setStatus(TASK_ACTIVE);
+
+        storageRepository.save(taskFile);
+        Data dataStorage = dataRepository.getOne(taskFile.getId());
+        dataStorage.setData(StringUtils.toJSON(data,true));
+        dataRepository.save(dataStorage);
+
+        sendWorkflowEvent(taskFile,data);
+
+        return ResponseEntity.ok(createResult(taskFile,data));
+
     }
 
     public ResponseEntity<?> delete( Map<String,Object> data) throws Exception {
 
-        // desborra un proceso
-        if( !isFolder ) {
-            return ResponseEntity.badRequest().body("complete: Se espera un Folder para configurar el proceso");
+        // completa una tarea
+        if( this.folderProcess == null ) {
+            return ResponseEntity.badRequest().body("Delete:No se encuentra la configuración del proceso");
         }
 
-        return ResponseEntity.badRequest().body("Funcionalidad no implementada");
+        String canReadStorage = canReadStorage(this.folderProcess);
+        if( canReadStorage != null ) {
+            return ResponseEntity.badRequest().body("Delete:" + canReadStorage);
+        }
+
+        if( this.taskFile == null )
+            return ResponseEntity.badRequest().body("Delete:No existe la tarea solicitada");
+
+        canReadStorage = canReadStorage(this.taskFile);
+        if( canReadStorage != null ) {
+            return ResponseEntity.badRequest().body("Delete:" + canReadStorage);
+        }
+
+        // crea un proceso
+
+        int cnt = permRepository.userHasDeletePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
+
+        if( cnt == 0 ) {
+            return ResponseEntity.badRequest().body("Delete:El usuario no tiene permisos para eliminar una tarea");
+        }
+
+        taskFile.setDeletedDate(new Date())
+                .setUserDeleter(userEntity.getUser())
+                .setClazzName(TASK_CLAZZ)
+                .setStatus(TASK_DELETED);
+
+        storageRepository.save(taskFile);
+        Data dataStorage = dataRepository.getOne(taskFile.getId());
+        dataStorage.setData(StringUtils.toJSON(data,true));
+        dataRepository.save(dataStorage);
+
+        // cual es el siguiente folder a donde se movera la tarea?
+
+        sendWorkflowEvent(taskFile,data);
+
+        return ResponseEntity.ok(createResult(taskFile,data));
+    }
+
+    public ResponseEntity<?> complete( Map<String,Object> data) throws Exception {
+
+        // completa una tarea
+        if( this.folderProcess == null ) {
+            return ResponseEntity.badRequest().body("Complete:No se encuentra la configuración del proceso");
+        }
+
+        String canReadStorage = canReadStorage(this.folderProcess);
+        if( canReadStorage != null ) {
+            return ResponseEntity.badRequest().body("Complete:" + canReadStorage);
+        }
+
+        if( this.taskFile == null )
+            return ResponseEntity.badRequest().body("Complete:No existe la tarea solicitada");
+
+        canReadStorage = canReadStorage(this.taskFile);
+        if( canReadStorage != null ) {
+            return ResponseEntity.badRequest().body("Complete:" + canReadStorage);
+        }
+
+        // crea un proceso
+
+        int cnt = permRepository.userHasSendPermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
+
+        if( cnt == 0 ) {
+            return ResponseEntity.badRequest().body("Complete:El usuario no tiene permisos para completar una tarea");
+        }
+
+        taskFile.setModifyDate(new Date())
+                .setModifier(userEntity.getUser())
+                .setClazzName(TASK_CLAZZ)
+                .setStatus(TASK_ACTIVE);
+
+        storageRepository.save(taskFile);
+        Data dataStorage = dataRepository.getOne(taskFile.getId());
+        dataStorage.setData(StringUtils.toJSON(data,true));
+        dataRepository.save(dataStorage);
+
+        // cual es el siguiente folder a donde se movera la tarea?
+        String newFolder = evaluateFlow(data);
+
+        if( newFolder == null ) {
+            return ResponseEntity.badRequest().body("Complete:No se encuentra un folder destino para completar la tarea");
+        }
+        newFolder = this.folderProcess.getPath() + newFolder + "/" + this.taskFile.getName();
+        Storage result = null;
+        if( (Boolean)this.processConfig.get("saveHistory")) {
+            Storage target = new Storage().setPropertiesFrom(this.taskFile);
+            target.setCreated( new Date() )
+                    .setCreator(userEntity.getUser());
+            target.setPath(newFolder);
+
+            storageRepository.save(target);
+            // copiar propiedades adicionales
+
+            attachRepository.copyTo(target, this.taskFile );
+            dataRepository.copyTo(target.getId(), this.taskFile.getId() );
+            logRepository.copyTo(target, this.taskFile );
+            noteRepository.copyTo(target, this.taskFile );
+            permRepository.copyTo(target, this.taskFile );
+            valueRepository.copyTo(target, this.taskFile );
+
+            this.taskFile.setStatus(TASK_COMPLETED);
+            newLog(target, userEntity.getUser(), "Se copio desde " + this.taskFile.getPath());
+            result = target;
+        } else {
+            this.taskFile.setPath(newFolder);
+            storageRepository.save(taskFile);
+            newLog(taskFile, userEntity.getUser(), "Se copio desde " + this.taskFile.getPath());
+            result = this.taskFile;
+        }
+
+
+        sendWorkflowEvent(result,data);
+
+        return ResponseEntity.ok(createResult(result,data));
+
+    }
+
+    private String evaluateFlow(Map<String,Object> data) {
+        if( this.processConfig == null )
+            return null;
+
+        String current = PathUtils.getParentFolder( taskFile.getPath() );
+        current = PathUtils.getName(current);
+        current.substring(0, current.length() - 1);
+
+        // obtenemos el objeto de flows
+        Map<String,Object> flow = (Map<String,Object>)this.processConfig.get("flow");
+
+        // obtenemos el flow del current folder
+        flow = (Map<String,Object>)this.processConfig.get(current);
+
+        String defaultFolder = (String)flow.get("default");
+
+        List<Map<String,Object>> whens =  (List<Map<String,Object>>)flow.get("when");
+
+        for( Map<String,Object> when : whens ) {
+            List<String> conditionList = (List<String>) when.get("when");
+            if( conditionList.size() == 0 ) {
+                continue;
+            }
+            String condition = StringUtils.listAsString(conditionList, "\n");
+            Map<String,Object> context = createResult(taskFile,data);
+            EvalResult evalResult = new EvalResult();
+            try {
+                evalResult = evalProcessService.executeCode(context, this.folderProcess.getName(), this.taskFile.getName());
+            } catch( Exception ex ) {
+                logger.error(ex.getMessage());
+            }
+            if( evalResult.isError() ) {
+                this.taskFile.setStatus(TASK_ERROR);
+                storageRepository.save(this.taskFile);
+                return null;
+            }
+
+            if( evalResult.getResponse() != null && (Boolean)evalResult.getResponse() ) {
+                return (String)when.get("goto");
+            }
+        }
+
+
+
+        return defaultFolder;
     }
 
 

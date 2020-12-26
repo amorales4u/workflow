@@ -1,6 +1,5 @@
-package dev.c20.workflow.storage.services.responses;
+package dev.c20.workflow.commons.storage.responses;
 
-import dev.c20.workflow.storage.entities.Storage;
 import org.springframework.http.ResponseEntity;
 
 public class ObjectResponse<T> {
@@ -15,11 +14,7 @@ public class ObjectResponse<T> {
 
     public ObjectResponse(String obj) {
         this.error = true;
-        this.errorDescription = obj;
-    }
-
-    public ObjectResponse(T obj) {
-        this.data = obj;
+        this.errorDescription = "No existe";
     }
 
     public ResponseEntity<ObjectResponse> response() {
@@ -54,11 +49,11 @@ public class ObjectResponse<T> {
         return this;
     }
 
-    public T getData() {
+    public Object getData() {
         return data;
     }
 
-    public ObjectResponse<T> setData(T data) {
+    public ObjectResponse setData(T data) {
         this.data = data;
         return this;
     }

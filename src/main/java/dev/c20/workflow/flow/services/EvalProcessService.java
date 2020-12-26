@@ -28,7 +28,7 @@ public class EvalProcessService {
     }
 
     @SuppressWarnings("unchecked")
-    protected EvalResult executeCode(HashMap<String,Object> context, String nameCode, String methodName ) throws WFException {
+    protected EvalResult executeCode(Map<String,Object> context, String nameCode, String methodName ) throws WFException {
 
         EvalResult result = new EvalResult();
 

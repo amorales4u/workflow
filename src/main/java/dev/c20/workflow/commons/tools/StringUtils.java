@@ -549,6 +549,20 @@ public class StringUtils {
 
     }
 
+    public static Object fromJSON( String data ) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.readValue(data,Object.class);
+
+    }
+
+    public static Object fromJSON( String data, Class classType ) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.readValue(data,classType);
+
+    }
+
     public static String toJSON( Object map ) throws Exception {
         return toJSON( map, false );
     }

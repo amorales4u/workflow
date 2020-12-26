@@ -5,6 +5,17 @@ public class EvalResult {
     public boolean error = true;
     public String errorMessage = null;
     public Object response = null;
+    public String message = null;
+
+
+    public String getMessage() {
+        return message;
+    }
+
+    public EvalResult setMessage(String message) {
+        this.message = message;
+        return this;
+    }
 
     public EvalResult() {
 
