@@ -1,5 +1,8 @@
 package dev.c20.workflow.commons.storage.responses;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.c20.workflow.commons.storage.entities.adds.Data;
 import org.springframework.http.ResponseEntity;
 
 public class ObjectResponse<T> {
@@ -15,6 +18,28 @@ public class ObjectResponse<T> {
     public ObjectResponse(String obj) {
         this.error = true;
         this.errorDescription = "No existe";
+    }
+
+    public ObjectResponse setResponse(String data) {
+        if( data != null  ) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectResponse<T> res =
+                        mapper.readValue(data, new TypeReference<ObjectResponse<T>>() {
+                        });
+
+                this.error = res.error;
+                this.errorDescription = res.errorDescription;
+                this.data = res.data;
+                return this;
+            } catch( Exception ex ) {
+                this.error = true;
+                this.errorDescription = "Error al parsear el body:" + ex.getMessage();
+            }
+        }
+
+        return this;
+
     }
 
     public ResponseEntity<ObjectResponse> response() {

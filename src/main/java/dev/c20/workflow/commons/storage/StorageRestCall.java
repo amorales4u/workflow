@@ -13,7 +13,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StorageRestCall {
 
     protected final org.apache.commons.logging.Log logger = LogFactory.getLog(this.getClass());
@@ -27,6 +29,9 @@ public class StorageRestCall {
 
     public StorageRestCall( String server ) {
         this.server = server;
+    }
+    public StorageRestCall(  ) {
+
     }
 
     public StorageRestCall setWebContext(String webContext) {
@@ -133,6 +138,21 @@ public class StorageRestCall {
     }
 
 
+    public StorageRestCall get() {
+        return this.setHttpMethod(HttpMethod.GET);
+    }
+
+    public StorageRestCall post() {
+        return this.setHttpMethod(HttpMethod.POST);
+    }
+
+    public StorageRestCall put() {
+        return this.setHttpMethod(HttpMethod.PUT);
+    }
+
+    public StorageRestCall delete() {
+        return this.setHttpMethod(HttpMethod.DELETE);
+    }
 
     static public StorageRestCall post(String server) {
         StorageRestCall result = new StorageRestCall(server);
@@ -154,6 +174,11 @@ public class StorageRestCall {
         return result.setHttpMethod(HttpMethod.DELETE);
     }
 
+    static public StorageRestCall instance() {
+        StorageRestCall result = new StorageRestCall();
+        return result;
+    }
+
 
 
     static public void main(String[] args ) throws Exception {
@@ -162,7 +187,9 @@ public class StorageRestCall {
         Storage user = new Storage();
         user.setDescription("Big fucking Gun");
         StorageRestCall storageRestCall = StorageRestCall
-                .post("http://localhost:8089")
+                .instance()
+                .setServer("http://localhost:8089")
+                .post()
                 .setWebContext("/workflow/storage/file/Catálogos/Usuarios/BFG4000")
                 .setHeader("Authorization","token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==")
                 .setBody(user)

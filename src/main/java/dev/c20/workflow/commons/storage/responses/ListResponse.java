@@ -1,5 +1,7 @@
 package dev.c20.workflow.commons.storage.responses;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -48,6 +50,31 @@ public class ListResponse<T> {
         this.listCount = objs.size();
         this.currentPage = currentPage;
         this.pageCount = pageCount;
+    }
+
+    public ListResponse setResponse(String data) {
+        if (data != null) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                ListResponse<T> res =
+                        mapper.readValue(data, new TypeReference<ListResponse<T>>() {
+                        });
+
+                this.error = res.error;
+                this.errorDescription = res.errorDescription;
+                this.data = res.data;
+                this.listCount = res.listCount;
+                this.currentPage = res.currentPage;
+                this.pageCount = res.pageCount;
+
+                return this;
+            } catch (Exception ex) {
+                this.error = true;
+                this.errorDescription = "Error al parsear el body:" + ex.getMessage();
+            }
+        }
+
+        return this;
     }
 
     public ResponseEntity<ListResponse> response() {
