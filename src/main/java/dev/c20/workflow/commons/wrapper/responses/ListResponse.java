@@ -1,4 +1,4 @@
-package dev.c20.workflow.commons.storage.responses;
+package dev.c20.workflow.commons.wrapper.responses;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

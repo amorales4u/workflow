@@ -1,9 +1,9 @@
-package dev.c20.workflow.commons.storage;
+package dev.c20.workflow.commons.wrapper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.c20.workflow.commons.storage.entities.Storage;
-import dev.c20.workflow.commons.storage.responses.ObjectResponse;
+import dev.c20.workflow.commons.wrapper.entities.Storage;
+import dev.c20.workflow.commons.wrapper.responses.ObjectResponse;
 import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.config.RequestConfig;
@@ -193,7 +193,6 @@ public class StorageRestCall {
                 .setWebContext("/workflow/storage/file/Catálogos/Usuarios/BFG4000")
                 .setHeader("Authorization","token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==")
                 .setBody(user)
-                .setResponseType(ObjectResponse.class)
                 .send();
 
         if( storageRestCall.getResponse() != null  ) {

@@ -1,8 +1,7 @@
-package dev.c20.workflow.commons.storage.responses;
+package dev.c20.workflow.commons.wrapper.responses;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.c20.workflow.commons.storage.entities.adds.Data;
 import org.springframework.http.ResponseEntity;
 
 public class ObjectResponse<T> {

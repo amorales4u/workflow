@@ -1,9 +1,9 @@
-package dev.c20.workflow.commons.storage;
+package dev.c20.workflow.commons.wrapper;
 
-import dev.c20.workflow.commons.storage.entities.Storage;
-import dev.c20.workflow.commons.storage.entities.adds.*;
-import dev.c20.workflow.commons.storage.responses.ListResponse;
-import dev.c20.workflow.commons.storage.responses.ObjectResponse;
+import dev.c20.workflow.commons.wrapper.entities.Storage;
+import dev.c20.workflow.commons.wrapper.entities.adds.*;
+import dev.c20.workflow.commons.wrapper.responses.ListResponse;
+import dev.c20.workflow.commons.wrapper.responses.ObjectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -15,16 +15,19 @@ public class StorageService {
     StorageRestCall storageRestCall;
 
     String targetContext;
-    public void init(String server, String targetContext) {
+    String auth;
+
+    public void init(String server, String targetContext, String auth) {
         storageRestCall.setServer(server);
         this.targetContext = targetContext;
+        this.auth = auth;
     }
 
     public void callStorageService(HttpMethod httpMethod, String path, Object body) {
         storageRestCall
                 .setHttpMethod(httpMethod)
                 .setWebContext(this.targetContext + path)
-                .setHeader("Authorization","token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==")
+                .setHeader("Authorization",auth)
                 .setBody(body)
                 .send();
     }

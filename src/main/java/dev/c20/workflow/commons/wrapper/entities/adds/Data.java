@@ -1,4 +1,4 @@
-package dev.c20.workflow.commons.storage.entities.adds;
+package dev.c20.workflow.commons.wrapper.entities.adds;
 
 import java.io.Serializable;
 import java.util.Objects;

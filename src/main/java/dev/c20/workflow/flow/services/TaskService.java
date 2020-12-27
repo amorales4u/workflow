@@ -172,8 +172,19 @@ public class TaskService {
 
     private Map<String,Object> createResult( Storage task, Map<String,Object> data ) {
         Map<String,Object> result = new HashMap<>();
+        result.put("error", 0);
+        result.put("errorDescription", null);
         result.put("task",task);
         result.put("data",data);
+        return result;
+    }
+
+    private Map<String,Object> createErrorResult( int error, String errorDescription ) {
+        Map<String,Object> result = new HashMap<>();
+        result.put("error", error);
+        result.put("errorDescription", errorDescription);
+        result.put("task", null);
+        result.put("data", null);
         return result;
     }
 
@@ -192,7 +203,7 @@ public class TaskService {
 
     public ResponseEntity<?> getTask() throws Exception {
         if( this.taskFile == null ) {
-            return ResponseEntity.badRequest().body("Get:Se espera un File para la tarea");
+            return ResponseEntity.badRequest().body(createErrorResult(100,"Get:Se espera un File para la tarea"));
         }
 
         String canReadStorage = canReadStorage(this.taskFile);
@@ -210,12 +221,12 @@ public class TaskService {
     public ResponseEntity<?> create(Map<String,Object> data) throws Exception {
 
         if( this.folderProcess == null ) {
-            return ResponseEntity.badRequest().body("Create:No se encuentra la configuración del proceso");
+            return ResponseEntity.badRequest().body(createErrorResult(200,"Create:No se encuentra la configuración del proceso"));
         }
 
         String canReadStorage = canReadStorage(this.folderProcess);
         if( canReadStorage != null ) {
-            return ResponseEntity.badRequest().body("Create:" + canReadStorage);
+            return ResponseEntity.badRequest().body(createErrorResult(300,"Create:" + canReadStorage));
         }
 
 
@@ -228,7 +239,7 @@ public class TaskService {
         int cnt = permRepository.userHasCreatePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
 
         if( cnt == 0 ) {
-            return ResponseEntity.badRequest().body("Create:El usuario no tiene permisos para crear una tarea");
+            return ResponseEntity.badRequest().body(createErrorResult(400,"Create:El usuario no tiene permisos para crear una tarea"));
         }
         Storage task = new Storage()
                 .setCreated(new Date())
@@ -253,20 +264,20 @@ public class TaskService {
 
         // Actualiza un proceso
         if( this.folderProcess == null ) {
-            return ResponseEntity.badRequest().body("Update:No se encuentra la configuración del proceso");
+            return ResponseEntity.badRequest().body(createErrorResult(500,"Update:No se encuentra la configuración del proceso"));
         }
 
         String canReadStorage = canReadStorage(this.folderProcess);
         if( canReadStorage != null ) {
-            return ResponseEntity.badRequest().body("Update:" + canReadStorage);
+            return ResponseEntity.badRequest().body(createErrorResult(600,"Update:" + canReadStorage));
         }
 
         if( this.taskFile == null )
-            return ResponseEntity.badRequest().body("Update:No existe la tarea solicitada");
+            return ResponseEntity.badRequest().body(createErrorResult(700,"Update:No existe la tarea solicitada"));
 
         canReadStorage = canReadStorage(this.taskFile);
         if( canReadStorage != null ) {
-            return ResponseEntity.badRequest().body("Update:" + canReadStorage);
+            return ResponseEntity.badRequest().body(createErrorResult(800,"Update:" + canReadStorage));
         }
 
         // crea un proceso
@@ -274,7 +285,7 @@ public class TaskService {
         int cnt = permRepository.userHasUpdatePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
 
         if( cnt == 0 ) {
-            return ResponseEntity.badRequest().body("Update:El usuario no tiene permisos para modificar una tarea");
+            return ResponseEntity.badRequest().body(createErrorResult(900,"Update:El usuario no tiene permisos para modificar una tarea"));
         }
 
         taskFile.setModifyDate(new Date())
@@ -297,7 +308,7 @@ public class TaskService {
 
         // completa una tarea
         if( this.folderProcess == null ) {
-            return ResponseEntity.badRequest().body("Delete:No se encuentra la configuración del proceso");
+            return ResponseEntity.badRequest().body(createErrorResult(1000,"Delete:No se encuentra la configuración del proceso"));
         }
 
         String canReadStorage = canReadStorage(this.folderProcess);
@@ -306,11 +317,11 @@ public class TaskService {
         }
 
         if( this.taskFile == null )
-            return ResponseEntity.badRequest().body("Delete:No existe la tarea solicitada");
+            return ResponseEntity.badRequest().body(createErrorResult(1100,"Delete:No existe la tarea solicitada"));
 
         canReadStorage = canReadStorage(this.taskFile);
         if( canReadStorage != null ) {
-            return ResponseEntity.badRequest().body("Delete:" + canReadStorage);
+            return ResponseEntity.badRequest().body(createErrorResult(1200,"Delete:" + canReadStorage));
         }
 
         // crea un proceso
@@ -318,7 +329,7 @@ public class TaskService {
         int cnt = permRepository.userHasDeletePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
 
         if( cnt == 0 ) {
-            return ResponseEntity.badRequest().body("Delete:El usuario no tiene permisos para eliminar una tarea");
+            return ResponseEntity.badRequest().body(createErrorResult(1300,"Delete:El usuario no tiene permisos para eliminar una tarea"));
         }
 
         taskFile.setDeletedDate(new Date())
@@ -342,20 +353,20 @@ public class TaskService {
 
         // completa una tarea
         if( this.folderProcess == null ) {
-            return ResponseEntity.badRequest().body("Complete:No se encuentra la configuración del proceso");
+            return ResponseEntity.badRequest().body(createErrorResult(1400,"Complete:No se encuentra la configuración del proceso"));
         }
 
         String canReadStorage = canReadStorage(this.folderProcess);
         if( canReadStorage != null ) {
-            return ResponseEntity.badRequest().body("Complete:" + canReadStorage);
+            return ResponseEntity.badRequest().body(createErrorResult(1500,"Complete:" + canReadStorage));
         }
 
         if( this.taskFile == null )
-            return ResponseEntity.badRequest().body("Complete:No existe la tarea solicitada");
+            return ResponseEntity.badRequest().body(createErrorResult(1600,"Complete:No existe la tarea solicitada"));
 
         canReadStorage = canReadStorage(this.taskFile);
         if( canReadStorage != null ) {
-            return ResponseEntity.badRequest().body("Complete:" + canReadStorage);
+            return ResponseEntity.badRequest().body(createErrorResult(1700,"Complete:" + canReadStorage));
         }
 
         // crea un proceso
@@ -363,7 +374,7 @@ public class TaskService {
         int cnt = permRepository.userHasSendPermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
 
         if( cnt == 0 ) {
-            return ResponseEntity.badRequest().body("Complete:El usuario no tiene permisos para completar una tarea");
+            return ResponseEntity.badRequest().body(createErrorResult(1800,"Complete:El usuario no tiene permisos para completar una tarea"));
         }
 
         taskFile.setModifyDate(new Date())
@@ -380,7 +391,7 @@ public class TaskService {
         String newFolder = evaluateFlow(data);
 
         if( newFolder == null ) {
-            return ResponseEntity.badRequest().body("Complete:No se encuentra un folder destino para completar la tarea");
+            return ResponseEntity.badRequest().body(createErrorResult(1900,"Complete:No se encuentra un folder destino para completar la tarea"));
         }
         newFolder = this.folderProcess.getPath() + newFolder + "/" + this.taskFile.getName();
         Storage result = null;

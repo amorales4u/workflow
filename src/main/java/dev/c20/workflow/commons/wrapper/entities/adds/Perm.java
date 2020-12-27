@@ -1,6 +1,6 @@
-package dev.c20.workflow.commons.storage.entities.adds;
+package dev.c20.workflow.commons.wrapper.entities.adds;
 
-import dev.c20.workflow.commons.storage.entities.Storage;
+import dev.c20.workflow.commons.wrapper.entities.Storage;
 
 import java.util.Objects;
 

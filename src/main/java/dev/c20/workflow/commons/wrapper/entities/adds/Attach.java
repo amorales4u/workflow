@@ -1,11 +1,11 @@
-package dev.c20.workflow.commons.storage.entities.adds;
+package dev.c20.workflow.commons.wrapper.entities.adds;
 
-import dev.c20.workflow.commons.storage.entities.Storage;
+import dev.c20.workflow.commons.wrapper.entities.Storage;
 
 import java.util.Date;
 import java.util.Objects;
 
-public class Log {
+public class Attach {
 
     private Long id;
 
@@ -15,18 +15,16 @@ public class Log {
 
     private String modifier;
 
-    private String comment;
+    private String name;
 
-    private Long commentId = 0l;
-
-    private Long type = 0l;
+    private Long file;
 
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Log log = (Log) o;
+        Attach log = (Attach) o;
         return id.equals(log.id);
     }
 
@@ -39,7 +37,7 @@ public class Log {
         return id;
     }
 
-    public Log setId(Long id) {
+    public Attach setId(Long id) {
         this.id = id;
         return this;
     }
@@ -48,7 +46,7 @@ public class Log {
         return parent;
     }
 
-    public Log setParent(Storage parent) {
+    public Attach setParent(Storage parent) {
         this.parent = parent;
         return this;
     }
@@ -57,7 +55,7 @@ public class Log {
         return modified;
     }
 
-    public Log setModified(Date modified) {
+    public Attach setModified(Date modified) {
         this.modified = modified;
         return this;
     }
@@ -66,35 +64,27 @@ public class Log {
         return modifier;
     }
 
-    public Log setModifier(String modifier) {
+    public Attach setModifier(String modifier) {
         this.modifier = modifier;
         return this;
     }
 
-    public String getComment() {
-        return comment;
+    public String getName() {
+        return name;
     }
 
-    public Log setComment(String comment) {
-        this.comment = comment;
+    public Attach setName(String comment) {
+        this.name = comment;
         return this;
     }
 
-    public Long getCommentId() {
-        return commentId;
+    public Long getFile() {
+        return file;
     }
 
-    public Log setCommentId(Long commentId) {
-        this.commentId = commentId;
+    public Attach setFile(Long file) {
+        this.file = file;
         return this;
     }
 
-    public Long getType() {
-        return type;
-    }
-
-    public Log setType(Long type) {
-        this.type = type;
-        return this;
-    }
 }

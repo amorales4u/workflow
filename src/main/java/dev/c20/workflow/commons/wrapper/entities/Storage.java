@@ -1,4 +1,4 @@
-package dev.c20.workflow.commons.storage.entities;
+package dev.c20.workflow.commons.wrapper.entities;
 
 
 import dev.c20.workflow.commons.tools.PathUtils;
