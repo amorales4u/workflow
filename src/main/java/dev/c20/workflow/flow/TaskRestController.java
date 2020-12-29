@@ -1,9 +1,6 @@
 package dev.c20.workflow.flow;
 
 import dev.c20.workflow.flow.services.TaskService;
-import dev.c20.workflow.storage.services.CommandService;
-import dev.c20.workflow.storage.services.SecurityService;
-import dev.c20.workflow.storage.services.StorageService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,18 @@ public class TaskRestController {
     @Autowired
     TaskService taskService;
 
+
+    @GetMapping( )
+    ResponseEntity<?> getAllTasksFolderCount( HttpServletRequest request) throws Exception {
+        // Regresa todos los procesos y sus respectivas carpetas a los que tiene permiso,
+        // por cada actividad presenta el count de las tareas que existen y tienen permisos
+        // si al actividad no tiene tareas no se presenta
+        // si no tiene permisos en la actividad no se presenta
+        return taskService
+                .setHttpServletRequest(request)
+                .getTask();
+
+    }
 
     @GetMapping( "/**" )
     ResponseEntity<?> getTask( @RequestBody Map<String,Object> data, HttpServletRequest request) throws Exception {

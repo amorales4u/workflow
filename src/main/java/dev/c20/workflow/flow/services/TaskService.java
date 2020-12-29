@@ -2,6 +2,7 @@ package dev.c20.workflow.flow.services;
 
 import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.commons.auth.UserEntity;
+import dev.c20.workflow.commons.wrapper.responses.Activity;
 import dev.c20.workflow.flow.responses.EvalResult;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Data;
@@ -199,6 +200,40 @@ public class TaskService {
             return storage.getName() + " no es visible para los usuarios";
 
         return null;
+    }
+
+    public ResponseEntity<?> getAllTasksCount() throws Exception {
+
+        List<Activity> result = new ArrayList<>();
+
+        List<String> userPermissions = userEntity.getPermissionsList();
+        // llamamos los workflows a los que tiene permiso el usuario
+        List<String> workflows = permRepository.getWorkflows(userPermissions);
+
+        for( String workflow : workflows) {
+            List<String> activities = permRepository.getWorkflows(workflow+"%", userPermissions);
+            Activity resultActivities = new Activity().setName(workflow);
+            resultActivities.setActivities(new ArrayList<>());
+            logger.info("Permission for:" + workflow);
+            for( String activitie: activities ) {
+
+                Long count = permRepository.getWorkflowsCount(activitie, userPermissions);
+                logger.info("Permission for:" + activitie + " with " + count + " tasks instances");
+
+                if( count > 0l ) {
+                    resultActivities.setCount( resultActivities.getCount() + count);
+                }
+
+                resultActivities.getActivities().add( new Activity().setName(activitie).setCount(count));
+
+            }
+
+            result.add(resultActivities);
+
+        }
+
+        return ResponseEntity.ok(result);
+
     }
 
     public ResponseEntity<?> getTask() throws Exception {
@@ -474,6 +509,5 @@ public class TaskService {
 
         return defaultFolder;
     }
-
 
 }

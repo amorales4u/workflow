@@ -100,7 +100,12 @@ public class FlowService {
     public ResponseEntity<?> createProcess(Map<String,Object> data) throws Exception {
 
         if( !isFolder || folderProcess == null) {
-            return ResponseEntity.badRequest().body("Create:Se espera un Folder para configurar el proceso");
+            folderProcess = new Storage();
+            folderProcess.setPath(getPath());
+            folderProcess.setCreated(new Date());
+            folderProcess.setCreator(this.userEntity.getName());
+            isFolder = true;
+            folderProcess = storageRepository.save(folderProcess);
         }
         // crea un proceso
 
