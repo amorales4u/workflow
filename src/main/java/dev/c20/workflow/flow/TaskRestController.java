@@ -38,7 +38,7 @@ public class TaskRestController {
         // si no tiene permisos en la actividad no se presenta
         return taskService
                 .setHttpServletRequest(request)
-                .getTask();
+                .getAllTasksCount();
 
     }
 

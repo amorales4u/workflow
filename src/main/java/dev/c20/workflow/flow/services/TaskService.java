@@ -108,15 +108,19 @@ public class TaskService {
             this.folderProcess = storageRepository.getFolder(PathUtils.getParentFolder(this.getPath()));
         }
 
-        Data data = dataRepository.getByParent(folderProcess.getId());
+        if( folderProcess != null ) {
+            Data data = dataRepository.getByParent(folderProcess.getId());
 
-        if( data != null )
-            processConfig = (Map<String,Object>)StringUtils.JSONFromString(data.getData());
-        else
-            throw new RuntimeException("El Proceso no esta configurado");
+            if (data != null)
+                processConfig = (Map<String, Object>) StringUtils.JSONFromString(data.getData());
+            else
+                throw new RuntimeException("El Proceso no esta configurado");
+        }
 
         userEntity = UserEntity.fromToken(httpRequest.getHeader(WorkflowApplication.HEADER_AUTHORIZATION));
 
+        logger.info(userEntity.asMap());
+        logger.info(userEntity.getPermissionsList());
         return this;
     }
 
@@ -212,7 +216,7 @@ public class TaskService {
 
         for( String workflow : workflows) {
             List<String> activities = permRepository.getWorkflows(workflow+"%", userPermissions);
-            Activity resultActivities = new Activity().setName(workflow);
+            Activity resultActivities = new Activity().setPath(workflow).setName(PathUtils.getName(workflow));
             resultActivities.setActivities(new ArrayList<>());
             logger.info("Permission for:" + workflow);
             for( String activitie: activities ) {
@@ -224,7 +228,9 @@ public class TaskService {
                     resultActivities.setCount( resultActivities.getCount() + count);
                 }
 
-                resultActivities.getActivities().add( new Activity().setName(activitie).setCount(count));
+                resultActivities.getActivities().add( new Activity().setPath(activitie)
+                        .setName(PathUtils.getName(activitie))
+                        .setCount(count));
 
             }
 
@@ -269,7 +275,7 @@ public class TaskService {
 
         String startFolder = (String)this.processConfig.get("startFolder");
 
-        String newPath = this.folderProcess.getPath() + startFolder + "/" + StringUtils.randomString(20);
+        String newPath = this.folderProcess.getPath() + startFolder + "/" + data.get("key");
 
         int cnt = permRepository.userHasCreatePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
 
