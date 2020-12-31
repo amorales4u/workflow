@@ -1,30 +1,139 @@
-wildfly Config JMS:
-        <extension module="org.wildfly.extension.messaging-activemq"/>
+Storage:
+
+En los servicios de storage se pueden almancenar registros (Files) en carpetas (folders)
+Todo file se guarda en un folder.
+
+Un folder su nombre SIEMPRE termina en / ejemplo:
+
+Path:
+/Catálogos/Usuarios/
+
+Nombre de carpeta:
+Usuarios/
+
+Cuando es necesario se manda como body un json con la estructura de Storage.java
 
 
-        <subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0">
-            <server name="default">
-                <security-setting name="#">
-                    <role name="guest" delete-non-durable-queue="true" create-non-durable-queue="true" consume="true" send="true"/>
-                </security-setting>
-                <address-setting name="#" message-counter-history-day-limit="10" page-size-bytes="2097152" max-size-bytes="10485760" expiry-address="jms.queue.ExpiryQueue" dead-letter-address="jms.queue.DLQ"/>
-                <http-connector name="http-connector" endpoint="http-acceptor" socket-binding="http"/>
-                <http-connector name="http-connector-throughput" endpoint="http-acceptor-throughput" socket-binding="http">
-                    <param name="batch-delay" value="50"/>
-                </http-connector>
-                <in-vm-connector name="in-vm" server-id="0"/>
-                <http-acceptor name="http-acceptor" http-listener="default"/>
-                <http-acceptor name="http-acceptor-throughput" http-listener="default">
-                    <param name="batch-delay" value="50"/>
-                    <param name="direct-deliver" value="false"/>
-                </http-acceptor>
-                <in-vm-acceptor name="in-vm" server-id="0"/>
-                <jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue"/>
-                <jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
-                <jms-queue name="TasksQueue" entries="queue/TasksQueue"/>
-                <connection-factory name="InVmConnectionFactory" entries="java:/ConnectionFactory" connectors="in-vm"/>
-                <connection-factory name="RemoteConnectionFactory" entries="java:jboss/exported/jms/RemoteConnectionFactory" connectors="http-connector"/>
-                <pooled-connection-factory name="activemq-ra" transaction="xa" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="in-vm"/>
-            </server>
-        </subsystem>
+llamados REST
+web-context => "workflow"
+
+Obtener la versión de Storage
+GET http://localhost:8089/workflow/storage/version
+
+Operaciones de folders
+
+Obtiene un folder:
+GET http://localhost:8089/workflow/storage/folder/{ruta  **}
+
+Crea un folder:
+POST http://localhost:8089/workflow/storage/folder/{ruta **}
+
+Actualiza un folder:
+PUT http://localhost:8089/workflow/storage/folder/{ruta **}
+
+Elimina de forma logica un folder:
+DELETE http://localhost:8089/workflow/storage/folder/{ruta  **}
+
+
+Operaciones de files:
+
+Obtiene un file:
+GET http://localhost:8089/workflow/storage/file/{ruta  **}
+
+Crea un file:
+POST http://localhost:8089/workflow/storage/file/{ruta  **}
+
+Actualiza un file:
+PUT http://localhost:8089/workflow/storage/file/{ruta  **}
+
+Elimina de forma logica un file:
+DELETE http://localhost:8089/workflow/storage/file/{ruta  **}
+
+Cada file o folder puede tener notas:
+
+Crear:
+POST http://localhost:8089/workflow/storage/note/{ruta **}
+
+{ check Note.java for body }
+
+Obtener todas las notas de un storage:
+GET http://localhost:8089/workflow/storage/note/{ruta  **}
+
+Cada file o folder puede tener un Log:
+
+Crear:
+POST http://localhost:8089/workflow/storage/log/{ruta **}
+
+{ check Log.java for body }
+
+Obtener todo el log de un storage:
+GET http://localhost:8089/workflow/storage/log/{ruta  **}
+
+Cada file o folder puede tener una serie de values, "key pair values":
+
+Crear:
+POST http://localhost:8089/workflow/storage/value/{ruta **}
+
+{ check Value.java for body }
+
+Obtener todos los values de un storage:
+GET http://localhost:8089/workflow/storage/value/{ruta  **}
+
+Actualizar:
+POST http://localhost:8089/workflow/storage/value/{ruta **}
+
+Eliminar fisicamente:
+DELETE http://localhost:8089/workflow/storage/value/{ruta **}
+
+Cada file o folder puede tener una serie de Attachments:
+
+Crear:
+POST http://localhost:8089/workflow/storage/attach/{ruta **}
+
+{ check Attach.java for body }
+
+Obtener todos los values de un storage:
+GET http://localhost:8089/workflow/storage/attach/{ruta  **}
+
+Actualizar:
+POST http://localhost:8089/workflow/storage/attach/{ruta **}
+
+Eliminar fisicamente:
+DELETE http://localhost:8089/workflow/storage/attach/{ruta **}
+
+Descargar el file attac:
+GET http://localhost:8089/workflow/storage/download/{ruta **}
+
+Cada file o folder puede tener datos en formato JSON de uso libre:
+
+Crear:
+POST http://localhost:8089/workflow/storage/data/{ruta **}
+
+{ any JSON }
+
+Obtener todos los values de un storage:
+GET http://localhost:8089/workflow/storage/data/{ruta  **}
+
+Actualizar:
+POST http://localhost:8089/workflow/storage/data/{ruta **}
+
+Eliminar fisicamente:
+DELETE http://localhost:8089/workflow/storage/data/{ruta **}
+
+
+Cada file o folder puede tener permisos por registro:
+
+Crear:
+POST http://localhost:8089/workflow/storage/perm/{ruta **}
+
+{ Check Perm.java }
+
+Obtener todos los permisos de un storage:
+GET http://localhost:8089/workflow/storage/perm/{ruta  **}
+
+Actualizar:
+POST http://localhost:8089/workflow/storage/perm/{ruta **}
+
+Eliminar fisicamente:
+DELETE http://localhost:8089/workflow/storage/perm/{ruta **}
 

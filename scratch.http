@@ -177,6 +177,7 @@ Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zg
   "startFolder": "Inicio/",
   "folderRoot": "/workflow/demo-workflow",
   "saveHistory": false,
+  "keyFormat": "DM-{df,5}",
   "perms":[
       { "user": "amorales", "perms": "crudas" }
     , { "user": "emorales", "perms": "crudas" }
