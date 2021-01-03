@@ -56,6 +56,9 @@ public interface PermRepository extends JpaRepository<Perm, Long> {
     @Query( "select count(s.id) from Perm o, Storage s where o.parent = s and s.path = ?1 and ( not s.isFolder = true ) and o.user in ( ?2 ) and ( o.canAdmin = true  or o.canRead = true or o.canSend = true  ) order by s.path")
     public Long getWorkflowsCount( String workflow, List<String> identities);
 
+    @Query( "select s from Perm o, Storage s where o.parent = s and s.path = ?1 and ( not s.isFolder = true ) and o.user in ( ?2 ) and ( o.canAdmin = true  or o.canRead = true or o.canSend = true  ) and s.visible = true and s.deleted = false order by s.path")
+    public List<Storage> getWorkflowTasks( String workflow, List<String> identities);
+
 
 
 }
