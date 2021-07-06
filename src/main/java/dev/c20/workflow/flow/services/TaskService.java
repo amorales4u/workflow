@@ -3,6 +3,7 @@ package dev.c20.workflow.flow.services;
 import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.commons.auth.UserEntity;
 import dev.c20.workflow.commons.wrapper.responses.Activity;
+import dev.c20.workflow.commons.wrapper.responses.ListResponse;
 import dev.c20.workflow.flow.responses.EvalResult;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Data;
@@ -111,10 +112,10 @@ public class TaskService {
         if( folderProcess != null ) {
             Data data = dataRepository.getByParent(folderProcess.getId());
 
+            // puede ser un folder actividad y no de proceso
             if (data != null)
                 processConfig = (Map<String, Object>) StringUtils.JSONFromString(data.getData());
-            else
-                throw new RuntimeException("El Proceso no esta configurado");
+
         }
 
         userEntity = UserEntity.fromToken(httpRequest.getHeader(WorkflowApplication.HEADER_AUTHORIZATION));
@@ -242,8 +243,20 @@ public class TaskService {
 
     }
 
+    public ListResponse<Storage> getAllTasks() throws  Exception {
+        List<String> userPermissions = userEntity.getPermissionsList();
+        List<Storage> storages = permRepository.getWorkflowTasks(this.getPath(), userPermissions);
+
+        return new ListResponse<Storage>().setData(storages).setListCount(storages.size());
+    }
+
     public ResponseEntity<?> getTask() throws Exception {
+
+
         if( this.taskFile == null ) {
+            if( this.processConfig == null ) {
+                return ResponseEntity.ok(getAllTasks());
+            }
             return ResponseEntity.badRequest().body(createErrorResult(100,"Get:Se espera un File para la tarea"));
         }
 

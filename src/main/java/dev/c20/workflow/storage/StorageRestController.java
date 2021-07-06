@@ -1,16 +1,15 @@
 package dev.c20.workflow.storage;
 
 import dev.c20.workflow.commons.annotations.Roles;
+import dev.c20.workflow.commons.tools.StringUtils;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Attach;
 import dev.c20.workflow.storage.entities.adds.Note;
 import dev.c20.workflow.storage.entities.adds.Perm;
 import dev.c20.workflow.storage.entities.adds.Value;
 import dev.c20.workflow.storage.services.StorageService;
-import dev.c20.workflow.commons.tools.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.lucene.index.IndexReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,6 +88,16 @@ public class StorageRestController {
         return storageService
                 .setHttpServletRequest(request)
                 .addFolder(storage)
+                .response();
+
+    }
+
+    @PostMapping("/tree/**")
+    ResponseEntity<?> createTree( Storage storageDefinition, HttpServletRequest request) throws Exception {
+
+        return storageService
+                .setHttpServletRequest(request)
+                .addTreeFolders(storageDefinition)
                 .response();
 
     }

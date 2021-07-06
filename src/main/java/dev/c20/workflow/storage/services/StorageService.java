@@ -237,6 +237,51 @@ public class StorageService  {
         return count > 0;
     }
 
+    public ObjectResponse addTreeFolders(Storage storageDefinition) {
+        logger.info("addTreeFolders:" + this.getPath() );
+        String[] paths = PathUtils.splitPath(this.getPath());
+
+        String currentPath = "/";
+        Storage storage = null;
+        for( int idx = 0; idx < paths.length ; idx++) {
+            if( idx == paths.length-1 ) {
+                if(PathUtils.isFolder(this.getPath())) {
+                    currentPath += paths[idx] + "/";
+                } else {
+                    currentPath += paths[idx];
+                }
+            } else {
+                currentPath += paths[idx] + "/";
+            }
+            if( PathUtils.isFolder(currentPath) )
+                storage = storageRepository.getFolder(currentPath);
+            else
+                storage = storageRepository.getFile(currentPath);
+
+            if( storage == null ) {
+                storage = new Storage().setPath(currentPath)
+                        .setCreator(this.getUser().getUser())
+                        .setLocked(false)
+                        .setVisible(true)
+                        .setDeleted(false)
+                        .setReadOnly(false)
+                        .setRestrictedByPerm(false)
+                        .setChildrenRestrictedByPerm(false);
+
+                storageRepository.save(storage);
+            }
+
+            if( idx == paths.length-1 ) {
+                storage.setPropertiesFrom(storageDefinition);
+                storageRepository.save(storage);
+            }
+
+        }
+
+        return new ObjectResponse(storage);
+
+    }
+
     public ObjectResponse addFolder(Storage storage) {
         if( !this.isFolder() )
             return new ObjectResponse("En el path no se manda un folder");
