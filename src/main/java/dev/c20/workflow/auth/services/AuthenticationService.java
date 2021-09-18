@@ -30,7 +30,7 @@ public class AuthenticationService {
 
 
 
-    public Boolean isAuthenticated() {
+    public boolean isAuthenticated() {
         return authenticateComponent.isAuthenticated();
     }
 

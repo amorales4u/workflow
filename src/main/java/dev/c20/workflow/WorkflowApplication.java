@@ -1,29 +1,37 @@
 package dev.c20.workflow;
 
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.sql.DataSource;
-import java.util.Properties;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scripting.groovy.GroovyScriptFactory;
+import org.springframework.scripting.support.ScriptFactoryPostProcessor;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Properties;
 
 @SpringBootApplication
 @Configuration
@@ -111,9 +119,43 @@ public class WorkflowApplication {
         return properties;
     }
 
-    public static void main(String[] args) {
+    @Bean
+    ScriptFactoryPostProcessor scriptFactory() {
+        return new ScriptFactoryPostProcessor();
+    }
+
+    public static void main2(String[] args) {
 
         SpringApplication.run(WorkflowApplication.class, args);
+    }
+
+    public static void main(String[] args ) {
+        SpringApplication app = new SpringApplication(WorkflowApplication.class);
+        // Add GroovyScriptFactory after Application is prepared...
+        app.addListeners(new ApplicationListener<ApplicationEvent>() {
+            @Override
+            public void onApplicationEvent(ApplicationEvent applicationEvent) {
+
+                if( !( applicationEvent instanceof ContextRefreshedEvent) ) {
+                    return;
+                }
+                ApplicationContext applicationContext = ((ContextRefreshedEvent) applicationEvent).getApplicationContext();
+                AutowireCapableBeanFactory registry = applicationContext.getAutowireCapableBeanFactory();
+                BeanDefinitionBuilder bd = BeanDefinitionBuilder.genericBeanDefinition(GroovyScriptFactory.class);
+                bd.addConstructorArgValue("file:E:\\develop\\projects\\TaskServer\\workflow\\groovys\\HolaSpring.groovy");
+                bd.getBeanDefinition().
+                    setAttribute(ScriptFactoryPostProcessor.REFRESH_CHECK_DELAY_ATTRIBUTE, 1000);
+
+                GenericApplicationContext context = new GenericApplicationContext();
+                context.setParent(applicationContext);
+
+
+                System.out.println(bd.getBeanDefinition());
+                context.registerBeanDefinition("holaSpring", bd.getBeanDefinition());
+            }
+
+        });
+        app.run(args);
     }
 
 }

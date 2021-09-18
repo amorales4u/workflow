@@ -33,7 +33,7 @@ public class AuthenticationRestController {
     AuthenticationService authService;
 
     @PutMapping("/")
-    public ResponseEntity<?> createAuthenticationToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ResponseEntity<UserEntity> createAuthenticationToken(HttpServletRequest request, HttpServletResponse response)  {
 
         authService
                 .setHttpServletRequest(request)

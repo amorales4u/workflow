@@ -35,7 +35,7 @@ public abstract class AuthenticateBase {
     }
 
 
-    public Boolean isAuthenticated() {
+    public boolean isAuthenticated() {
         return authenticated;
     }
     public AuthenticateBase setAuthenticated(Boolean authenticated) {

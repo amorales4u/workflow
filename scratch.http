@@ -4,13 +4,27 @@ Authentication: amorales
 
 ###
 
+PUT http://localhost:8089/workflow/files/persistence.xml
+Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="persistence.xml"
+
+// The 'input.txt' file will be uploaded
+< C:/develop/persistence.xml
+--boundary
+
+
+###
+
 GET http://localhost:8089/workflow/storage/version
 Content-Type: application/json
 Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==
 
 ###
 
-PUT http://localhost:8089/workflow/storage/test
+PUT http://localhost:8090/workflow/storage/test
 Content-Type: application/json
 
 {
@@ -20,25 +34,50 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:8089/workflow/authenticate
+PUT http://localhost:8090/workflow/authentication/
 Content-Type: application/json
+Authentication: amorales
 
 { "username": "javainuse",
 "password": "password"
 }
-
-###
-
-POST http://localhost:8089/workflow/storage/folder/Catálogos/
-Content-Type: application/json
-Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==
+> {%
+client.global.set("token",response.headers.valueOf("Authorization"))
+%}
 
 
 ###
 
-POST http://localhost:8089/workflow/storage/folder/Catálogos/Usuarios/
+GET http://localhost:8090/workflow/folder/system/business/*
+Content-Type: application/json
+Authorization: {{token}}
+
+> {%
+client.global.set("token",response.headers.valueOf("Authorization"))
+%}
+
+
+###
+
+GET http://localhost:8090/workflow/storage/folder/Catálogos/
+Content-Type: application/json
+Authorization: {{token}}
+
+> {%
+client.global.set("token",response.headers.valueOf("Authorization"))
+%}
+
+
+###
+
+POST http://localhost:8090/workflow/storage/folder/Catálogos/Usuarios/
 Content-Type: application/json
 Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==
+
+
+> {%
+client.global.set("token",response.headers.valueOf("Authorization"))
+%}
 
 ###
 
@@ -113,18 +152,6 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYXZhaW51c2UiLCJncm91cHMiO
 
 ###
 
-POST http://localhost:8089/workflow/storage/upload/
-Content-Type: multipart/form-data; boundary=boundary
-
---boundary
-Content-Disposition: form-data; name="file"; filename="persistence.xml"
-
-// The 'input.txt' file will be uploaded
-< C:/develop/persistence.xml
---boundary
-
-
-###
 
 
 GET http://localhost:8089/workflow/storage/download/3/ejemplo%2exml

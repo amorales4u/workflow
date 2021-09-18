@@ -16,7 +16,7 @@ public interface StorageRepository extends JpaRepository<Storage, Long> {
     @Query( "select o from Storage o where o.path = ?1 and o.isFolder = true")
     public Storage getFolder(String path );
 
-    @Query( "select o from Storage o where o.path like ?1 and o.level = ?2 order by o.isFolder, o.name")
+    @Query( "select o from Storage o where o.path like ?1 and o.level = ?2 order by o.isFolder desc, o.name")
     public List<Storage> dir(String path, Integer level );
 
 }

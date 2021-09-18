@@ -13,7 +13,7 @@ public class SimpleAuthenticateComponent extends AuthenticateBase {
             UserEntity user = new UserEntity()
                     .setUser(this.getUser())
                     .setName("Aton Morales")
-                    .setRoles("STORAGE, COMMAND, WORKFLOW, ADMIN, TEST, DEV");
+                    .setRoles("STORAGE,COMMAND,WORKFLOW,ADMIN,TEST,DEV");
             this.setAuthenticatedUser(user);
         } else if( this.getUser().equals("emorales")) {
             this.setAuthenticated( true );

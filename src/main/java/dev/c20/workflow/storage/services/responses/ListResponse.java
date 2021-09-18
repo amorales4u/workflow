@@ -2,14 +2,13 @@ package dev.c20.workflow.storage.services.responses;
 
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ListResponse {
+public class ListResponse<T> {
 
     private boolean error = false;
     private String errorDescription = "";
-    private List<Object> data = new ArrayList<>();
+    private List<T> data;
     private int listCount = 0;
     private int currentPage = 0;
     private int pageCount = 10;
@@ -31,13 +30,13 @@ public class ListResponse {
             return;
         }
 
-        this.data.add(obj);
+        //this.data.add(obj);
         this.listCount = 1;
         this.currentPage = 1;
         this.pageCount = 1;
     }
 
-    public ListResponse(List<Object> objs, int currentPage, int pageCount) {
+    public ListResponse(List<T> objs, int currentPage, int pageCount) {
         if( objs == null ) {
             this.error = true;
             this.errorDescription = "No hay información";
@@ -81,12 +80,13 @@ public class ListResponse {
         return this;
     }
 
-    public List<Object> getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public ListResponse setData(List<Object> data) {
+    public ListResponse setData(List<T> data) {
         this.data = data;
+        this.listCount = data.size();
         return this;
     }
 
