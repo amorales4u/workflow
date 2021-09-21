@@ -1,6 +1,6 @@
 package dev.c20.workflow.storage;
 
-import dev.c20.workflow.commons.annotations.Roles;
+import dev.c20.workflow.auth.annotations.Roles;
 import dev.c20.workflow.commons.tools.StringUtils;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Attach;

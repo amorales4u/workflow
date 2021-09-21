@@ -54,7 +54,7 @@ public class Storage implements Serializable {
 
 
     @Column(name=WorkflowApplication.DB_PREFIX + "DELETED", columnDefinition = "TINYINT" )
-    private Boolean deleted = null;
+    private Boolean deleted = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "DELETE_DATE")
     @Temporal(value= TemporalType.TIMESTAMP)
@@ -64,7 +64,7 @@ public class Storage implements Serializable {
     private String userDeleter;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "MODIFIED", columnDefinition = "TINYINT" )
-    private Boolean modified = null;
+    private Boolean modified = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "MODIFY_DATE")
     @Temporal(value=TemporalType.TIMESTAMP)
@@ -87,9 +87,6 @@ public class Storage implements Serializable {
 
     @Column(name=WorkflowApplication.DB_PREFIX + "RESTRICTED_BY_ROLE", columnDefinition = "TINYINT" )
     private Boolean restrictedByPerm = false;
-
-    @Column(name=WorkflowApplication.DB_PREFIX + "RESTRICTED_CHILDREN_BY_ROLE", columnDefinition = "TINYINT" )
-    private Boolean childrenRestrictedByPerm = false;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "STATUS")
     private Integer status;
@@ -146,7 +143,6 @@ public class Storage implements Serializable {
         return this.setAssigned(source.assigned)
                 .setExtension(source.extension)
                 .setDescription(source.description)
-                .setChildrenRestrictedByPerm(source.childrenRestrictedByPerm)
                 .setClazzName(source.clazzName)
                 .setImage(source.image)
                 .setLocked(source.locked)

@@ -1,6 +1,6 @@
 package dev.c20.workflow.auth;
 
-import dev.c20.workflow.commons.auth.UserEntity;
+import dev.c20.workflow.auth.entities.UserEntity;
 import dev.c20.workflow.auth.services.AuthenticationService;
 import dev.c20.workflow.commons.tools.StringUtils;
 
@@ -33,22 +33,19 @@ public class AuthenticationRestController {
     AuthenticationService authService;
 
     @PutMapping("/")
-    public ResponseEntity<UserEntity> createAuthenticationToken(HttpServletRequest request, HttpServletResponse response)  {
+    public ResponseEntity<UserEntity> createAuthenticationToken(@RequestBody UserEntity userEntity, HttpServletRequest request, HttpServletResponse response)  {
 
         authService
-                .setHttpServletRequest(request)
+                .setUserEntity(userEntity)
                 .authenticate();
 
         if( !authService.isAuthenticated() )
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        UserEntity userEntity = authService.getAuthenticatedUser();
+        userEntity = authService.getAuthenticatedUser();
 
         String token = StringUtils.getToken(userEntity.asMap());
 
-        response.setHeader("Authorization", "token "+ token);
-
-        logger.info("User authenticated:" + userEntity.getName());
 
         return ResponseEntity.ok(userEntity);
     }

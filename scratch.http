@@ -36,10 +36,9 @@ Content-Type: application/json
 
 PUT http://localhost:8090/workflow/authentication/
 Content-Type: application/json
-Authentication: amorales
 
-{ "username": "javainuse",
-"password": "password"
+{ "user": "javainuse",
+"otp": "458667"
 }
 > {%
 client.global.set("token",response.headers.valueOf("Authorization"))
@@ -48,7 +47,7 @@ client.global.set("token",response.headers.valueOf("Authorization"))
 
 ###
 
-GET http://localhost:8090/workflow/folder/system/business/*
+GET http://localhost:8090/workflow/stg/Sistema/Usuarios/*
 Content-Type: application/json
 Authorization: {{token}}
 

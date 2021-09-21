@@ -1,15 +1,22 @@
 package dev.c20.workflow.auth.services;
 
-import dev.c20.workflow.commons.auth.UserEntity;
+import dev.c20.workflow.auth.entities.UserEntity;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Slf4j
+@Getter
+@Setter
+@Accessors(chain = true)
 public abstract class AuthenticateBase {
 
     private HttpServletResponse httpResponse = null;
     private HttpServletRequest httpRequest = null;
-    private String user = null;
     private UserEntity auhenticatedUser = null;
     boolean authenticated = false;
 
@@ -24,16 +31,6 @@ public abstract class AuthenticateBase {
         this.httpRequest = httpRequest;
         return this;
     }
-
-    public String getUser() {
-        return user;
-    }
-
-    public AuthenticateBase setUser(String user) {
-        this.user = user;
-        return this;
-    }
-
 
     public boolean isAuthenticated() {
         return authenticated;

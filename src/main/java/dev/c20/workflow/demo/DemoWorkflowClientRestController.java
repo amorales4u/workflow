@@ -1,7 +1,6 @@
 package dev.c20.workflow.demo;
 
-import dev.c20.workflow.commons.annotations.RoleException;
-import dev.c20.workflow.commons.annotations.Roles;
+import dev.c20.workflow.auth.annotations.Roles;
 import dev.c20.workflow.demo.entities.Palabra;
 import dev.c20.workflow.demo.entities.PalabraRepository;
 import dev.c20.workflow.storage.entities.Storage;
@@ -13,13 +12,14 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.Response;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RestController

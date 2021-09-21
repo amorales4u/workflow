@@ -1,7 +1,7 @@
 package dev.c20.workflow.storage.services;
 
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.commons.auth.UserEntity;
+import dev.c20.workflow.auth.entities.UserEntity;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.*;
 import dev.c20.workflow.files.services.FileDBStorageService;
@@ -266,7 +266,7 @@ public class StorageService  {
                         .setDeleted(false)
                         .setReadOnly(false)
                         .setRestrictedByPerm(false)
-                        .setChildrenRestrictedByPerm(false);
+                        ;
 
                 storageRepository.save(storage);
             }
@@ -305,7 +305,7 @@ public class StorageService  {
                 .setDeleted(false)
                 .setReadOnly(false)
                 .setRestrictedByPerm(false)
-                .setChildrenRestrictedByPerm(false));
+                );
 
         storageRepository.save(this.getRequestedStorage());
 
@@ -365,8 +365,6 @@ public class StorageService  {
         if( request.getStatus() != null )
             this.getRequestedStorage().setStatus(request.getStatus());
 
-        if( request.getChildrenRestrictedByPerm() != null )
-            this.getRequestedStorage().setChildrenRestrictedByPerm(request.getChildrenRestrictedByPerm());
 
         if( request.getRestrictedByPerm() != null )
             this.getRequestedStorage().setRestrictedByPerm(request.getRestrictedByPerm());
@@ -425,8 +423,7 @@ public class StorageService  {
                 .setVisible(true)
                 .setDeleted(false)
                 .setReadOnly(false)
-                .setRestrictedByPerm(false)
-                .setChildrenRestrictedByPerm(false));
+                .setRestrictedByPerm(false));
 
         storageRepository.save(this.getRequestedStorage());
 

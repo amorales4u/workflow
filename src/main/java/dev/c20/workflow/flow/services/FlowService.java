@@ -1,7 +1,7 @@
 package dev.c20.workflow.flow.services;
 
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.commons.auth.UserEntity;
+import dev.c20.workflow.auth.entities.UserEntity;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Data;
 import dev.c20.workflow.storage.entities.adds.Perm;

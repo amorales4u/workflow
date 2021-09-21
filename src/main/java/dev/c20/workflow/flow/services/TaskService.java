@@ -1,7 +1,7 @@
 package dev.c20.workflow.flow.services;
 
 import dev.c20.workflow.WorkflowApplication;
-import dev.c20.workflow.commons.auth.UserEntity;
+import dev.c20.workflow.auth.entities.UserEntity;
 import dev.c20.workflow.commons.wrapper.responses.Activity;
 import dev.c20.workflow.commons.wrapper.responses.ListResponse;
 import dev.c20.workflow.flow.responses.EvalResult;
