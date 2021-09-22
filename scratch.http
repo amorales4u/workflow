@@ -37,8 +37,8 @@ Content-Type: application/json
 PUT http://localhost:8090/workflow/authentication/
 Content-Type: application/json
 
-{ "user": "javainuse",
-"otp": "458667"
+{ "user": "bfg9000",
+"password": "tigger"
 }
 > {%
 client.global.set("token",response.headers.valueOf("Authorization"))

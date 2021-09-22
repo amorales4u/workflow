@@ -121,7 +121,7 @@ public class TaskService {
         userEntity = UserEntity.fromToken(httpRequest.getHeader(WorkflowApplication.HEADER_AUTHORIZATION));
 
         logger.info(userEntity.asMap());
-        logger.info(userEntity.getPermissionsList());
+        logger.info(userEntity.getRolesList());
         return this;
     }
 
@@ -211,7 +211,7 @@ public class TaskService {
 
         List<Activity> result = new ArrayList<>();
 
-        List<String> userPermissions = userEntity.getPermissionsList();
+        List<String> userPermissions = userEntity.getRolesList();
         // llamamos los workflows a los que tiene permiso el usuario
         List<String> workflows = permRepository.getWorkflows(userPermissions);
 
@@ -244,7 +244,7 @@ public class TaskService {
     }
 
     public ListResponse<Storage> getAllTasks() throws  Exception {
-        List<String> userPermissions = userEntity.getPermissionsList();
+        List<String> userPermissions = userEntity.getRolesList();
         List<Storage> storages = permRepository.getWorkflowTasks(this.getPath(), userPermissions);
 
         return new ListResponse<Storage>().setData(storages).setListCount(storages.size());
@@ -290,7 +290,7 @@ public class TaskService {
 
         String newPath = this.folderProcess.getPath() + startFolder + "/" + data.get("key");
 
-        int cnt = permRepository.userHasCreatePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
+        int cnt = permRepository.userHasCreatePermissionsInStorage( this.folderProcess.getId(), userEntity.getRolesList() );
 
         if( cnt == 0 ) {
             return ResponseEntity.badRequest().body(createErrorResult(400,"Create:El usuario no tiene permisos para crear una tarea"));
@@ -336,7 +336,7 @@ public class TaskService {
 
         // crea un proceso
 
-        int cnt = permRepository.userHasUpdatePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
+        int cnt = permRepository.userHasUpdatePermissionsInStorage( this.folderProcess.getId(), userEntity.getRolesList() );
 
         if( cnt == 0 ) {
             return ResponseEntity.badRequest().body(createErrorResult(900,"Update:El usuario no tiene permisos para modificar una tarea"));
@@ -380,7 +380,7 @@ public class TaskService {
 
         // crea un proceso
 
-        int cnt = permRepository.userHasDeletePermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
+        int cnt = permRepository.userHasDeletePermissionsInStorage( this.folderProcess.getId(), userEntity.getRolesList() );
 
         if( cnt == 0 ) {
             return ResponseEntity.badRequest().body(createErrorResult(1300,"Delete:El usuario no tiene permisos para eliminar una tarea"));
@@ -425,7 +425,7 @@ public class TaskService {
 
         // crea un proceso
 
-        int cnt = permRepository.userHasSendPermissionsInStorage( this.folderProcess.getId(), userEntity.getPermissionsList() );
+        int cnt = permRepository.userHasSendPermissionsInStorage( this.folderProcess.getId(), userEntity.getRolesList() );
 
         if( cnt == 0 ) {
             return ResponseEntity.badRequest().body(createErrorResult(1800,"Complete:El usuario no tiene permisos para completar una tarea"));

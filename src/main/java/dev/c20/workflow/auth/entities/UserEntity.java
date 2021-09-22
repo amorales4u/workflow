@@ -22,9 +22,11 @@ public class UserEntity {
     private String roles;
     private String email;
     private String otp;
+    private String password;
+
     private Map<String,Object> extras = new HashMap<>();
 
-    public List<String> getPermissionsList() {
+    public List<String> getRolesList() {
         if( this.getRoles() == null ) {
             return new LinkedList<>();
         }

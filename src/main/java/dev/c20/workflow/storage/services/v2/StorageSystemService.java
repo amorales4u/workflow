@@ -5,8 +5,10 @@ import dev.c20.workflow.auth.entities.UserEntity;
 import dev.c20.workflow.commons.tools.PathUtils;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Log;
+import dev.c20.workflow.storage.entities.adds.Value;
 import dev.c20.workflow.storage.repositories.LogRepository;
 import dev.c20.workflow.storage.repositories.StorageRepository;
+import dev.c20.workflow.storage.repositories.ValueRepository;
 import dev.c20.workflow.storage.services.responses.ListResponse;
 import dev.c20.workflow.storage.services.responses.ObjectResponse;
 import lombok.Getter;
@@ -38,6 +40,9 @@ public class StorageSystemService {
     @Autowired
     LogRepository logRepository;
 
+    @Autowired
+    ValueRepository valueRepository;
+
     UserEntity userEntity;
 
     HttpServletRequest httpServletRequest;
@@ -64,7 +69,7 @@ public class StorageSystemService {
 
     public ObjectResponse<Storage> getFolder(String path) {
 
-        Storage result = storageRepository.userCanReadInFolder(path, userEntity.getPermissionsList());
+        Storage result = storageRepository.userCanReadInFolder(path, userEntity.getRolesList());
 
         if( result == null ) {
             return new ObjectResponse<>( path + " => No existe el folder, no esta visible, esta eliminado o usted no tiene permisos");
@@ -195,5 +200,88 @@ public class StorageSystemService {
 
     }
 
+    private StorageFile getFileForAdds( String path ) {
+        StorageFile storageFile = new StorageFile();
+
+        String parentFolderPath = PathUtils.getParentFolder(path);
+
+        Storage parentFolder = storageRepository.userCanUpdateInFolder(parentFolderPath, userEntity.getRolesList());
+
+        if( parentFolder == null ) {
+            storageFile.errorMessage = "No tiene permisos para el folder => " + parentFolderPath;
+            return storageFile;
+        }
+
+        Storage storage = storageRepository.getFile(path);
+
+        if( storage == null ) {
+            storageFile.errorMessage = "No existe el storage =>" + path;
+            return storageFile;
+        }
+
+        storageFile.parentFolder = parentFolder;
+        storageFile.file = storage;
+        storageFile.isError = false;
+
+        return storageFile;
+
+    }
+
+    public ListResponse<Value> getValues(String path) {
+        StorageFile storageFile = getFileForAdds(path);
+
+        if( storageFile.isError ) {
+            return new ListResponse<>(storageFile.errorMessage);
+        }
+
+        return new ListResponse<Value>().setData( valueRepository.getAll(storageFile.file));
+
+    }
+
+    public ObjectResponse<Value> addValue(String path, Value value) {
+        StorageFile storageFile = getFileForAdds(path);
+
+        if( storageFile.isError ) {
+            return new ObjectResponse<>(storageFile.errorMessage);
+        }
+
+        value = valueRepository.save(value);
+
+        return new ObjectResponse<Value>().setData(value);
+
+    }
+
+    public ObjectResponse<Value> updateValue(String path, Value value) {
+        StorageFile storageFile = getFileForAdds(path);
+
+        if( storageFile.isError ) {
+            return new ObjectResponse<>(storageFile.errorMessage);
+        }
+
+        value = valueRepository.save(value);
+
+        return new ObjectResponse<Value>().setData(value);
+
+    }
+
+    public ObjectResponse<Value> deleteValue(String path, Value value) {
+        StorageFile storageFile = getFileForAdds(path);
+
+        if( storageFile.isError ) {
+            return new ObjectResponse<>(storageFile.errorMessage);
+        }
+
+        valueRepository.delete(value);
+
+        return new ObjectResponse<Value>().setData(value);
+
+    }
+
+    class StorageFile {
+        Storage parentFolder;
+        Storage file;
+        String errorMessage;
+        boolean isError = true;
+    }
 
 }

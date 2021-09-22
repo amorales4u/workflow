@@ -14,10 +14,15 @@ import java.util.List;
 @Repository
 public interface ValueRepository extends JpaRepository<Value, Long> {
 
-    @Query( "select o from Value o where o.parent = ?1 order by o.id")
+    public static final int PROPERTIES = 1000;
+
+    @Query( "select o from Value o where o.parent = ?1 order by o.order")
     public List<Value> getAll(Storage parent);
 
-    @Query( "select o from Value o where o.parent = ?1 and o.name = ?2 order by o.id")
+    @Query( "select o from Value o where o.parent = ?1 and o.intValue = 1000 order by o.order")
+    public List<Value> getAllProperties(Storage parent);
+
+    @Query( "select o from Value o where o.parent = ?1 and o.name = ?2 order by o.order")
     public Value getByName(Storage parent, String name);
 
     @Modifying

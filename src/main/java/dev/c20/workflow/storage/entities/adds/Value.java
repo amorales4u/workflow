@@ -2,11 +2,17 @@ package dev.c20.workflow.storage.entities.adds;
 
 import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.storage.entities.Storage;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
+@Setter
+@Getter
+@Accessors(chain = true)
 @Entity
 @Table(name= WorkflowApplication.DB_PREFIX + "STG_VALUE")
 public class Value {
@@ -26,6 +32,9 @@ public class Value {
     @Column(name=WorkflowApplication.DB_PREFIX + "STR_VALUE")
     private String value;
 
+    @Column(name=WorkflowApplication.DB_PREFIX + "STR_TYPE")
+    private String type;
+
     @Column(name=WorkflowApplication.DB_PREFIX + "NUM_VALUE", precision = 6)
     private Double doubleValue;
 
@@ -34,6 +43,12 @@ public class Value {
 
     @Column(name=WorkflowApplication.DB_PREFIX + "LONG_VALUE")
     private Long longValue;
+
+    @Column(name=WorkflowApplication.DB_PREFIX + "INT_VALUE")
+    private Integer intValue;
+
+    @Column(name=WorkflowApplication.DB_PREFIX + "ORDER_VALUE")
+    private Integer order;
 
 
     @Override
@@ -48,69 +63,5 @@ public class Value {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Value setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public Storage getParent() {
-        return parent;
-    }
-
-    public Value setParent(Storage parent) {
-        this.parent = parent;
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Value setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public Value setValue(String value) {
-        this.value = value;
-        return this;
-    }
-
-    public Double getDoubleValue() {
-        return doubleValue;
-    }
-
-    public Value setDoubleValue(Double doubleValue) {
-        this.doubleValue = doubleValue;
-        return this;
-    }
-
-    public Date getDateValue() {
-        return dateValue;
-    }
-
-    public Value setDateValue(Date dateValue) {
-        this.dateValue = dateValue;
-        return this;
-    }
-
-    public Long getLongValue() {
-        return longValue;
-    }
-
-    public Value setLongValue(Long longValue) {
-        this.longValue = longValue;
-        return this;
-    }
-
 
 }

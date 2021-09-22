@@ -15,10 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 @Accessors(chain = true)
 public abstract class AuthenticateBase {
 
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String AUTHORIZATION_TOKEN = "";
     private HttpServletResponse httpResponse = null;
     private HttpServletRequest httpRequest = null;
     private UserEntity auhenticatedUser = null;
     boolean authenticated = false;
+
+
 
 
 
