@@ -27,7 +27,9 @@ import org.springframework.scripting.groovy.GroovyScriptFactory;
 import org.springframework.scripting.support.ScriptFactoryPostProcessor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -60,6 +62,21 @@ public class WorkflowApplication {
 
     @Autowired
     Environment env;
+
+
+    @Bean
+    public WebMvcConfigurer corsFilter() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedHeaders("*")
+                        .allowedMethods("*")
+                        .exposedHeaders("Authorization");
+            }
+        };
+
+    }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {

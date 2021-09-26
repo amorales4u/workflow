@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Component
@@ -26,6 +28,7 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
     public static String APP_NAME = "MAIN_AMB_DEV";
 
     public static String USER_MAIL = "amorales@c20.dev";
+    public static final String EMAIL_CHECK = "^(.+)@(.+)$";
 
     static public void main(String[] args) throws UnsupportedEncodingException {
         //System.out.println(Base32.random());
@@ -64,8 +67,22 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
     @Override
     public AuthenticateBase authenticate() {
         this.setAuthenticated(false);
+        Pattern pattern = Pattern.compile(EMAIL_CHECK);
+        Matcher matcher = pattern.matcher(this.getAuthenticatedUser().getUser());
 
-        Storage storage = storageRepository.getFile(usersDir+this.getAuhenticatedUser().getUser());
+        Storage storage = null;
+        if( this.getAuthenticatedUser().getUser() != null && !matcher.matches()) {
+            storage = storageRepository.getFile(usersDir + this.getAuhenticatedUser().getUser());
+        } else {
+            List<dev.c20.workflow.storage.entities.adds.Value> emails = valueRepository.getFindByNameValue( "email", this.getAuthenticatedUser().getUser());
+            if( emails.size() != 1 ) {
+                return this;
+            }
+            storage = emails.get(0).getParent();
+            this.getAuthenticatedUser().setUser(storage.getName());
+            this.getAuthenticatedUser().setEmail(emails.get(0).getValue());
+        }
+
         if( storage == null ) {
             return this;
         }
@@ -134,19 +151,8 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
         }
         this.getAuthenticatedUser().setName(storage.getDescription());
         this.getAuthenticatedUser().setPassword("*********");
+        this.getAuthenticatedUser().setOtp(null);
         this.setAuthenticated(true);
-/*
-        dev.c20.workflow.storage.entities.adds.Value value = valueRepository.getByName(storage,"password");
-
-        if( value == null ) {
-            return this;
-        }
-
-        if(StringUtils.encrypt(this.getPass(),secret).equals(value.getValue())) {
-            this.setAuthenticated(true);
-            return this;
-        }
-        */
 
         return this;
     }

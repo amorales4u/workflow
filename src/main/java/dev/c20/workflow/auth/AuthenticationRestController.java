@@ -32,7 +32,7 @@ public class AuthenticationRestController {
     AuthenticationService authService;
 
     @PutMapping("/")
-    public ResponseEntity<UserEntity> createAuthenticationToken(@RequestBody UserEntity userEntity, HttpServletRequest request, HttpServletResponse response)  {
+    public ResponseEntity<UserEntity> createAuthenticationToken(@RequestBody UserEntity userEntity, HttpServletRequest request, HttpServletResponse response) throws InterruptedException {
 
         authService
                 .setUserEntity(userEntity)
@@ -45,7 +45,7 @@ public class AuthenticationRestController {
 
         response.addHeader(AuthenticateBase.AUTHORIZATION, AuthenticateBase.AUTHORIZATION_TOKEN + StringUtils.getToken(userEntity.asMap()));
 
-
+        //Thread.sleep(5000);
         return ResponseEntity.ok(userEntity);
     }
 

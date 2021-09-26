@@ -26,6 +26,13 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("IN  ContentCachingFilter ");
+
+        if( httpServletRequest.getMethod().toLowerCase().equals("options")) {
+            httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+            httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, HEAD, OPTIONS");
+            httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
+            return;
+        }
         CachedBodyHttpServletRequest cachedBodyHttpServletRequest = new CachedBodyHttpServletRequest(httpServletRequest);
 
         String restService = PathUtils.splitPath(httpServletRequest.getRequestURI())[1];

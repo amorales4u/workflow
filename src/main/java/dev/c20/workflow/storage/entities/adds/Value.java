@@ -17,6 +17,10 @@ import java.util.Objects;
 @Table(name= WorkflowApplication.DB_PREFIX + "STG_VALUE")
 public class Value {
 
+    public static int VALUE_IS_PROPERTY = 1000;
+    public static int VALUE_IS_PROPERTY_MASKED = 1010;
+    public static int VALUE_IS_PROPERTY_PROTECTTED = 1020;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name=WorkflowApplication.DB_PREFIX + "ID")
