@@ -2,11 +2,18 @@ package dev.c20.workflow.storage.entities.adds;
 
 import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.storage.entities.Storage;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
+
+@Setter
+@Getter
+@Accessors(chain = true)
 @Entity
 @Table(name=WorkflowApplication.DB_PREFIX + "STG_LOG")
 public class Log {
@@ -51,66 +58,4 @@ public class Log {
         return Objects.hash(id);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Log setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public Storage getParent() {
-        return parent;
-    }
-
-    public Log setParent(Storage parent) {
-        this.parent = parent;
-        return this;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public Log setModified(Date modified) {
-        this.modified = modified;
-        return this;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public Log setModifier(String modifier) {
-        this.modifier = modifier;
-        return this;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public Log setComment(String comment) {
-        this.comment = comment;
-        return this;
-    }
-
-    public Long getCommentId() {
-        return commentId;
-    }
-
-    public Log setCommentId(Long commentId) {
-        this.commentId = commentId;
-        return this;
-    }
-
-    public Long getType() {
-        return type;
-    }
-
-    public Log setType(Long type) {
-        this.type = type;
-        return this;
-    }
 }

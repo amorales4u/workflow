@@ -9,6 +9,7 @@ import dev.c20.workflow.storage.entities.adds.Value;
 import dev.c20.workflow.storage.repositories.LogRepository;
 import dev.c20.workflow.storage.repositories.StorageRepository;
 import dev.c20.workflow.storage.repositories.ValueRepository;
+import dev.c20.workflow.storage.services.requests.StorageRequest;
 import dev.c20.workflow.storage.services.responses.ListResponse;
 import dev.c20.workflow.storage.services.responses.ObjectResponse;
 import lombok.Getter;
@@ -79,14 +80,14 @@ public class StorageSystemService {
 
     }
 
-    public ObjectResponse<Storage> createStorage(String path, Storage requestStorage) {
+    public ObjectResponse<Storage> createStorage(StorageRequest<Storage> storageRequest) {
 
-        if( path.equals("/") ) {
+        if( storageRequest.getPath().equals("/") ) {
             if( !userEntity.getRoles().contains("ADMIN") ) {
                 return new ObjectResponse<>("No tiene permisos de admin en root /");
             }
         } else {
-            String parentFolderPath = PathUtils.getParentFolder(path);
+            String parentFolderPath = PathUtils.getParentFolder(storageRequest.getPath());
 
             ObjectResponse<Storage> result = getFolder(parentFolderPath);
 
@@ -95,20 +96,20 @@ public class StorageSystemService {
             }
         }
 
-        Storage storage = storageRepository.getStorage(path);
+        Storage storage = storageRepository.getStorage(storageRequest.getPath());
         if( storage != null ) {
             return new ObjectResponse<>("Ya existe el storage");
         }
 
         storage = new Storage();
-        storage.setPath(path)
+        storage.setPath(storageRequest.getPath())
                 .setCreator(userEntity.getUser())
                 .setCreated( new Date())
-                .setStatus(requestStorage.getStatus())
-                .setClazzName(requestStorage.getClazzName())
-                .setDescription(requestStorage.getDescription())
-                .setImage(requestStorage.getImage())
-                .setExtension(requestStorage.getExtension())
+                .setStatus(storageRequest.getRequest().getStatus())
+                .setClazzName(storageRequest.getRequest().getClazzName())
+                .setDescription(storageRequest.getRequest().getDescription())
+                .setImage(storageRequest.getRequest().getImage())
+                .setExtension(storageRequest.getRequest().getExtension())
                 ;
 
         storage = storageRepository.save(storage);
@@ -124,9 +125,9 @@ public class StorageSystemService {
 
     }
 
-    public ObjectResponse<Storage> updateStorage(String path, Storage requestStorage) {
+    public ObjectResponse<Storage> updateStorage(StorageRequest<Storage> storageRequest) {
 
-        String parentFolderPath = PathUtils.getParentFolder(path);
+        String parentFolderPath = PathUtils.getParentFolder(storageRequest.getPath());
 
         ObjectResponse<Storage> result = getFolder(parentFolderPath);
 
@@ -134,7 +135,7 @@ public class StorageSystemService {
             return result;
         }
 
-        Storage storage = storageRepository.getStorage(path);
+        Storage storage = storageRepository.getStorage(storageRequest.getPath());
 
         if( storage == null ) {
             return new ObjectResponse<>("No existe el storage");
@@ -143,11 +144,11 @@ public class StorageSystemService {
         storage
                 .setModifier(userEntity.getUser())
                 .setModifyDate( new Date())
-                .setStatus(requestStorage.getStatus())
-                .setClazzName(requestStorage.getClazzName())
-                .setDescription(requestStorage.getDescription())
-                .setImage(requestStorage.getImage())
-                .setExtension(requestStorage.getExtension())
+                .setStatus(storageRequest.getRequest().getStatus())
+                .setClazzName(storageRequest.getRequest().getClazzName())
+                .setDescription(storageRequest.getRequest().getDescription())
+                .setImage(storageRequest.getRequest().getImage())
+                .setExtension(storageRequest.getRequest().getExtension())
         ;
 
         storage = storageRepository.save(storage);
@@ -164,9 +165,9 @@ public class StorageSystemService {
 
     }
 
-    public ObjectResponse<Storage> deleteStorage(String path, Log log) {
+    public ObjectResponse<Storage> deleteStorage(StorageRequest<Storage> storageRequest) {
 
-        String parentFolderPath = PathUtils.getParentFolder(path);
+        String parentFolderPath = PathUtils.getParentFolder(storageRequest.getPath());
 
         ObjectResponse<Storage> result = getFolder(parentFolderPath);
 
@@ -174,7 +175,7 @@ public class StorageSystemService {
             return result;
         }
 
-        Storage storage = storageRepository.getFile(path);
+        Storage storage = storageRepository.getFile(storageRequest.getPath());
 
         if( storage == null ) {
             return new ObjectResponse<>("No existe el storage");
@@ -188,7 +189,7 @@ public class StorageSystemService {
 
         storage = storageRepository.save(storage);
 
-        log
+        Log log = new Log()
                 .setParent(storage)
                 .setModifier(storage.getModifier())
                 .setModified(new Date())
@@ -200,7 +201,7 @@ public class StorageSystemService {
 
     }
 
-    private StorageFile getFileForAdds( String path ) {
+    private StorageFile getStorageForAdds(String path ) {
         StorageFile storageFile = new StorageFile();
 
         String parentFolderPath = PathUtils.getParentFolder(path);
@@ -212,7 +213,7 @@ public class StorageSystemService {
             return storageFile;
         }
 
-        Storage storage = storageRepository.getFile(path);
+        Storage storage = storageRepository.getStorage(path);
 
         if( storage == null ) {
             storageFile.errorMessage = "No existe el storage =>" + path;
@@ -228,7 +229,7 @@ public class StorageSystemService {
     }
 
     public ListResponse<Value> getValues(String path) {
-        StorageFile storageFile = getFileForAdds(path);
+        StorageFile storageFile = getStorageForAdds(path);
 
         if( storageFile.isError ) {
             return new ListResponse<>(storageFile.errorMessage);
@@ -238,42 +239,29 @@ public class StorageSystemService {
 
     }
 
-    public ObjectResponse<Value> addValue(String path, Value value) {
-        StorageFile storageFile = getFileForAdds(path);
+    public ObjectResponse<Value> addOrUpdateValue(StorageRequest<Value> storageRequest) {
+        StorageFile storageFile = getStorageForAdds(storageRequest.getPath());
 
         if( storageFile.isError ) {
             return new ObjectResponse<>(storageFile.errorMessage);
         }
 
-        value = valueRepository.save(value);
+        Value value = valueRepository.save(storageRequest.getRequest());
 
         return new ObjectResponse<Value>().setData(value);
 
     }
 
-    public ObjectResponse<Value> updateValue(String path, Value value) {
-        StorageFile storageFile = getFileForAdds(path);
+    public ObjectResponse<Value> deleteValue(StorageRequest<Value> storageRequest) {
+        StorageFile storageFile = getStorageForAdds(storageRequest.getPath());
 
         if( storageFile.isError ) {
             return new ObjectResponse<>(storageFile.errorMessage);
         }
 
-        value = valueRepository.save(value);
+        valueRepository.delete(storageRequest.getRequest());
 
-        return new ObjectResponse<Value>().setData(value);
-
-    }
-
-    public ObjectResponse<Value> deleteValue(String path, Value value) {
-        StorageFile storageFile = getFileForAdds(path);
-
-        if( storageFile.isError ) {
-            return new ObjectResponse<>(storageFile.errorMessage);
-        }
-
-        valueRepository.delete(value);
-
-        return new ObjectResponse<Value>().setData(value);
+        return new ObjectResponse<Value>().setData(storageRequest.getRequest());
 
     }
 

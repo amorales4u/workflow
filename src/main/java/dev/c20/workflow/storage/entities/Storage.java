@@ -3,6 +3,7 @@ package dev.c20.workflow.storage.entities;
 
 import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.commons.tools.PathUtils;
+import dev.c20.workflow.storage.entities.adds.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -102,6 +103,24 @@ public class Storage implements Serializable {
 
     @Column(name=WorkflowApplication.DB_PREFIX + "PATH",length = 1000 )
     private String path;
+
+
+    @OneToMany(mappedBy="parent")
+    private List<Attach> attachments;
+
+    @OneToOne(mappedBy="parent")
+    private Data data;
+
+    @OneToMany(mappedBy="parent")
+    private List<Note> notes;
+
+    @OneToMany(mappedBy="parent")
+    private List<Value> values;
+
+
+    @Transient
+    private List<Perm> permissions = new ArrayList<>();
+
 
     @Transient
     private List<Storage> children = new ArrayList<>();

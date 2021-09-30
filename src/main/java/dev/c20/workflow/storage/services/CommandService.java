@@ -281,7 +281,7 @@ public class CommandService {
         logRepository.copyTo(target, requestedStorage );
         noteRepository.copyTo(target, requestedStorage );
         permRepository.copyTo(target, requestedStorage );
-        valueRepository.copyTo(target, requestedStorage );
+        //valueRepository.copyTo(target, requestedStorage );
 
         newLog(target, userEntity.getUser(), "Se copio desde " + requestedStorage.getPath());
 

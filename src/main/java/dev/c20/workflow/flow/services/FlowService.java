@@ -112,7 +112,7 @@ public class FlowService {
         Data dataObj = dataRepository.getByParent(folderProcess.getId());
         if( dataObj == null )
             dataObj = new Data()
-                    .setParent(folderProcess.getId());
+                    .setParent(folderProcess);
 
         dataObj.setData(StringUtils.toJSON(data,true));
         logger.info(folderProcess.getId());
@@ -138,7 +138,7 @@ public class FlowService {
         Data dataObj = dataRepository.getByParent(folderProcess.getId());
         if( dataObj == null )
             dataObj = new Data()
-                    .setParent(folderProcess.getId());
+                    .setParent(folderProcess);
         dataObj.setData(StringUtils.toJSON(data,true));
         logger.info(folderProcess.getId());
         logger.info(dataObj.getData());

@@ -3,9 +3,10 @@ package dev.c20.workflow.auth.services;
 import dev.c20.workflow.commons.tools.StringUtils;
 import dev.c20.workflow.storage.entities.Storage;
 import dev.c20.workflow.storage.entities.adds.Perm;
+import dev.c20.workflow.storage.entities.adds.ProtectedValue;
 import dev.c20.workflow.storage.repositories.PermRepository;
+import dev.c20.workflow.storage.repositories.ProtectedValueRepository;
 import dev.c20.workflow.storage.repositories.StorageRepository;
-import dev.c20.workflow.storage.repositories.ValueRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.aerogear.security.otp.Totp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
     StorageRepository storageRepository;
 
     @Autowired
-    ValueRepository valueRepository;
+    ProtectedValueRepository protectedValueRepository;
 
     @Autowired
     PermRepository permRepository;
@@ -74,7 +75,7 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
         if( this.getAuthenticatedUser().getUser() != null && !matcher.matches()) {
             storage = storageRepository.getFile(usersDir + this.getAuhenticatedUser().getUser());
         } else {
-            List<dev.c20.workflow.storage.entities.adds.Value> emails = valueRepository.getFindByNameValue( "email", this.getAuthenticatedUser().getUser());
+            List<dev.c20.workflow.storage.entities.adds.Value> emails = protectedValueRepository.getFindByNameValue( "email", this.getAuthenticatedUser().getUser());
             if( emails.size() != 1 ) {
                 return this;
             }
@@ -87,11 +88,11 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
             return this;
         }
 
-        List<dev.c20.workflow.storage.entities.adds.Value> properties = valueRepository.getAllProperties(storage);
+        List<ProtectedValue> properties = protectedValueRepository.getAllProperties(storage);
 
         if( getAuhenticatedUser().getPassword() != null ) {
-            dev.c20.workflow.storage.entities.adds.Value password = null;
-            for(dev.c20.workflow.storage.entities.adds.Value property : properties ) {
+            ProtectedValue password = null;
+            for(ProtectedValue property : properties ) {
                 if( property.getName().equals("password")) {
                     password = property;
                     break;
@@ -106,8 +107,8 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
             }
 
         } else if( getAuhenticatedUser().getOtp() != null ) {
-            dev.c20.workflow.storage.entities.adds.Value random = null;
-            for(dev.c20.workflow.storage.entities.adds.Value property : properties ) {
+            ProtectedValue random = null;
+            for(ProtectedValue property : properties ) {
                 if( property.getName().equals("random")) {
                     random = property;
                     break;
@@ -144,7 +145,7 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
         }
         this.getAuthenticatedUser().setRoles(roles);
 
-        for(dev.c20.workflow.storage.entities.adds.Value property : properties ) {
+        for(ProtectedValue property : properties ) {
             if( property.getName().equals("email") ) {
                 this.getAuthenticatedUser().setEmail(property.getValue());
             }

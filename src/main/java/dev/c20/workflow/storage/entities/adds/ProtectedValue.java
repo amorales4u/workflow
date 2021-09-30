@@ -14,15 +14,12 @@ import java.util.Objects;
 @Getter
 @Accessors(chain = true)
 @Entity
-@Table(name= WorkflowApplication.DB_PREFIX + "STG_VALUE")
-public class Value {
+@Table(name= WorkflowApplication.DB_PREFIX + "STG_VALUE_PROTECTED")
+public class ProtectedValue {
 
     public static int VALUE_IS_PROPERTY = 1000;
     public static int VALUE_IS_PROPERTY_MASKED = 1010;
     public static int VALUE_IS_PROPERTY_PROTECTTED = 1020;
-
-    public static int VALUE_CLASS_FOR_PREVIEW = 2000;
-    public static int VALUE_CLASS_FOR_EDIT = 2010;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +59,7 @@ public class Value {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Value value = (Value) o;
+        ProtectedValue value = (ProtectedValue) o;
         return id.equals(value.id);
     }
 

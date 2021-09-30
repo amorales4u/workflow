@@ -1,6 +1,14 @@
-PUT http://localhost:8089/workflow/authentication/
+PUT http://localhost:8090/workflow/authentication/
 Content-Type: application/json
-Authentication: amorales
+
+{ "user": "amorales@c20.dev",
+  "password": "tigger"
+}
+
+> {%
+client.global.set("token",response.headers.valueOf("Authorization"))
+%}
+
 
 ###
 
@@ -34,18 +42,6 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:8090/workflow/authentication/
-Content-Type: application/json
-
-{ "user": "bfg9000",
-"password": "tigger"
-}
-> {%
-client.global.set("token",response.headers.valueOf("Authorization"))
-%}
-
-
-###
 
 GET http://localhost:8090/workflow/stg/Sistema/Usuarios/*
 Content-Type: application/json
@@ -181,13 +177,6 @@ Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zg
 
 ###
 
-PUT http://localhost:8089/workflow/commands/rename/Catálogos/Usuarios/antonio.morales
-Content-Type: application/json
-Authorization: token VPqM7akss8ifIkjz0bA0eyHNo3N8PAkH02iKoEZ48sIkwxBevF+Wjddr7zgfx1H9ji8+wmZAI8v5p2z94fHyW6sKpuGfBq6GjR7aV2QKP5Dd5XKhSxpWeMoz6F8/z/NFBQv4GUO4drWE9eTXHNQI9/1pX7f5xsXXOU/eRYwts5k7XVhc4PjV8YuJVuC820f5W+90RTufkoWdu8aHba1t/g==
-
--t /Catálogos/Usuarios/admin
-
-###
 
 GET http://localhost:8089/workflow/flow/Seguimiento de Algo/
 Content-Type: application/json

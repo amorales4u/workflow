@@ -2,8 +2,8 @@ package dev.c20.workflow.storage;
 
 import dev.c20.workflow.commons.tools.PathUtils;
 import dev.c20.workflow.storage.entities.Storage;
-import dev.c20.workflow.storage.entities.adds.Log;
 import dev.c20.workflow.storage.entities.adds.Value;
+import dev.c20.workflow.storage.services.requests.StorageRequest;
 import dev.c20.workflow.storage.services.responses.ListResponse;
 import dev.c20.workflow.storage.services.responses.ObjectResponse;
 import dev.c20.workflow.storage.services.v2.StorageSystemService;
@@ -41,51 +41,45 @@ public class StorageRestControllerV2 {
         return URLDecoder.decode( PathUtils.getPathFromLevel(restOfTheUrl,2) );
     }
     @GetMapping("/stg/**")
-    public ListResponse<Storage> getFolderStorage(HttpServletRequest request) {
+    public ListResponse<Storage> getFolderStorage( HttpServletRequest httpServletRequest) {
 
-        String restOfTheUrl = getPath(request);
+        String restOfTheUrl = getPath(httpServletRequest);
 
         return storageSystemService
-                .setHttpServletRequest(request)
+                .setHttpServletRequest(httpServletRequest)
                 .getFolderList(restOfTheUrl);
 
     }
 
-    @PostMapping("/stg/**")
-    public ObjectResponse<Storage> createStorage(@RequestBody Storage storage, HttpServletRequest request) {
-
-        String restOfTheUrl = getPath(request);
+    @PostMapping("/stg/")
+    public ObjectResponse<Storage> createStorage(@RequestBody StorageRequest<Storage> storageRequest, HttpServletRequest httpServletRequest) {
 
         return storageSystemService
-                .setHttpServletRequest(request)
-                .createStorage(restOfTheUrl, storage);
+                .setHttpServletRequest(httpServletRequest)
+                .createStorage(storageRequest);
 
     }
 
-    @PutMapping("/stg/**")
-    public ObjectResponse<Storage> updateStorage(@RequestBody Storage storage, HttpServletRequest request) {
-
-        String restOfTheUrl = getPath(request);
+    @PutMapping("/stg/")
+    public ObjectResponse<Storage> updateStorage(@RequestBody StorageRequest<Storage> storageRequest, HttpServletRequest httpServletRequest) {
 
         return storageSystemService
-                .setHttpServletRequest(request)
-                .updateStorage(restOfTheUrl, storage);
+                .setHttpServletRequest(httpServletRequest)
+                .updateStorage(storageRequest);
 
     }
 
-    @DeleteMapping("/stg/**")
-    public ObjectResponse<Storage> deleteStorage(@RequestBody Log log, HttpServletRequest request) {
-
-        String restOfTheUrl = getPath(request);
+    @DeleteMapping("/stg/")
+    public ObjectResponse<Storage> deleteStorage(@RequestBody StorageRequest<Storage> storageRequest, HttpServletRequest httpServletRequest) {
 
         return storageSystemService
-                .setHttpServletRequest(request)
-                .deleteStorage(restOfTheUrl, log);
+                .setHttpServletRequest(httpServletRequest)
+                .deleteStorage(storageRequest);
 
     }
 
     @GetMapping("/value/**")
-    ListResponse<Value> readValues(HttpServletRequest request) throws Exception {
+    public ListResponse<Value> readValues(HttpServletRequest request)  {
         String restOfTheUrl = getPath(request);
 
         return storageSystemService
@@ -94,36 +88,32 @@ public class StorageRestControllerV2 {
 
     }
 
-    @PostMapping("/value/**")
-    ObjectResponse<Value>  createValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
-
-        String restOfTheUrl = getPath(request);
+    private ObjectResponse<Value>  createOrUpdateValue(StorageRequest<Value> storageRequest, HttpServletRequest httpServletRequest)  {
 
         return storageSystemService
-                .setHttpServletRequest(request)
-                .addValue(restOfTheUrl,value);
+                .setHttpServletRequest(httpServletRequest)
+                .addOrUpdateValue(storageRequest);
 
     }
 
-    @PutMapping("/value/**")
-    ObjectResponse<Value> updateValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
+    @PostMapping("/value/")
+    public ObjectResponse<Value>  createValue(@RequestBody StorageRequest<Value> storageRequest, HttpServletRequest httpServletRequest)  {
+        return createOrUpdateValue(storageRequest,httpServletRequest);
+    }
 
-        String restOfTheUrl = getPath(request);
+    @PutMapping("/value/")
+    public ObjectResponse<Value> updateValue(@RequestBody StorageRequest<Value> storageRequest, HttpServletRequest httpServletRequest)  {
 
-        return storageSystemService
-                .setHttpServletRequest(request)
-                .updateValue(restOfTheUrl,value);
+        return createOrUpdateValue(storageRequest,httpServletRequest);
 
     }
 
-    @DeleteMapping("/value/**")
-    ObjectResponse<Value> deleteValue(@RequestBody Value value, HttpServletRequest request) throws Exception {
-
-        String restOfTheUrl = getPath(request);
+    @DeleteMapping("/value/")
+    public ObjectResponse<Value> deleteValue(@RequestBody StorageRequest<Value> storageRequest, HttpServletRequest httpServletRequest) {
 
         return storageSystemService
-                .setHttpServletRequest(request)
-                .deleteValue(restOfTheUrl,value);
+                .setHttpServletRequest(httpServletRequest)
+                .deleteValue(storageRequest);
 
     }
 

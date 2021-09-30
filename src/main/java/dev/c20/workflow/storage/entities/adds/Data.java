@@ -1,18 +1,32 @@
 package dev.c20.workflow.storage.entities.adds;
 
 import dev.c20.workflow.WorkflowApplication;
+import dev.c20.workflow.storage.entities.Storage;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
+@Accessors(chain = true)
+
 @Entity
 @Table(name= WorkflowApplication.DB_PREFIX + "STG_DATA")
 public class Data implements Serializable {
 
+
     @Id
-    @Column( name=WorkflowApplication.DB_PREFIX + "STORAGE")
-    private Long parent;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name=WorkflowApplication.DB_PREFIX + "ID")
+    private Long id;
+
+    @OneToOne(fetch= FetchType.LAZY)
+    @JoinColumn( name= WorkflowApplication.DB_PREFIX + "STORAGE")
+    private Storage parent;
 
     @Column(name=WorkflowApplication.DB_PREFIX + "VALUE", length = 32000)
     private String data;
@@ -30,21 +44,4 @@ public class Data implements Serializable {
         return Objects.hash(parent);
     }
 
-    public Long getParent() {
-        return parent;
-    }
-
-    public Data setParent(Long parent) {
-        this.parent = parent;
-        return this;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public Data setData(String value) {
-        this.data = value;
-        return this;
-    }
 }

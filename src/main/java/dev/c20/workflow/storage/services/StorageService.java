@@ -794,7 +794,7 @@ public class StorageService  {
 
         try {
             Data obj = new Data()
-                    .setParent(this.getRequestedStorage().getId())
+                    .setParent(this.getRequestedStorage())
                     .setData(StringUtils.toJSON(data));
             dataRepository.save(obj);
 

@@ -3,10 +3,17 @@ package dev.c20.workflow.storage.entities.adds;
 
 import dev.c20.workflow.WorkflowApplication;
 import dev.c20.workflow.storage.entities.Storage;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.Date;
 
+
+@Setter
+@Getter
+@Accessors(chain = true)
 @Entity
 @Table(name= WorkflowApplication.DB_PREFIX + "STG_NOTE")
 public class Note {
@@ -47,57 +54,4 @@ public class Note {
         return (id != null ? id.hashCode() : 0);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Note setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public Storage getParent() {
-        return parent;
-    }
-
-    public Note setParent(Storage parent) {
-        this.parent = parent;
-        return this;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public Note setCreator(String creator) {
-        this.creator = creator;
-        return this;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public Note setCreated(Date created) {
-        this.created = created;
-        return this;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public Note setImage(String image) {
-        this.image = image;
-        return this;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public Note setComment(String comment) {
-        this.comment = comment;
-        return this;
-    }
 }

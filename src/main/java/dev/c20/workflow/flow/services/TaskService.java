@@ -304,7 +304,7 @@ public class TaskService {
 
         storageRepository.save(task);
         Data dataStorage = new Data()
-                .setParent(task.getId())
+                .setParent(task)
                 .setData(StringUtils.toJSON(data,true));
         dataRepository.save(dataStorage);
 
@@ -463,7 +463,7 @@ public class TaskService {
             logRepository.copyTo(target, this.taskFile );
             noteRepository.copyTo(target, this.taskFile );
             permRepository.copyTo(target, this.taskFile );
-            valueRepository.copyTo(target, this.taskFile );
+            //valueRepository.copyTo(target, this.taskFile );
 
             this.taskFile.setStatus(TASK_COMPLETED);
             newLog(target, userEntity.getUser(), "Se copio desde " + this.taskFile.getPath());
