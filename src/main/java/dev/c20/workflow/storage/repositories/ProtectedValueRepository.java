@@ -14,16 +14,16 @@ public interface ProtectedValueRepository extends JpaRepository<ProtectedValue, 
 
     public static final int PROPERTIES = 1000;
 
-    @Query( "select o from Value o where o.parent = ?1 order by o.order")
+    @Query( "select o from ProtectedValue o where o.parent = ?1 order by o.order")
     List<ProtectedValue> getAll(Storage parent);
 
-    @Query( "select o from Value o where o.parent = ?1 and o.intValue = 1000 order by o.order")
+    @Query( "select o from ProtectedValue o where o.parent = ?1 and o.intValue = 1000 order by o.order")
     List<ProtectedValue> getAllProperties(Storage parent);
 
     @Query( "select o from Value o where o.parent = ?1 and o.name = ?2 order by o.order")
     Value getByName(Storage parent, String name);
 
-    @Query( "select o from Value o where o.name = ?1 and o.value = ?2 order by o.order")
+    @Query( "select o from ProtectedValue o where o.name = ?1 and o.value = ?2 order by o.order")
     List<Value> getFindByNameValue(String name, String value);
 
 }

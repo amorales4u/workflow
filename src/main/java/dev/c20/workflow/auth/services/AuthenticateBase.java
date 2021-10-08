@@ -21,6 +21,8 @@ public abstract class AuthenticateBase {
     private HttpServletRequest httpRequest = null;
     private UserEntity auhenticatedUser = null;
     boolean authenticated = false;
+    String error = "";
+    int hasError = -100;
 
 
 

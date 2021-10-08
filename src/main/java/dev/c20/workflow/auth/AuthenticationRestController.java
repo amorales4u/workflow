@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(
@@ -38,11 +40,17 @@ public class AuthenticationRestController {
                 .setUserEntity(userEntity)
                 .authenticate();
 
-        if( !authService.isAuthenticated() )
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if( !authService.isAuthenticated() ) {
+            Map<String,Object> res = new HashMap<>();
+            res.put("error", true);
+            res.put("errorNo", authService.getAuthenticateComponent().getHasError());
+            response.addHeader("auth-error", authService.getAuthenticateComponent().getHasError()+ "");
+            userEntity.setErrorInLogin(true);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(userEntity);
+        }
 
         userEntity = authService.getAuthenticatedUser();
-
+        userEntity.setErrorInLogin(false);
         response.addHeader(AuthenticateBase.AUTHORIZATION, AuthenticateBase.AUTHORIZATION_TOKEN + StringUtils.getToken(userEntity.asMap()));
 
         //Thread.sleep(5000);

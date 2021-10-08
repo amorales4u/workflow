@@ -77,6 +77,7 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
         } else {
             List<dev.c20.workflow.storage.entities.adds.Value> emails = protectedValueRepository.getFindByNameValue( "email", this.getAuthenticatedUser().getUser());
             if( emails.size() != 1 ) {
+                hasError = -100; // no existe el correo
                 return this;
             }
             storage = emails.get(0).getParent();
@@ -85,6 +86,7 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
         }
 
         if( storage == null ) {
+            hasError = -200; // no existe el usuario
             return this;
         }
 
@@ -99,10 +101,12 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
                 }
             }
             if( password == null ) {
+                hasError = -300; // no tiene password
                 return this;
             }
 
             if( !password.getValue().equals(StringUtils.encrypt(getAuhenticatedUser().getPassword(),secret))) {
+                hasError = -400; // el password no corresponde
                 return this;
             }
 
@@ -115,6 +119,7 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
                 }
             }
             if( random == null ) {
+                hasError = -500; // no tiene configurado el OTP
                 return this;
             }
 
@@ -123,11 +128,13 @@ public class DataBaseAuthenticateComponent extends AuthenticateBase {
             Totp totp = new Totp(random.getValue());
             if (!isValidLong(this.getAuthenticatedUser().getOtp())) {
                 log.info("BadCredentialsException( Invalid verification type code )");
+                hasError = -600; // OTP Random no es correcto
                 return this;
 
             }
             if (!totp.verify(this.getAuthenticatedUser().getOtp())) {
                 log.info("BadCredentialsException( Invalid verification code )");
+                hasError = -700; // OTP incorrecto
                 return this;
 
             }

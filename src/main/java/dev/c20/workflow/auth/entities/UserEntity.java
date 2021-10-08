@@ -23,7 +23,7 @@ public class UserEntity {
     private String email;
     private String otp;
     private String password;
-
+    private Boolean errorInLogin = true;
     private Map<String,Object> extras = new HashMap<>();
 
     public List<String> getRolesList() {
